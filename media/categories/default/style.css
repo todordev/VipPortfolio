@@ -1,0 +1,26 @@
+#itp-vp-box {
+    width:100%;
+    text-align:center;
+}
+
+#itp-vp-box a{
+    float: left;
+
+}
+
+#itp-vp-box a img{
+  border: medium solid #E8E8E8;
+  margin: 20px;
+}
+
+.clear {
+
+clear:both;
+
+}
+
+.itp-vp-category-name{
+	width: 350px;
+	height: 100px;
+	text-align:center;
+}

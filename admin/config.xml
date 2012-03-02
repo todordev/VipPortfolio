@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fieldset name="global" label="COM_VIPPORTFOLIO_GLOBAL_TITLE" description="COM_VIPPORTFOLIO_GLOBAL_PARAMS">
+        <field name="cat_breadcrumbs" type="radio" default="0"  label="COM_VIPPORTFOLIO_CAT_BREADCRUMBS" description="COM_VIPPORTFOLIO_CAT_BREADCRUMBS_DESC" >
+           <option value="0">JHIDE</option>
+           <option value="1">JSHOW</option>
+       </field>
+       <field name="catDesc" type="radio" default="0"  label="COM_VIPPORTFOLIO_CAT_DESCRIPTIOON" description="COM_VIPPORTFOLIO_CAT_DESCRIPTIOON_DESC" >
+           <option value="0">JHIDE</option>
+           <option value="1">JSHOW</option>
+       </field>
+       <field name="modalLib" type="list" default="native" label="COM_VIPPORTFOLIO_MODAL_LIBRARY" description="COM_VIPPORTFOLIO_MODAL_LIBRARY_DESC" >
+           <option value="native">Joomla! Native</option>
+           <option value="slimbox">Slimbox</option>
+       </field>
+	</fieldset>
+
+	<fieldset name="list" label="COM_VIPPORTFOLIO_PROJECTS_LIST_TITLE" description="COM_VIPPORTFOLIO_PROJECTS_LIST_PARAMS">
+	    <field name="modal" type="radio" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
+	        <option value="0">JNO</option>
+	        <option value="1">JYES</option>
+	    </field>
+	    <field name="image_linkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_IMAGE_LINK" description="COM_VIPPORTFOLIO_IMAGE_LINK_DESC" >
+	        <option value="0">JNO</option>
+	        <option value="1">JYES</option>
+	    </field>
+	    <field name="title_linkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="extra_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_EXTRA_IMAGE" description="COM_VIPPORTFOLIO_EXTRA_IMAGE_DESC" >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="extra_max" type="text" default="3" size="50" label="COM_VIPPORTFOLIO_EI_NUM" description="COM_VIPPORTFOLIO_EI_NUM_DESC" />
+	    <field name="thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+	    <field name="thumb_height" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+	    <field name="pp_page" type="text" default="6" size="50" label="COM_VIPPORTFOLIO_PP_PAGE" description="COM_VIPPORTFOLIO_PP_PAGE_DESC" />
+	</fieldset>
+    
+    <fieldset name="line" label="COM_VIPPORTFOLIO_PROJECTS_LINEAL" description="COM_VIPPORTFOLIO_PROJECTS_LINEAL_PARAMS">
+        <field name="lModal" type="radio" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </field>
+        <field name="lLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_IMAGE_LINK" description="COM_VIPPORTFOLIO_IMAGE_LINK_DESC" >
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </field>
+        <field name="lTitleLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" >
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+        </field>
+        <field name="lDisplayTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_TITLE" description="COM_VIPPORTFOLIO_SHOW_TITLE_DESC" >
+            <option value="0">Hide</option>
+            <option value="1">Show</option>
+        </field>
+        <field name="lDisplayUrl" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_URL" description="COM_VIPPORTFOLIO_SHOW_URL_DESC" >
+            <option value="0">Hide</option>
+            <option value="1">Show</option>
+        </field>
+        <field name="lExtraImage" type="radio" default="0"  label="COM_VIPPORTFOLIO_EXTRA_IMAGE" description="COM_VIPPORTFOLIO_EXTRA_IMAGE_DESC" >
+            <option value="0">Hide</option>
+            <option value="1">Show</option>
+        </field>
+        <field name="lExtraMax" type="text" default="3" size="50" label="COM_VIPPORTFOLIO_EI_NUM" description="COM_VIPPORTFOLIO_EI_NUM_DESC" />
+        <field name="lThumbWidth" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="lThumbHeight" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+    </fieldset>
+    
+    <fieldset name="catslist" label="COM_VIPPORTFOLIO_CATEGORY_LIST_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_LIST_PARAMS">
+        
+        <field name="clistThumbWidth" type="text" default="350" size="50" label="COM_VIPPORTFOLIO_IMAGE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_WIDTH_DESC" />
+        <field name="clistThumbHeight" type="text" default="100" size="50" label="COM_VIPPORTFOLIO_IMAGE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_HEIGHT_DESC" />
+    </fieldset>
+    
+    <fieldset name="catstabbed" label="COM_VIPPORTFOLIO_CATEGORY_TABBED_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_TABBED_PARAMS">
+        <field name="ctabModal" type="radio" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="ctabsTitleLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="ctabsDisplayTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_TITLE" description="COM_VIPPORTFOLIO_SHOW_TITLE_DESC" >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="ctabsDisplayTips" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_TIPS" description="COM_VIPPORTFOLIO_DISPLAY_TIPS_DESC" >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="ctabsDisplayInnerTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_INNER_TITLE" description="COM_VIPPORTFOLIO_DISPLAY_INNER_TITLE_DESC" >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="ctabsDisplayInner" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_INNER" description="COM_VIPPORTFOLIO_DISPLAY_INNER_DESC" >
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="ctabsInnerURL" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_INNER_URL" description="COM_VIPPORTFOLIO_DISPLAY_INNER_URL_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="ctabsInnerTitleMaxChars" type="text" default="20" size="50" label="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS_DESC" />
+        <field name="ctabsInnerMaxChars" type="text" default="80" size="50" label="COM_VIPPORTFOLIO_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_MAX_CHARACTERS_DESC" />
+        <field name="ctabsThumbWidth" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="ctabsThumbHeight" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+    </fieldset>
+    
+    <fieldset name="fblist" label="COM_VIPPORTFOLIO_PROJECTS_FBLIST_TITLE" description="COM_VIPPORTFOLIO_PROJECTS_FBLIST_PARAMS">
+        <field name="fbpp_page" type="text" default="10" size="50" label="COM_VIPPORTFOLIO_PP_PAGE" description="COM_VIPPORTFOLIO_PP_PAGE_DESC" />
+    </fieldset>
+</config>

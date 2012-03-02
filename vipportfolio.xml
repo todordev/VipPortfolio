@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5" method="upgrade">
+	<name>com_vipportfolio</name>
+	<creationDate>August, 2010</creationDate>
+	<author>Todor Iliev</author>
+	<authorEmail>todor@itprism.com</authorEmail>
+	<authorUrl>http://itprism.com</authorUrl>
+	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html</license>
+	<version>3.1</version>
+	<description>COM_VIPPORTFOLIO_DESCRIPTION</description>
+
+	<install>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.sql</file>
+        </sql>
+    </install>
+
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+        </sql>
+    </uninstall>
+	
+	<update> 
+		<schemas>
+				<schemapath type="mysql">sql/updates</schemapath>
+		</schemas>
+	</update>
+	
+    <scriptfile>install.php</scriptfile>
+		
+	<media destination="com_vipportfolio" folder="media">
+		<filename>index.html</filename>
+		<folder>categories</folder>
+		<folder>css</folder>	
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>lightface</folder>
+		<folder>projects</folder>
+		<folder>slimbox</folder>
+	</media>
+	
+	<!-- Site Main File Copy Section -->
+	<files folder="site">
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<filename>router.php</filename>
+		<filename>vipportfolio.php</filename>
+		<folder>controllers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+
+	<languages folder="site">
+		<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
+	</languages>
+	
+	
+	<administration>
+		<menu img="../media/com_vipportfolio/images/menu_vip_portfolio.gif" link="option=com_vipportfolio">COM_VIPPORTFOLIO</menu>
+		<submenu>
+			<menu img="../media/com_vipportfolio/images/menu_icon_cpanel.gif" link="option=com_vipportfolio">COM_VIPPORTFOLIO_CP</menu>
+			<menu img="../media/com_vipportfolio/images/menu_icon_projects_new.gif" link="option=com_vipportfolio&amp;view=project&amp;layout=edit">COM_VIPPORTFOLIO_NEW_PROJECT</menu>
+			<menu img="../media/com_vipportfolio/images/menu_icon_projects.gif" link="option=com_vipportfolio&amp;view=projects">COM_VIPPORTFOLIO_PROJECT_LIST</menu>
+			<menu img="../media/com_vipportfolio/images/menu_icon_folder_new.gif" link="option=com_vipportfolio&amp;view=category&amp;layout=edit">COM_VIPPORTFOLIO_NEW_CATEGORY</menu>
+			<menu img="../media/com_vipportfolio/images/menu_icon_folder.gif" link="option=com_vipportfolio&amp;view=categories">COM_VIPPORTFOLIO_CATEGORY_LIST</menu>
+		</submenu>
+	
+		<files folder="admin">		    		
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>libraries</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>sql</folder>
+			<folder>views</folder>		
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+			<filename>config.xml</filename> 
+			<filename>vipportfolio.php</filename>
+		</files>
+		
+		<languages folder="admin">
+			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.sys.ini</language>
+		</languages>
+			
+		</administration>
+</extension>
