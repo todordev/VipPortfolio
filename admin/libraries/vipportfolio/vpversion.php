@@ -54,7 +54,7 @@ class VpVersion {
      * 
      * @var string
      */
-    public $releaseDate= 'March-2012';
+    public $releaseDate= 'March, 2012';
     
     /**
      * Copyright Text

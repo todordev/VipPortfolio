@@ -45,6 +45,7 @@ class VipPortfolioViewCategories extends JView {
         
         // Prepare actions
         $this->addToolbar();
+        $this->setDocument();
         
         parent::display($tpl);
     }
@@ -66,5 +67,17 @@ class VipPortfolioViewCategories extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::deleteList(JText::_("COM_VIPPORTFOLIO_DELETE_ITEMS_QUESTION"), "categories.delete");
     }
+    
+	/**
+	 * Method to set up the document properties
+	 *
+	 * @return void
+	 */
+	protected function setDocument() {
+	    
+		$document = JFactory::getDocument();
+		$document->setTitle(JText::_('COM_VIPPORTFOLIO_CATEGORIES_ADMINISTRATION'));
+		
+	}
 
 }

@@ -25,16 +25,13 @@ class VpHelper {
         
         // Create user folder
         if(true !== JFolder::create($folder)) {
-            jimport( 'joomla.error.log' );
-            $log = JLog::getInstance();
-            // create entry array
-            $entry = array(
-                'LEVEL' => '500',
-                'STATUS' => "Error file creating",
-                'COMMENT' => "The system could not create folder:" . $folder
-            );
-            // add entry to the log
-            $log->addEntry($entry);
+           
+            $registry = JRegistry::getInstance("loggerOptions");
+            $loggerOptions = $registry->toArray();
+            
+            $entry     = new JLogEntry("The system could not create folder:" . $folder);
+            $logger    = new JLoggerFormattedText($loggerOptions);
+            $logger->addEntry($entry, JLog::ALERT);
             return false;
         }
         
@@ -42,16 +39,12 @@ class VpHelper {
         $indexFile = $folder . DS ."index.html";
         $html = '<html><body bgcolor="#FFFFFF"></body></html>';
         if(true !== JFile::write($indexFile,$html)) {
-            jimport( 'joomla.error.log' );
-            $log = JLog::getInstance();
-            // create entry array
-            $entry = array(
-                'LEVEL' => '500',
-                'STATUS' => "Error file creating",
-                'COMMENT' => "The system could not save index.html to : " . $indexFile
-            );
-            // add entry to the log
-            $log->addEntry($entry);
+            $registry = JRegistry::getInstance("loggerOptions");
+            $loggerOptions = $registry->toArray();
+            
+            $entry     = new JLogEntry("The system could not save index.html to : " . $folder);
+            $logger    = new JLoggerFormattedText($loggerOptions);
+            $logger->addEntry($entry, JLog::ALERT);
             return false;
         }
         
@@ -65,14 +58,14 @@ class VpHelper {
 	 */
     public static function getCategories($index = "id") {
     	
-    	$db                = JFactory::getDBO();
-    	$tableCategories   = $db->nameQuote('');
+    	$db              = JFactory::getDBO();
+    	$tableCategories = $db->quoteName("#__vp_categories");
     	
     	$query = "
     	   SELECT
     	       *
    	       FROM
-   	            `#__vp_categories`";
+   	           " .$tableCategories;
     	
     	$db->setQuery($query);
     	
@@ -82,25 +75,27 @@ class VpHelper {
     /**
      * Gets a category
      * 
-     * @params  integer  The category Id
+     * @params  integer  Category Id
      * @return array Associative array
      */
-    public static function getCategory($id) {
+    public static function getCategory($categoryId) {
         
-    	$category = null; 
-    	if (!$id) {
+        $category = array(); 
+        if (!$categoryId) {
     		return $category;
     	}
-        $db                = JFactory::getDBO();
         
-        $query = "
-           SELECT
-               *
-           FROM
-               `#__vp_categories`
-           WHERE
-               `id` = " . (int)$id;
+        $db     = JFactory::getDBO();
+        /** @var $db JDatabaseMySQLi **/
         
+        $tableCategories = $db->quoteName("#__vp_categories");
+    	$columnId        = $db->quoteName("id");
+    	
+        $query  = $db->getQuery(true);
+        $query->select("*")
+              ->from($tableCategories)
+              ->where($columnId." = ". (int)$categoryId);
+    	
         $db->setQuery($query);
         
         $category = $db->loadObject();
@@ -114,11 +109,11 @@ class VpHelper {
      */
     public static function getCategoryName($id) {
     	
-        $db                = JFactory::getDBO();
-        $tableCategories   = $db->nameQuote('#__vp_categories');
-        $columnId          = $db->nameQuote('id');
-        $columnName        = $db->nameQuote('name');
-        
+        $db               = JFactory::getDBO();
+        $tableCategories  = $db->quoteName("#__vp_categories");
+    	$columnId         = $db->quoteName("id");
+    	$columnName       = $db->quoteName("name");
+    	
         $query = "
            SELECT
                $columnName 
@@ -136,20 +131,19 @@ class VpHelper {
      * Checking for published category
      * @param integer $id Category Id
      */
-    public static function isCategoryPublished($id) {
+    public static function isCategoryPublished($categoryId) {
         
-        $db                = JFactory::getDBO();
-        $tableCategories   = $db->nameQuote('#__vp_categories');
-        $columnId          = $db->nameQuote('id');
-        $columnPublished   = $db->nameQuote('published');
+        $db     = JFactory::getDBO();
+        /** @var $db JDatabaseMySQLi **/
         
-        $query = "
-           SELECT
-               `published`
-           FROM
-               `#__vp_categories` 
-           WHERE
-               `id`=" . (int)$id;
+        $tableCategories = $db->quoteName("#__vp_categories");
+    	$columnPublished = $db->quoteName("published");
+    	$columnId        = $db->quoteName("id");
+    	
+        $query  = $db->getQuery(true);
+        $query->select($columnPublished)
+              ->from($tableCategories)
+              ->where($columnId." = ". (int)$categoryId);
         
         $db->setQuery($query,0,1);
         
@@ -159,73 +153,79 @@ class VpHelper {
     }
     
     /**
-     * Loads all projects
-     * @param mixed $published  Indicator for published or not project
+     * Load all projects
+     * 
      * @param array $categories Category IDs
+     * @param mixed $published  Indicator for published or not project
+     * @return mixed array or null
+     * 
      */
     public static function getProjects($categories = null, $published = null) {
         
-    	$db            = JFactory::getDBO();
+    	$db     = JFactory::getDBO();
+        /** @var $db JDatabaseMySQLi **/
+    	
+    	$tableProjects   = $db->quoteName("#__vp_projects");
+    	$columnPublished = $db->quoteName("published");
+    	$columnCatId     = $db->quoteName("catid");
+    	$columnOrdering  = $db->quoteName("ordering");
+    	
+        $query  = $db->getQuery(true);
+        $query->select("*")
+              ->from($tableProjects);
         
-        $query = "
-           SELECT
-               *
-           FROM
-               `#__vp_projects`
-           WHERE 1";
-               
         // Gets only published or not published
         if (!is_null($published)){
             if ($published) {
-                $query .= " AND published=1";
+                $query->where($columnPublished."=1");
             } else {
-                $query .= " AND published=0";
+                $query->where($columnPublished."=0");
             }
         }
         
         if (!is_null($categories)){
             settype($categories,"array");
+            JArrayHelper::toInteger($categories);
+            
             if (!empty($categories)){
-                $query .= " AND `catid` IN (" . implode(",",$categories) . ")";
+                $query->where($columnCatId." IN (" . implode(",",$categories) . ")");
             }
         }
                
+        $query->order($columnOrdering);
         $db->setQuery($query);
 
         $result = $db->loadAssocList();
-        
-        if ($db->getErrorNum()) {
-            throw new ItpException($db->getErrorMsg(),500);
-        }
         
         return $result;
         
     }
     
-    public static function getExtraImages($id){
+    public static function getExtraImages($projectId){
     	
-    	settype($id,"integer");
+    	settype($projectId,"integer");
     	$images = array();
-    	if (!$id){
+    	if (!$projectId){
     		return $images;
     	}
     	
-    	$db                = JFactory::getDBO();
+    	$db     = JFactory::getDBO();
+        /** @var $db JDatabaseMySQLi **/
+    	
+    	$tableImages     = $db->quoteName("#__vp_images");
+    	$columnProjectsId= $db->quoteName("projects_id");
+    	
         
     	$query ="
 	    	SELECT
 	    	   *
 	    	FROM
-	    	   `#__vp_images`
+	    	   $tableImages
 	        WHERE
-	            `projects_id`=" . (int)$id;
+	           $columnProjectsId =" . (int)$projectId;
     	
         $db->setQuery($query);
         $images = $db->loadAssocList();
-        
-        if ($db->getErrorNum()) {
-            throw new ItpException($db->getErrorMsg(),500);
-        }
         
         return $images;
     }

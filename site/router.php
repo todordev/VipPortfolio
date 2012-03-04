@@ -22,7 +22,7 @@ function VipPortfolioBuildRoute(&$query){
     $segments = array();
     
     // get a menu item based on Itemid or currently active
-    $app = JFactory::getApplication();
+    $app  = JFactory::getApplication();
     $menu = $app->getMenu();
     
     // we need a menu item.  Either the one specified in the query, or the current active one if none specified
@@ -99,6 +99,14 @@ function VipPortfolioBuildRoute(&$query){
  */
 function VipPortfolioParseRoute($segments){
     
+    /*
+    jimport('joomla.log.loggers.formattedtext');
+    $loggerOptions = array();
+    $entry     = new JLogEntry(var_export($segments, 1));
+    $logger    = new JLoggerFormattedText($loggerOptions);
+    $logger->addEntry($entry, JLog::DEBUG);
+    */
+    
     $query = array();
     
     //Get the active menu item.
@@ -107,7 +115,6 @@ function VipPortfolioParseRoute($segments){
     $menuItem   = $menu->getActive();
     
     $count      = count($segments);
-    
     $categoryAlias = null;
     
     if(!isset($menuItem)) {
@@ -127,6 +134,7 @@ function VipPortfolioParseRoute($segments){
         }
         
     }
+    
     
     /**** Categories ****/
     if(!isset($query['catid']) AND !empty($categoryAlias) ){

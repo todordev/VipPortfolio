@@ -14,7 +14,6 @@
 // no direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.log.loggers.formattedtext');
 require_once (JPATH_COMPONENT_ADMINISTRATOR . DS. "libraries" . DS ."itpinit.php");
 
 // Include dependencies

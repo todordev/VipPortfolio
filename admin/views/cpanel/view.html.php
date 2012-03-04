@@ -23,6 +23,7 @@ class VipPortfolioViewCpanel extends JView {
         JHtml::_('behavior.modal', 'a.modal');
         
         $this->addToolbar();
+        $this->setDocument();
         
         parent::display($tpl);
     }
@@ -36,4 +37,16 @@ class VipPortfolioViewCpanel extends JView {
         JToolBarHelper::title(JText::_("COM_VIPPORTFOLIO_CPANEL_TITLE"), 'vip-properties');
     }
 
+	/**
+	 * Method to set up the document properties
+	 *
+	 * @return void
+	 */
+	protected function setDocument() {
+	    
+		$document = JFactory::getDocument();
+		$document->setTitle(JText::_('COM_VIPPORTFOLIO_CPANEL_ADMINISTRATION'));
+		
+	}
+	
 }

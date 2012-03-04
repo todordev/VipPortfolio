@@ -14,7 +14,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.error.log');
+jimport('joomla.log.loggers.formattedtext');
 
 if(!defined("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR")) {
     define("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR", JPATH_ADMINISTRATOR . DS. "components" . DS ."com_vipportfolio");
@@ -31,3 +31,6 @@ JLoader::register("VpVersion",VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . DS . "libra
 
 // Register Component helpers
 JLoader::register("VpHelper",VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . DS . "helpers" . DS . "VpHelper.php");
+
+// Options of the loffer
+$registry = JRegistry::getInstance("loggerOptions");

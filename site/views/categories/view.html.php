@@ -60,8 +60,7 @@ class VipPortfolioViewCategories extends JView {
         $this->assignRef( "version",    new VpVersion() );
         
         $this->prepareLightBox();
-        
-        $this->_prepareDocument();
+        $this->prepareDocument();
                 
         parent::display($tpl);
     }
@@ -129,10 +128,9 @@ class VipPortfolioViewCategories extends JView {
     /**
      * Prepares the document
      */
-    protected function _prepareDocument(){
+    protected function prepareDocument(){
         $app = JFactory::getApplication();
         $menus = $app->getMenu();
-        $title = null;
         
         // Because the application sets a default page title,
         // we need to get it from the menu item itself
@@ -142,6 +140,8 @@ class VipPortfolioViewCategories extends JView {
         }else{
             $this->params->def('page_heading', JText::_('COM_VIPPORTFOLIO_CATEGORIES_DEFAULT_PAGE_TITLE'));
         }
+        
+        /*** Set page title ***/
         $title = $this->params->get('page_title', '');
         if(empty($title)){
             $title = $app->getCfg('sitename');
@@ -150,10 +150,12 @@ class VipPortfolioViewCategories extends JView {
         }
         $this->document->setTitle($title);
         
+        /*** Meta Description ***/
         if($this->params->get('menu-meta_description')){
             $this->document->setDescription($this->params->get('menu-meta_description'));
         }
         
+        /*** Meta keywords ***/
         if($this->params->get('menu-meta_keywords')){
             $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
         }

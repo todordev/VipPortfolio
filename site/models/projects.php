@@ -27,7 +27,12 @@ class VipPortfolioModelProjects extends JModelList {
      */
     public function __construct($config = array()){
         if(empty($config['filter_fields'])){
-            $config['filter_fields'] = array('id', 'a.id', 'title', 'a.title', 'description', 'a.description', 'url', 'a.url', 'thumb', 'a.thumb', 'image', 'a.image', 'catid', 'a.catid', 'published', 'a.published', 'ordering', 'a.ordering');
+            $config['filter_fields'] = array(
+            	'id', 'a.id', 'title', 
+            	'a.title', 'description', 'a.description', 
+            	'url', 'a.url', 'thumb', 'a.thumb', 'image', 
+            	'a.image', 'catid', 'a.catid', 'published', 
+            	'a.published', 'ordering', 'a.ordering');
         }
         
         parent::__construct($config);

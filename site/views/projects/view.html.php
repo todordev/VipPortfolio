@@ -85,7 +85,7 @@ class VipPortfolioViewProjects extends JView {
         $this->assignRef("version", new VpVersion());
         
         $this->prepareLightBox();
-        $this->_prepareDocument();
+        $this->prepareDocument();
         
         parent::display($tpl);
     }
@@ -159,20 +159,20 @@ class VipPortfolioViewProjects extends JView {
     /**
      * Prepares the document
      */
-    protected function _prepareDocument(){
+    protected function prepareDocument(){
         $app = JFactory::getApplication();
         
         $title = null;
         
         $categoryId = JRequest::getInt("catid");
-        $category = VpHelper::getCategory($categoryId);
+        $category   = VpHelper::getCategory($categoryId);
         
-        $menus = $app->getMenu();
+        $menus      = $app->getMenu();
         // Because the application sets a default page title,
         // we need to get it from the menu item itself
         $menu = $menus->getActive();
         
-        // Get page heading
+        /*** Set page heading ***/
         if(!$this->params->get("page_heading")){
             if(!empty($category) AND !empty($category->name)) {
                 $this->params->def('page_heading', $category->name);
@@ -185,7 +185,7 @@ class VipPortfolioViewProjects extends JView {
             }
         }
           
-        // Set a page title
+        /*** Set page title ***/
         $title = "";
         if(!$category) { // Uncategorised
             // Get title from the page title option
@@ -194,9 +194,11 @@ class VipPortfolioViewProjects extends JView {
             if(!$title) {
                 $title = $app->getCfg('sitename');
             }
+            
         } else{
             
             $title = $category->meta_title;
+            
             if(!$title){
                 // Get title from the page title option
                 $title = $this->params->get("page_title");
@@ -204,32 +206,37 @@ class VipPortfolioViewProjects extends JView {
                 if(!$title) {
                     $title = $app->getCfg('sitename');
                 }
-            }elseif($app->getCfg('sitename_pagetitles', 0)){
+                
+            }elseif($app->getCfg('sitename_pagetitles', 0)){ // Set site name if it is necessary ( the option 'sitename' = 1 )
                 $title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+                
             }
+            
         }
+        
         $this->document->setTitle($title);
         
-        // Meta Description
+        /*** Meta Description ***/
         if(!$category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_description'));
         } else {
             $this->document->setDescription($category->meta_desc);
         }
-        // Meta keywords
+        
+        /*** Meta keywords ***/
         if(!$category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_keywords'));
         } else {
             $this->document->setMetadata('keywords', $category->meta_keywords);
         }
         
-        // Canonical URL
+        /*** Canonical URL ***/
         if(!empty($category) AND !empty($category->meta_canonical)) {
            $cLink = '<link href="' . $category->meta_canonical . '" rel="canonical"  />';
            $this->document->addCustomTag($cLink);
         }
         
-        // Adds the category name into breadcrumbs
+        /*** Add the category name into breadcrumbs ***/
         if($this->params->get('cat_breadcrumbs')){
             
             if(!empty($categoryId) AND !empty($category->name)){
