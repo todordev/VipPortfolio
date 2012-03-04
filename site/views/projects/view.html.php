@@ -72,6 +72,10 @@ class VipPortfolioViewProjects extends JView {
                 $this->linealLayOut();
                 break;
             
+            case "scrollgallery":
+                $this->scrollgalleryLayout($layout);
+                break;
+                
             default:
                 
                 $layout = "default";
@@ -153,6 +157,20 @@ class VipPortfolioViewProjects extends JView {
             $this->assign('extraMax', $this->params->get("lExtraMax"));
         
         }
+    
+    }
+    
+    protected function scrollgalleryLayout($layout){
+        
+        $option = JRequest::getCmd("option");
+        $document = JFactory::getDocument();
+		
+        // Add template style
+        $this->document->addStyleSheet(JURI::base() . 'media/com_vipportfolio/projects/' . $layout . '/style.css', 'text/css', null);
+
+		// Add scripts
+		$document->addScript(JURI::root() . 'media/'.$option.'/scrollgallery/scrollGallery.js');
+		$document->addScript(JURI::root() . 'components/'.$option.'/views/projects/tmpl/scrollgallery.js');
     
     }
     

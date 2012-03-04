@@ -10,7 +10,7 @@
            <option value="1">JSHOW</option>
        </field>
        <field name="modalLib" type="list" default="native" label="COM_VIPPORTFOLIO_MODAL_LIBRARY" description="COM_VIPPORTFOLIO_MODAL_LIBRARY_DESC" >
-           <option value="native">Joomla! Native</option>
+           <option value="native">COM_VIPPORTFOLIO_CONFIG_JOOMLA_NATIVE</option>
            <option value="slimbox">Slimbox</option>
        </field>
 	</fieldset>
@@ -40,32 +40,43 @@
     
     <fieldset name="line" label="COM_VIPPORTFOLIO_PROJECTS_LINEAL" description="COM_VIPPORTFOLIO_PROJECTS_LINEAL_PARAMS">
         <field name="lModal" type="radio" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="lLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_IMAGE_LINK" description="COM_VIPPORTFOLIO_IMAGE_LINK_DESC" >
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="lTitleLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" >
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="lDisplayTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_TITLE" description="COM_VIPPORTFOLIO_SHOW_TITLE_DESC" >
-            <option value="0">Hide</option>
-            <option value="1">Show</option>
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
         <field name="lDisplayUrl" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_URL" description="COM_VIPPORTFOLIO_SHOW_URL_DESC" >
-            <option value="0">Hide</option>
-            <option value="1">Show</option>
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
         <field name="lExtraImage" type="radio" default="0"  label="COM_VIPPORTFOLIO_EXTRA_IMAGE" description="COM_VIPPORTFOLIO_EXTRA_IMAGE_DESC" >
-            <option value="0">Hide</option>
-            <option value="1">Show</option>
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
         <field name="lExtraMax" type="text" default="3" size="50" label="COM_VIPPORTFOLIO_EI_NUM" description="COM_VIPPORTFOLIO_EI_NUM_DESC" />
         <field name="lThumbWidth" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
         <field name="lThumbHeight" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+    </fieldset>
+    
+    <fieldset name="scrollgallery" label="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_TITLE" description="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_PARAMS">
+        <field name="sgDisplayCaption" type="radio" default="0"  label="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_CAPTION" description="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_CAPTION_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="sgImageWidth" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_WIDTH_DESC" />
+        <field name="sgImageHeight" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_HEIGHT_DESC" />
+        <field name="sgThumbWidth" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="sgThumbHeight" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
     </fieldset>
     
     <fieldset name="catslist" label="COM_VIPPORTFOLIO_CATEGORY_LIST_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_LIST_PARAMS">

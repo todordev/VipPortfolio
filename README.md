@@ -8,6 +8,7 @@ Changelog
 
 v3.1
 -----------
+* Added Scroll Gallery layout
 * Upgraded Slimbox JS library to 1.8
 * Fixed some bugs
 * Improved
