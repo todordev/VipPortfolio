@@ -39,7 +39,11 @@ class VipPortfolioControllerProject extends JController {
             $model = $this->getModel( "Project", "VipPortfolioModel" );
             $model->removeExtraImage($id);
             
-            $msg = JText::_( 'COM_VIPPORTFOLIO_IMAGE_DELETED' );
+            $response = array(
+            	"success" => true,
+                "title"=> JText::_( 'COM_VIPPORTFOLIO_SUCCESS' ),
+                "text" => JText::_( 'COM_VIPPORTFOLIO_IMAGE_DELETED' ),
+            );
 
         } catch ( Exception $e ) {
             
@@ -51,7 +55,7 @@ class VipPortfolioControllerProject extends JController {
             
         }
         
-        echo $msg;
+        echo json_encode($response);
     }
     
 

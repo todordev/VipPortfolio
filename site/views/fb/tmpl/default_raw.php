@@ -18,10 +18,11 @@ defined('_JEXEC') or die;?>
     <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8" />
       <link rel="stylesheet" href="<?php echo JURI::root();?>media/com_vipportfolio/css/fb.css" type="text/css" />
-      <link rel="stylesheet" href="<?php echo JURI::root();?>media/com_vipportfolio/lightface/css/LightFace.css" type="text/css" />
+      <link rel="stylesheet" href="<?php echo JURI::root();?>media/com_vipportfolio/js/lightface/css/LightFace.css" type="text/css" />
+      
       <script src="<?php echo JURI::root();?>media/system/js/mootools-core.js" type="text/javascript"></script>
-      <script src="<?php echo JURI::root();?>media/com_vipportfolio/lightface/LightFace.js" type="text/javascript"></script>
-      <script src="<?php echo JURI::root();?>media/com_vipportfolio/lightface/LightFace.Image.js" type="text/javascript"></script>
+      <script src="<?php echo JURI::root();?>media/com_vipportfolio/js/lightface/LightFace.js" type="text/javascript"></script>
+      <script src="<?php echo JURI::root();?>media/com_vipportfolio/js/lightface/LightFace.Image.js" type="text/javascript"></script>
       <script>
       window.addEvent('domready',function(){
 
@@ -31,6 +32,28 @@ defined('_JEXEC') or die;?>
                 modal.load(this.href,"Image Preview").open();
           });
       });
+
+      window.fbAsyncInit = function() {
+    	  FB.init({ 
+  	        appId: "<?php echo $this->params->get("fbpp_app_id", "");?>", 
+  	        cookie:true, 
+  	        status:true, 
+  	        xfbml:true,
+  	        oauth  : true
+  	     });
+
+    	  FB.Canvas.setAutoGrow();
+    	  
+      };
+
+      // Load the SDK Asynchronously
+      (function(d){
+         var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+         js = d.createElement('script'); js.id = id; js.async = true;
+         js.src = "//connect.facebook.net/en_US/all.js";
+         d.getElementsByTagName('head')[0].appendChild(js);
+       }(document));
+      
       </script>
     </head>
     <body>

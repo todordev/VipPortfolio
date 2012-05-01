@@ -13,21 +13,31 @@
 
 // no direct access
 defined('_JEXEC') or die;?>
-<div id="itp-vp-box">
-<?php
-jimport ('joomla.html.pane');
-
-if ($this->params->get("ctabsDisplayTips")){
-    // Loads the behaviors
-    JHTML::_('behavior.framework');
-    JHTML::_('behavior.tooltip');
-}
-
-$pane =& JPane::getInstance('Tabs');
-echo $pane->startPane('optionsPane');
-{
-
-?>
+<div class="itp-vp<?php echo $this->pageclass_sfx;?>">
+    <?php if ($this->params->get('show_page_heading', 1)) { ?>
+    <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
+    <?php } ?>
+    
+    <div class="itp-vp<?php echo $this->pageclass_sfx;?>">
+    <?php if ($this->params->get('show_page_heading', 1)) { ?>
+    <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
+    <?php } ?>
+    
+    <div class="itp-vp-box">
+    <?php
+    jimport ('joomla.html.pane');
+    
+    if ($this->params->get("ctabsDisplayTips")){
+        // Loads the behaviors
+        JHTML::_('behavior.framework');
+        JHTML::_('behavior.tooltip');
+    }
+    
+    $pane =& JPane::getInstance('Tabs');
+    echo $pane->startPane('optionsPane');
+    {
+    
+    ?>
     <?php foreach ( $this->items as $item ) {?>
         <?php 
         $id = JString::str_ireplace(" ", "_",JString::strtolower($item->name)).rand(1,500);
@@ -39,23 +49,30 @@ echo $pane->startPane('optionsPane');
 	        foreach ($this->projects[$item->id] as $project) {?>
 	           <?php if($project['thumb']) {?> 
 	            <div class="vp-ti">
-	            
-	            <?php // Start modal window 
-	               if ($this->params->get("ctabModal")) { ?>
-                    <a href="<?php echo JURI::root(); ?>media/vipportfolio/<?php echo $project['image'];?>" <?php echo sprintf($this->modalParams, "-item".$item->id);?> >
-                <?php } else {?>
-                    <a href="<?php echo JURI::root(); ?>media/vipportfolio/<?php echo $project['image'];?>" >
-                <?php }?>
-                   
-	            <img src="<?php echo JURI::root(); ?>media/vipportfolio/<?php echo $project['thumb'];?>" alt="<?php echo $project['title'];?>"
-	            <?php if($this->params->get("ctabsDisplayTips")){?> 
-	            class="hasTip" 
-	            title="<?php echo strip_tags($project['title']);?> :: <?php echo strip_tags($project['description']);?>"
-	            <?php }?>
-	            width="<?php echo $this->params->get("ctabsThumbWidth");?>" 
-                height="<?php echo $this->params->get("ctabsThumbHeight");?>" 
-	            />
-	            
+
+                <?php 
+                
+                // Initialize modal dialog
+                if(!$this->hasModal) { ?>
+                	<a href="<?php echo JURI::root(); ?>media/vipportfolio/<?php echo $project['image'];?>" >
+                <?php }else{
+                    
+                    if("slimbox" == $this->modalLib ) { 
+                        echo '<a href="'.  JURI::root().'media/vipportfolio/'.$project['image'].'" rel="lightbox-item'.$item->id.'" >';
+                    }else {
+                        echo '<a href="'.  JURI::root().'media/vipportfolio/'.$project['image'].'" class="vip-modal" rel="{handler: \'image\'}" >';
+                    }
+                }
+                ?>
+                
+    	            <img src="<?php echo JURI::root(); ?>media/vipportfolio/<?php echo $project['thumb'];?>" alt="<?php echo $project['title'];?>"
+    	            <?php if($this->params->get("ctabsDisplayTips")){?> 
+    	            class="hasTip" 
+    	            title="<?php echo strip_tags($project['title']);?> :: <?php echo strip_tags($project['description']);?>"
+    	            <?php }?>
+    	            width="<?php echo $this->params->get("ctabsThumbWidth");?>" 
+                    height="<?php echo $this->params->get("ctabsThumbHeight");?>" 
+    	            />
                 </a>
                 
 	            <?php if($this->params->get("ctabsDisplayTitle")) {?>
@@ -68,7 +85,7 @@ echo $pane->startPane('optionsPane');
 	            </h3>
 	            <?php }?>
 	            
-	            <?php if($this->params->get("ctabsDisplayInner")) {?></a>
+	            <?php if($this->params->get("ctabsDisplayInner")) {?>
 	            <div>
 	            <?php if($this->params->get("ctabsDisplayInnerTitle")){?>
 	            <h3>
@@ -100,9 +117,12 @@ echo $pane->startPane('optionsPane');
         
 		<?php echo $pane->endPanel(); ?>
     <?php } ?>
+        
+    <?php 
+    }
+    echo $pane->endPane();?>
+    </div>
+</div>
     
-<?php 
-}
-echo $pane->endPane();?>
 </div>
 <?php echo $this->version->url;?>

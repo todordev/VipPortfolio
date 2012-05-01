@@ -13,34 +13,24 @@
 
 // no direct access
 defined('_JEXEC') or die;?>
+
 <div class="itp-vp<?php echo $this->pageclass_sfx;?>">
     <?php if ($this->params->get('show_page_heading', 1)) { ?>
     <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
     <?php } ?>
     
-    <div id="itp-vp-box">
+    <div id="itp-vp-image-menu">
+        <ul>
         <?php foreach ( $this->items as $item ) {?>
-            <a href="<?php echo JRoute::_('index.php?option=com_vipportfolio&amp;view=projects&amp;layout=' . $this->projectLayout .'&amp;catid=' . $item->id);?>">
-            <?php if ( !empty( $item->image ) ) {?>
-                <img 
-                width="<?php echo $this->params->get("clistThumbWidth", 350); ?>" 
-                height="<?php echo $this->params->get("clistThumbHeight", 100); ?>" src="<?php echo JURI::root() . "media/vipportfolio/" . $item->image;?>" alt="<?php echo $item->name;?>" title="<?php echo $item->name;?>" />
-            <?php } else {?>
+            <li class="item<?php echo $item->id;?>">
+                <a href="<?php echo JRoute::_('index.php?option=com_vipportfolio&amp;view=projects&amp;layout=' . $this->projectLayout .'&amp;catid=' . $item->id);?>">
                 <?php echo $item->name;?>
-            <?php }?>
-            </a>
-        <?php } ?>
+                </a>
+            </li>
+        <?php }?>
+        </ul>
     </div>
     <div class="clear">&nbsp;</div>
-    <div class="pagination">
     
-        <?php if ($this->params->def('show_pagination_results', 1)) : ?>
-            <p class="counter">
-                <?php echo $this->pagination->getPagesCounter(); ?>
-            </p>
-        <?php endif; ?>
-    
-        <?php echo $this->pagination->getPagesLinks(); ?>
-    </div>
 </div>
 <?php echo $this->version->url;?>

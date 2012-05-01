@@ -24,6 +24,9 @@ jimport( 'joomla.application.component.controlleradmin' );
   */
 class VipPortfolioControllerCategories extends JControllerAdmin {
     
+    // Check the table in so it can be edited.... we are done with it anyway
+    private    $defaultLink = 'index.php?option=com_vipportfolio';
+    
     /**
      * @var     string  The prefix to use with controller messages.
      * @since   1.6
@@ -38,6 +41,12 @@ class VipPortfolioControllerCategories extends JControllerAdmin {
         
         $model = parent::getModel($name, $prefix, $config);
         return $model;
+    }
+    
+    public function backToControlPanel() {
+        
+        $this->setRedirect( JRoute::_($this->defaultLink, false) );
+        
     }
     
 }

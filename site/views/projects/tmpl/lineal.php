@@ -21,76 +21,26 @@ defined('_JEXEC') or die;?>
         <?php if($this->params->get("catDesc")) {?>
         <?php echo $this->category->desc; ?>
         <?php }?>
-    <?php if ( isset($this->item) ) { ?>
-    <div class="itp-vp-lbox" style="width: <?php echo $this->params->get('lThumbWidth', 300); ?>; height: <?php echo $this->params->get('lThumbHeight', 300); ?>;">
-        <?php if( !empty( $this->item->thumb ) ) { ?>
-        <div class="itp-vp-limage-box">
-    	   <?php if ($this->params->get("lLinkable")) {?>
-    		   <?php if ($this->params->get("lModal")) { ?>
-    		       <a href="media/vipportfolio/<?php echo $this->item->image;?>" <?php echo sprintf($this->modalParams, "");?> >
-    		   <?php } else { ?>
-    		       <a href="media/vipportfolio/<?php echo $this->item->image;?>" >   
-    		   <?php } ?>
-    	   <?php }?>
-    	
-    	   <?php if ($this->params->get("lModal") AND !$this->params->get("lLinkable") ) {?>
-              <a href="media/vipportfolio/<?php echo $this->item->image;?>" <?php echo sprintf($this->modalParams, "");?> >
-            <?php }?>
-    		<img
-    		width="<?php echo $this->params->get('lThumbWidth', 300); ?>" height="<?php echo $this->params->get('lThumbHeight', 300); ?>" 
-    		src="media/vipportfolio/<?php echo $this->item->thumb;?>" 
-    		alt="<?php echo htmlentities( strip_tags($this->item->title), ENT_QUOTES,"UTF-8" );?>" 
-    		title="<?php echo htmlentities( strip_tags($this->item->title), ENT_QUOTES,"UTF-8" );?>" 
-    		/>  
-    		<?php if ($this->params->get("lModal") AND !$this->params->get("lLinkable") ) {?>
-              </a>
-            <?php }?>
-            
-    	    <?php if ($this->params->get("lLinkable")) {?>
-    		</a>
-    		<?php } ?>
-    		
-    		<div class="itp-vp-extra-image">
-             <?php 
-             if (isset($this->extraImages[$this->item->id]) AND !empty($this->extraImages[$this->item->id])){
-                  $i = 0;
-                 foreach($this->extraImages[$this->item->id] as $eImage){?>
-                  
-                    <a href="media/vipportfolio/<?php echo $eImage['name'];?>" <?php echo sprintf($this->modalParams, "-item".$this->item->id);?> >
-                        <img
-                        width="48" height="48" 
-                        src="media/vipportfolio/ethumb_<?php echo $eImage['name'];?>" 
-                        alt="" 
-                        title="" 
-                        />  
-                    </a>
-                    
-                 <?php
-                  $i++;
-                  if($i==$this->extraMax){ break; }
-                 }
-             }?>
-            </div>
-            
-        </div>
-        <?php } ?>
-        <div class="itp-vp-ltext-box">
-        <?php if ($this->params->get("lDisplayTitle")) {?>
-         <h3 class="itp-vp-ltitle" >
-         <?php if($this->params->get("lTitleLinkable") AND $this->item->url ) { ?>
-         <a href="<?php echo $this->item->url;?>"><?php echo $this->item->title;?></a>
-         <?php } else { ?>
-         <?php echo $this->item->title;?>
-         <?php }?>
-         </h3>
-        <?php }?>
-        <p><?php echo $this->item->description;?></p>
-        <?php if ($this->params->get("lDisplayUrl")) {?>
-        <a href="<?php echo $this->item->url;?>" title="<?php echo $this->item->title;?>" ><?php echo $this->item->url;?></a>
-        <?php }?>
         
-        </div>
-    </div>
+    <?php if ( isset($this->item) ) { ?>
+    
+    <?php 
+    if($this->hasModal) {
+        switch($this->modalLib) {
+            case "slimbox":
+                echo $this->loadTemplate("slimbox");
+                break;
+                
+            default: // Native modal
+                echo $this->loadTemplate("nativemodal");
+                break;
+        }
+    } else {
+        echo $this->loadTemplate("nomodal");
+    }
+    
+    ?>
+    
     <div class="pagination">
     
         <?php if ($this->params->def('show_pagination_results', 1)) : ?>

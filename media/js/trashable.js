@@ -25,7 +25,26 @@ var trashCan = new Class({
         onDrop: function(el,droppable) {
           if(droppable) {
         	el.preventDefault = true;
-        	var myRequest = new Request({url: this.options.taskUrl});
+        	var myRequest = new Request({
+        		url: this.options.taskUrl,
+        		onSuccess: function(responseText) {
+        			
+        			var object = JSON.decode(responseText);
+        			
+        			if(object.success) {
+        				var icon = 'message_class_ok.png';
+        			} else {
+        				var icon = 'message_class_warning.png';
+        			}
+        			new Message({
+        				iconPath: '/media/com_vipportfolio/images/',
+        				icon: icon,
+        				title: object.title,
+        				message: object.text
+        			}).say();
+        			
+        		}
+    		});
         	var uri = 'id=' + el.id;
         	myRequest.post(uri);
             drag.dispose();

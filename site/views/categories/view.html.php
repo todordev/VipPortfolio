@@ -24,6 +24,8 @@ class VipPortfolioViewCategories extends JView {
     
     public function display($tpl = null) {
         
+        $option     = JRequest::getCmd("option", "com_vipportfolio", "GET");
+        
         // Initialise variables
         $state      = $this->get('State');
         $items      = $this->get('Items');
@@ -38,35 +40,39 @@ class VipPortfolioViewCategories extends JView {
         $this->assignRef('items', $items);
         $this->assignRef('pagination', $pagination);
         
-        $layout = $this->getLayout();
-
         $this->assign('projectLayout', JRequest::getCmd("project_layout", "default"));
+        
+        $layout = $this->getLayout();
         
     	switch( $layout ) {
             case "tabbed":
-                // Add template style
-                $this->document->addStyleSheet( JURI::base() . 'media/com_vipportfolio/categories/' . $layout . '/style.css', 'text/css', null );
-        
-                $this->tabbedLayout();
+                $this->tabbedLayout($layout, $option);
+                break;
+
+            case "imagemenu":
+                $this->imagemenuLayout($layout, $option);
                 break;
                 
     		default:
     			$layout =   "default";
     			// Add template style
-                $this->document->addStyleSheet( JURI::base() . 'media/com_vipportfolio/categories/' . $layout . '/style.css', 'text/css', null );
+                $this->document->addStyleSheet( JURI::base() . 'media/'.$option.'/categories/' . $layout . '/style.css', 'text/css', null );
     			break;
     	}
         
         $this->assignRef( "version",    new VpVersion() );
         
-        $this->prepareLightBox();
+        $this->prepareLightBox($option);
         $this->prepareDocument();
                 
         parent::display($tpl);
     }
     
-    protected function tabbedLayout() {
+    protected function tabbedLayout($layout, $option) {
         
+        // Add template style
+        $this->document->addStyleSheet( JURI::base() . 'media/'.$option.'/categories/' . $layout . '/style.css', 'text/css', null );
+                
         // Only loads projects from the published categories
         foreach ($this->items as $item){
             $categories[] = $item->id;
@@ -81,48 +87,78 @@ class VipPortfolioViewCategories extends JView {
         }
         
         $this->assignRef('projects',    $projects);
+        
+    }
+    
+    protected function imagemenuLayout($layout, $option) {
+        
+        // Add template style
+        $this->document->addStyleSheet( JURI::base() . 'media/'.$option.'/categories/' . $layout . '/style.css', 'text/css', null );
+        $this->document->addScript(JURI::root() . 'media/'.$option.'/js/imagemenu/ImageMenu.js');
+        
+        $cssStyles = "";
+        foreach($this->items as $item) {
+            $cssStyles .= "
+            #itp-vp-image-menu ul li.item" .$item->id."  a {
+                background: url('".JURI::root() . "media/vipportfolio/" . $item->image."') repeat scroll 0%;
+            }
+            ";
+        }
+        if(!empty($cssStyles)) {
+            $this->document->addStyleDeclaration($cssStyles);
+        }
+        
+        $js = "window.addEvent('domready', function(){
+    	  var myMenu = new ImageMenu(
+    	    $$('#itp-vp-image-menu a'),{
+        	    openWidth:" . $this->params->get("cimgmenuOpenWidth", 310) .", 
+        	    border:" . $this->params->get("cimgmenuBorder", 2).", 
+        	    duration:" .  $this->params->get("cimgmenuDuration", 400).", 
+    	    	OnClickOpen:function(e,i){ 
+        	     window.location = e;
+        	    }
+    	    });
+        });";
+        
+        $this->document->addScriptDeclaration($js);
                 
     }
     
-    protected function prepareLightBox() {
+    protected function prepareLightBox($option) {
         
-        $modalParams = "";
-        $layout = $this->getLayout();
-        $isModal = false;
+        $modalParams    = "";
+        $layout         = $this->getLayout();
+        $hasModal       = false;
         
         switch($layout) {
             case "tabbed":
-                $isModal = (bool)$this->params->get("ctabModal");
+                $hasModal = (bool)$this->params->get("ctabModal");
                 break;
             default:
                 break;
         }
         
-        switch($this->params->get("modalLib")) {
-            
-            case "slimbox":
-                if ($isModal) {
+        if ($hasModal) {
+            switch($this->params->get("modalLib")) {
+                
+                case "slimbox":
+                    
                     JHTML::_('behavior.framework');
                     
-                    $document = JFactory::getDocument();
-                    /* @var $document JDocumentHTML */
-                    $document->addStyleSheet(JURI::root() . 'media/com_vipportfolio/slimbox/css/slimbox.css');
-                    $document->addScript(JURI::root() . 'media/com_vipportfolio/slimbox/slimbox.js');
+                    $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/js/slimbox/css/slimbox.css');
+                    $this->document->addScript(JURI::root() . 'media/'.$option.'/js/slimbox/slimbox.js');
                     
-                    $modalParams = 'rel="lightbox%s"';
-                }
-                break;
-            
-            default: // Joomla! native
-                if ($isModal) {
+                    break;
+                
+                default: // Joomla! native
                     // Adds a JavaScript needs for modal windows
                     JHTML::_('behavior.modal', 'a.vip-modal');
-                    $modalParams = 'class="vip-modal" rel="{handler: \'image\'}"';
-                }
-                break;
+                    break;
+            }
         }
         
-        $this->assign("modalParams", $modalParams);
+        $this->assign("hasModal", $hasModal);
+        $this->assign("modalLib", $this->params->get("modalLib"));
     }
     
     /**

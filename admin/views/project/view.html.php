@@ -89,19 +89,20 @@ class VipPortfolioViewProject extends JView {
         JHtml::_('behavior.tooltip');
         JHtml::_('behavior.formvalidation');
         
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_VIPPORTFOLIO_PROJECT_ADMINISTRATION'));
+		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_PROJECT_ADMINISTRATION'));
         
         // Add styles
-        $document->addStyleSheet(JURI::root() . 'media/'.$option.'/slimbox/css/slimbox.css');
+        $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/slimbox/css/slimbox.css');
+        $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/js/messageclass/message.css');
         
         // Add JS libraries
-        $document->addScript(JURI::root() . 'media/'.$option.'/js/trashable.js');
-        $document->addScript(JURI::root() . 'media/'.$option.'/slimbox/slimbox.js');
+        $this->document->addScript(JURI::root() . 'media/'.$option.'/js/trashable.js');
+        $this->document->addScript(JURI::root() . 'media/'.$option.'/js/messageclass/message.js');
+        $this->document->addScript(JURI::root() . 'media/'.$option.'/slimbox/slimbox.js');
         
 		// Add scripts
-		$document->addScript(JURI::root() . 'administrator/components/'.$option.'/models/forms/'.$this->getName().'.js');
-		$document->addScript(JURI::root() . 'administrator/components/'.$option.'/views/'.$this->getName().'/submitbutton.js');
+		$this->document->addScript(JURI::root() . 'administrator/components/'.$option.'/models/forms/'.$this->getName().'.js');
+		$this->document->addScript(JURI::root() . 'administrator/components/'.$option.'/views/'.$this->getName().'/submitbutton.js');
         
 	}
 

@@ -6,6 +6,8 @@
 .icon-48-vip-settings 	    { background-image: url(../images/settings_48.png); }
 .icon-48-vip-properties 	{ background-image: url(../images/properties_48.png); }
 
+.icon-32-vip-properties-back { background-image: url(../images/properties_back_32.png); }
+
 #itp-cpanel {
       width: 400px;
       height: 400px;

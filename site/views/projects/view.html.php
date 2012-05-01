@@ -31,6 +31,7 @@ class VipPortfolioViewProjects extends JView {
         
         // Check for valid category
         $categoryId = JRequest::getInt("catid", 0, "GET");
+        $option     = JRequest::getCmd("option", "com_vipportfolio", "GET");
         
         if(!empty($categoryId)){
             // Checking for published category
@@ -45,7 +46,7 @@ class VipPortfolioViewProjects extends JView {
         $items      = $this->get('Items');
         $pagination = $this->get('Pagination');
     
-        $params     = &$state->params;
+        $params     = $state->params;
         
         if($params->get("catDesc")) {
             $category = VpHelper::getCategory($categoryId);
@@ -64,78 +65,75 @@ class VipPortfolioViewProjects extends JView {
         switch($layout){
             
             case "lineal":
-                
-                // Add template style
-                $this->document->addStyleSheet(JURI::base() . 'media/com_vipportfolio/projects/' . $layout . '/style.css', 'text/css', null);
-                
                 $this->assignRef('item', JArrayHelper::getValue($this->items, 0));
-                $this->linealLayOut();
+                $this->linealLayout($layout, $option);
                 break;
             
             case "scrollgallery":
-                $this->scrollgalleryLayout($layout);
+                $this->scrollgalleryLayout($layout, $option);
                 break;
                 
             default:
                 
                 $layout = "default";
-                // Add template style
-                $this->document->addStyleSheet(JURI::root() . 'media/com_vipportfolio/projects/' . $layout . '/style.css', 'text/css');
-                $this->defaultLayout();
+                $this->defaultLayout($layout, $option);
                 
                 break;
         }
         
         $this->assignRef("version", new VpVersion());
         
-        $this->prepareLightBox();
+        $this->prepareLightBox($option);
         $this->prepareDocument();
         
         parent::display($tpl);
     }
     
-    protected function prepareLightBox() {
+    protected function prepareLightBox($option) {
         
         $modalParams = "";
-        $layout = $this->getLayout();
-        $isModal = false;
+        $layout      = $this->getLayout();
+        $hasModal    = false;
         
         switch($layout) {
             case "lineal":
-                $isModal = (bool)$this->params->get("lModal");
+                $hasModal = (bool)$this->params->get("lModal");
                 break;
             default:
-                $isModal = (bool)$this->params->get("modal");
+                $hasModal = (bool)$this->params->get("modal");
                 break;
         }
         
-        switch($this->params->get("modalLib")) {
-            
-            case "slimbox":
-                if ($isModal) {
-                    JHTML::_('behavior.framework');
+        if ($hasModal) {
+            switch($this->params->get("modalLib")) {
+                
+                case "slimbox":
                     
-                    $this->document->addStyleSheet(JURI::root() . 'media/com_vipportfolio/slimbox/css/slimbox.css');
-                    $this->document->addScript(JURI::root() . 'media/com_vipportfolio/slimbox/slimbox.js');
+                        JHTML::_('behavior.framework');
+                        
+                        $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/js/slimbox/css/slimbox.css');
+                        $this->document->addScript(JURI::root() . 'media/'.$option.'/js/slimbox/slimbox.js');
+                        
+                    break;
+                
+                default: // Joomla! native
                     
-                    $modalParams = 'rel="lightbox%s"';
-                }
-                break;
-            
-            default: // Joomla! native
-                if ($isModal) {
-                    // Adds a JavaScript needs for modal windows
-                    JHTML::_('behavior.modal', 'a.vip-modal');
-                    $modalParams = 'class="vip-modal" rel="{handler: \'image\'}"';
-                }
-                break;
+                        // Adds a JavaScript needs for modal windows
+                        JHTML::_('behavior.modal', 'a.vip-modal');
+                    
+                    break;
+            }
         }
         
-        $this->assign("modalParams", $modalParams);
+        $this->assign("hasModal", $hasModal);
+        $this->assign("modalLib", $this->params->get("modalLib"));
     }
     
-    protected function defaultLayout(){
+    protected function defaultLayout($layout, $option){
         
+        // Add template style
+        $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/projects/' . $layout . '/style.css', 'text/css');
+                
         if($this->params->get("extra_image")){
             foreach($this->items as $item){
                 // Extra Images
@@ -147,8 +145,11 @@ class VipPortfolioViewProjects extends JView {
     
     }
     
-    protected function linealLayOut(){
+    protected function linealLayout($layout, $option){
         
+        // Add template style
+        $this->document->addStyleSheet(JURI::base() . 'media/'. $option. '/projects/' . $layout . '/style.css', 'text/css', null);
+                
         if($this->params->get("lExtraImage") AND isset($this->item)){
             // Extra Images
             $extraImages[$this->item->id] = VpHelper::getExtraImages($this->item->id);
@@ -160,17 +161,14 @@ class VipPortfolioViewProjects extends JView {
     
     }
     
-    protected function scrollgalleryLayout($layout){
+    protected function scrollgalleryLayout($layout, $option){
         
-        $option = JRequest::getCmd("option");
-        $document = JFactory::getDocument();
-		
         // Add template style
-        $this->document->addStyleSheet(JURI::base() . 'media/com_vipportfolio/projects/' . $layout . '/style.css', 'text/css', null);
+        $this->document->addStyleSheet(JURI::base() . 'media/'. $option. '/projects/' . $layout . '/style.css', 'text/css', null);
 
 		// Add scripts
-		$document->addScript(JURI::root() . 'media/'.$option.'/scrollgallery/scrollGallery.js');
-		$document->addScript(JURI::root() . 'components/'.$option.'/views/projects/tmpl/scrollgallery.js');
+		$this->document->addScript(JURI::root() . 'media/'.$option.'/js/scrollgallery/scrollGallery.js');
+		$this->document->addScript(JURI::root() . 'components/'.$option.'/views/projects/tmpl/scrollgallery.js');
     
     }
     
@@ -178,9 +176,9 @@ class VipPortfolioViewProjects extends JView {
      * Prepares the document
      */
     protected function prepareDocument(){
-        $app = JFactory::getApplication();
-        
-        $title = null;
+
+        $title      = "";
+        $app        = JFactory::getApplication();
         
         $categoryId = JRequest::getInt("catid");
         $category   = VpHelper::getCategory($categoryId);
@@ -188,7 +186,7 @@ class VipPortfolioViewProjects extends JView {
         $menus      = $app->getMenu();
         // Because the application sets a default page title,
         // we need to get it from the menu item itself
-        $menu = $menus->getActive();
+        $menu       = $menus->getActive();
         
         /*** Set page heading ***/
         if(!$this->params->get("page_heading")){
@@ -204,7 +202,6 @@ class VipPortfolioViewProjects extends JView {
         }
           
         /*** Set page title ***/
-        $title = "";
         if(!$category) { // Uncategorised
             // Get title from the page title option
             $title = $this->params->get("page_title");

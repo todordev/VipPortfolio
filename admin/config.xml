@@ -95,12 +95,12 @@
             <option value="1">JYES</option>
         </field>
         <field name="ctabsDisplayTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_TITLE" description="COM_VIPPORTFOLIO_SHOW_TITLE_DESC" >
-            <option value="0">JHIDE</option>
-            <option value="1">JSHOW</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="ctabsDisplayTips" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_TIPS" description="COM_VIPPORTFOLIO_DISPLAY_TIPS_DESC" >
-            <option value="0">JHIDE</option>
-            <option value="1">JSHOW</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="ctabsDisplayInnerTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_INNER_TITLE" description="COM_VIPPORTFOLIO_DISPLAY_INNER_TITLE_DESC" >
             <option value="0">JHIDE</option>
@@ -120,7 +120,14 @@
         <field name="ctabsThumbHeight" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
     </fieldset>
     
+    <fieldset name="catsimgmenu" label="COM_VIPPORTFOLIO_CATEGORY_IMAGEMENU_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_IMAGEMENU_PARAMS">
+        <field name="cimgmenuOpenWidth" type="text" default="310" size="50" label="COM_VIPPORTFOLIO_OPEN_WIDTH" description="COM_VIPPORTFOLIO_OPEN_WIDTH_DESC" />
+        <field name="cimgmenuBorder" type="text" default="2" size="50" label="COM_VIPPORTFOLIO_BORDER" description="COM_VIPPORTFOLIO_BORDER_DESC" />
+        <field name="cimgmenuDuration" type="text" default="400" size="50" label="COM_VIPPORTFOLIO_DURATION" description="COM_VIPPORTFOLIO_DURATION_DESC" />
+    </fieldset>
+    
     <fieldset name="fblist" label="COM_VIPPORTFOLIO_PROJECTS_FBLIST_TITLE" description="COM_VIPPORTFOLIO_PROJECTS_FBLIST_PARAMS">
         <field name="fbpp_page" type="text" default="10" size="50" label="COM_VIPPORTFOLIO_PP_PAGE" description="COM_VIPPORTFOLIO_PP_PAGE_DESC" />
+        <field name="fbpp_app_id" type="text" default="" size="50" label="COM_VIPPORTFOLIO_APP_ID" description="COM_VIPPORTFOLIO_APP_ID_DESC" />
     </fieldset>
 </config>

@@ -18,10 +18,10 @@ defined('_JEXEC') or die;?>
     <head>
       <meta http-equiv="content-type" content="text/html; charset=utf-8" />
       <link rel="stylesheet" href="<?php echo JURI::root();?>media/com_vipportfolio/css/fb.css" type="text/css" />
-      <link rel="stylesheet" href="<?php echo JURI::root();?>media/com_vipportfolio/lightface/css/LightFace.css" type="text/css" />
+      <link rel="stylesheet" href="<?php echo JURI::root();?>media/com_vipportfolio/js/lightface/css/LightFace.css" type="text/css" />
       <script src="<?php echo JURI::root();?>media/system/js/mootools-core.js" type="text/javascript"></script>
-      <script src="<?php echo JURI::root();?>media/com_vipportfolio/lightface/LightFace.js" type="text/javascript"></script>
-      <script src="<?php echo JURI::root();?>media/com_vipportfolio/lightface/LightFace.Image.js" type="text/javascript"></script>
+      <script src="<?php echo JURI::root();?>media/com_vipportfolio/js/lightface/LightFace.js" type="text/javascript"></script>
+      <script src="<?php echo JURI::root();?>media/com_vipportfolio/js/lightface/LightFace.Image.js" type="text/javascript"></script>
       <script>
       window.addEvent('domready',function(){
 

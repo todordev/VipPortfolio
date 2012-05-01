@@ -12,7 +12,8 @@
  */
 
 // no direct access
-defined('_JEXEC') or die;?>
+defined('_JEXEC') or die;
+?>
 <div id="itp-vp<?php echo $this->pageclass_sfx;?>">
     <?php if ($this->params->get('show_page_heading', 1)) { ?>
     <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
@@ -21,72 +22,24 @@ defined('_JEXEC') or die;?>
     <?php if($this->params->get("catDesc")) {?>
     <?php   if(!empty($this->category)) { echo $this->category->desc; }; ?>
     <?php }?>
-    <?php foreach ( $this->items as $item ) {?>
-    <div class="itp-vp-box" style="width: <?php echo $this->params->get('thumb_width', 200); ?>; height: <?php echo $this->params->get('thumb_height', 200); ?>;">
-        <?php if( !empty( $item->thumb ) ) { ?>
-        <div class="itp-vp-image-box">
-           <?php if ($this->params->get("image_linkable")) {?>
-               <?php if ($this->params->get("modal")) { ?>
-                   <a href="media/vipportfolio/<?php echo $item->image;?>"  <?php echo sprintf($this->modalParams, "");?> >
-               <?php } else { ?>
-                   <a href="media/vipportfolio/<?php echo $item->image;?>" >   
-               <?php } ?>
-           <?php }?>
-        
-           <?php if ($this->params->get("modal") AND !$this->params->get("image_linkable") ) {?>
-              <a href="media/vipportfolio/<?php echo $item->image;?>" class="vip-modal" rel="{handler: 'image'}" >
-            <?php }?>
-            <img
-            width="<?php echo $this->params->get('thumb_width', 200); ?>" height="<?php echo $this->params->get('thumb_height', 200); ?>" 
-            src="<?php echo "media/vipportfolio/" . $item->thumb;?>" 
-            alt="<?php echo htmlentities( strip_tags($item->title), ENT_QUOTES,"UTF-8" );?>" 
-            title="<?php echo htmlentities( strip_tags($item->title), ENT_QUOTES,"UTF-8" );?>" 
-            />  
-            <?php if ($this->params->get("modal") AND !$this->params->get("image_linkable")) {?>
-              </a>
-            <?php }?>
-            
-            <?php if ($this->params->get("image_linkable")) {?>
-            </a>
-            <?php } ?>
-            
-            <?php if(isset($this->extraImages)){?>
-            <div class="itp-vp-extra-image">
-             <?php 
-             if (isset($this->extraImages[$item->id]) AND !empty($this->extraImages[$item->id])){
-                  $i = 0;
-                 foreach($this->extraImages[$item->id] as $eImage){?>
-                  
-                    <a href="media/vipportfolio/<?php echo $eImage['name'];?>" <?php echo sprintf($this->modalParams, "-item".$item->id);?> >
-                        <img
-                        width="48" height="48" 
-                        src="media/vipportfolio/ethumb_<?php echo $eImage['name'];?>" 
-                        alt="" 
-                        title="" 
-                        />  
-                    </a>
-                    
-                 <?php
-                  $i++;
-                  if($i==$this->extraMax){ break; }
-                 }
-             }?>
-            </div>
-            <?php }?>
-        </div>
-        <?php } ?>
-        <div class="itp-vp-text-box">
-         <h3 class="itp-vp-title" >
-         <?php if($this->params->get("title_linkable") AND $item->url) { ?>
-         <a href="<?php echo $item->url;?>"><?php echo $item->title;?></a>
-         <?php }else{?>
-         <?php echo $item->title;?>
-         <?php }?>
-         </h3>
-        <p><?php echo $item->description;?></p>
-        </div>
-    </div>
-    <?php }?>
+    
+    <?php 
+    
+    if($this->hasModal) {
+        switch($this->modalLib) {
+            case "slimbox":
+                echo $this->loadTemplate("slimbox");
+                break;
+                
+            default: // Native modal
+                echo $this->loadTemplate("nativemodal");
+                break;
+        }
+    } else {
+        echo $this->loadTemplate("nomodal");
+    }
+    
+    ?>
     <div class="pagination">
     
         <?php if ($this->params->def('show_pagination_results', 1)) : ?>

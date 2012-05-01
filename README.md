@@ -1,10 +1,17 @@
 Vip Portfolio for Joomla! 
 ==========================
-( Version 3.1 )
+( Version 3.2 )
 --------------------------
 
 Changelog
 ---------
+
+v3.2
+-----------
+* Added Image Menu Category layout
+* Fixed bug when delete images
+* Added "auto grow" to Facebook layout
+* Improved
 
 v3.1
 -----------

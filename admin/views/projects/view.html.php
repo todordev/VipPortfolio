@@ -69,6 +69,8 @@ class VipPortfolioViewProjects extends JView {
         JToolBarHelper::unpublishList("projects.unpublish");
         JToolBarHelper::divider();
         JToolBarHelper::deleteList(JText::_("COM_VIPPORTFOLIO_DELETE_ITEMS_QUESTION"), "projects.delete");
+        JToolBarHelper::divider();
+        JToolBarHelper::custom('projects.backToControlPanel', "vip-properties-back", "", JText::_("COM_VIPPORTFOLIO_BACK"), false);
         
     }
     
