@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined( '_JEXEC' ) or die;
 
 jimport( 'joomla.application.component.modellist' );
 
@@ -59,9 +59,6 @@ class VipPortfolioModelProjects extends JModelList {
      */
     protected function populateState($ordering = null, $direction = null) {
         
-        // Initialise variables.
-        $app = JFactory::getApplication('administrator');
-
         // Load the filter state.
         $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
         $this->setState('filter.search', $search);
@@ -70,7 +67,7 @@ class VipPortfolioModelProjects extends JModelList {
         $this->setState('filter.published', $published);
 
         // Load the component parameters.
-        $params = JComponentHelper::getParams('com_vipportfolio');
+        $params = JComponentHelper::getParams($this->option);
         $this->setState('params', $params);
 
         // List state information.
@@ -93,7 +90,6 @@ class VipPortfolioModelProjects extends JModelList {
         // Compile the store id.
         $id.= ':' . $this->getState('filter.search');
         $id.= ':' . $this->getState('filter.published');
-//        $id.= ':' . $this->getState('filter.id');
 
         return parent::getStoreId($id);
     }

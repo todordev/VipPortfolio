@@ -24,6 +24,9 @@ defined('_JEXEC') or die;
 		<td >
 			<a href="index.php?option=com_vipportfolio&amp;view=category&amp;layout=edit&amp;id=<?php echo $item->id;?>" ><?php echo $item->name; ?></a>
 		</td>
+		<td class="center">
+			( <?php echo JArrayHelper::getValue($this->numbers, $item->id, 0); ?> )
+		</td>
 		<td class="order">
             <?php
             $disabled = $this->saveOrder ?  '' : 'disabled="disabled"';

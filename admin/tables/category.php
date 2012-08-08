@@ -11,13 +11,12 @@
  * other free or open source software licenses.
  */
 
-defined('_JEXEC') or die('Restricted access');
+// No direct access
+defined('_JEXEC') or die;
 class VipPortfolioTableCategory extends JTable {
     
     public function __construct( $db ) {
-        
         parent::__construct( '#__vp_categories', 'id', $db );
-        
     }
     
 }

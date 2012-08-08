@@ -1,10 +1,25 @@
 Vip Portfolio for Joomla! 
 ==========================
-( Version 3.2 )
+( Version 3.1 )
 --------------------------
 
 Changelog
 ---------
+
+v3.3
+----------
+
+* New options
+  - Images directory
+  - Options for images resizing
+  
+* Options changed
+  - Removed the options where you select the modal box type
+  - Replaced is the option that turns on and off the modal box. Now you can choose the type of modal window.
+  
+* Removed PHP Thumb library. The image will be resized by JImage object
+* Improved deleting categories
+* Improved
 
 v3.2
 -----------

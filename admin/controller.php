@@ -11,8 +11,8 @@
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+// no direct access
+defined('_JEXEC') or die;
 
 jimport( 'joomla.application.component.controller' );
 
@@ -24,21 +24,23 @@ jimport( 'joomla.application.component.controller' );
   */
 class VipPortfolioController extends JController {
     
+    protected $option;
+    
 	public function __construct($config = array())	{
 		parent::__construct($config);
-		
+        $this->option = JFactory::getApplication()->input->getCmd("option");
 	}
 
 	public function display( ) {
 
-		$document =& JFactory::getDocument();
-		/* @var $document JDocumentHtml */
+		$document = JFactory::getDocument();
+		/** @var $document JDocumentHtml **/
 		
 		// Add component style
-        $document->addStyleSheet(JURI::root() . 'media/com_vipportfolio/css/vipportfolio.css', 'text/css');
+        $document->addStyleSheet('../media/'.$this->option.'/css/style.css');
         
-        $viewName      = JRequest::getCmd('view', 'cpanel');
-        JRequest::setVar("view", $viewName);
+        $viewName      = JFactory::getApplication()->input->getCmd('view', 'cpanel');
+        JFactory::getApplication()->input->set("view", $viewName);
 
         parent::display();
         return $this;

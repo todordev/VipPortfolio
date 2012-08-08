@@ -15,42 +15,8 @@
  * It is Vip Portfolio helper class
  *
  */
-class VpHelper {
+class VipPortfolioHelper {
 	
-    public static function createFolder($folder){
-        
-        if(!$folder) {
-            return false;
-        }
-        
-        // Create user folder
-        if(true !== JFolder::create($folder)) {
-           
-            $registry = JRegistry::getInstance("loggerOptions");
-            $loggerOptions = $registry->toArray();
-            
-            $entry     = new JLogEntry("The system could not create folder:" . $folder);
-            $logger    = new JLoggerFormattedText($loggerOptions);
-            $logger->addEntry($entry, JLog::ALERT);
-            return false;
-        }
-        
-        // Copy index.html
-        $indexFile = $folder . DS ."index.html";
-        $html = '<html><body bgcolor="#FFFFFF"></body></html>';
-        if(true !== JFile::write($indexFile,$html)) {
-            $registry = JRegistry::getInstance("loggerOptions");
-            $loggerOptions = $registry->toArray();
-            
-            $entry     = new JLogEntry("The system could not save index.html to : " . $folder);
-            $logger    = new JLoggerFormattedText($loggerOptions);
-            $logger->addEntry($entry, JLog::ALERT);
-            return false;
-        }
-        
-        return true;
-    }
-    
 	/**
 	 * Get all categories
 	 * 
@@ -59,13 +25,12 @@ class VpHelper {
     public static function getCategories($index = "id") {
     	
     	$db              = JFactory::getDBO();
-    	$tableCategories = $db->quoteName("#__vp_categories");
+    	/** @var $db JDatabaseMySQLi **/
     	
-    	$query = "
-    	   SELECT
-    	       *
-   	       FROM
-   	           " .$tableCategories;
+    	$query = $db->getQuery(true);
+    	$query
+    	    ->select("*")
+    	    ->from("#__vp_categories");
     	
     	$db->setQuery($query);
     	
@@ -77,6 +42,8 @@ class VpHelper {
      * 
      * @params  integer  Category Id
      * @return array Associative array
+     * 
+     * @return mixed object or null
      */
     public static function getCategory($categoryId) {
         
@@ -97,8 +64,11 @@ class VpHelper {
               ->where($columnId." = ". (int)$categoryId);
     	
         $db->setQuery($query);
-        
         $category = $db->loadObject();
+        
+        if(!$category) {
+            $category = null;
+        }
         
         return $category;
     }
@@ -106,6 +76,8 @@ class VpHelper {
     /**
      * Gets the category name
      * @param integer $id Category Id
+     * 
+     * @return string
      */
     public static function getCategoryName($id) {
     	
@@ -114,15 +86,17 @@ class VpHelper {
     	$columnId         = $db->quoteName("id");
     	$columnName       = $db->quoteName("name");
     	
-        $query = "
-           SELECT
-               $columnName 
-           FROM
-               $tableCategories
-           WHERE
-               $columnId=" . (int)$id;
-        
-        $name   =   $db->getOne($query);
+    	$db              = JFactory::getDBO();
+    	/** @var $db JDatabaseMySQLi **/
+    	
+    	$query = $db->getQuery(true);
+    	$query
+    	    ->select("id, name")
+    	    ->from("#__vp_categories")
+    	    ->where("id=".(int)$id);
+    	    
+        $db->setQuery($query);
+        $name   =  (string)$db->getOne($query);
         
         return $name;
     }
@@ -136,14 +110,10 @@ class VpHelper {
         $db     = JFactory::getDBO();
         /** @var $db JDatabaseMySQLi **/
         
-        $tableCategories = $db->quoteName("#__vp_categories");
-    	$columnPublished = $db->quoteName("published");
-    	$columnId        = $db->quoteName("id");
-    	
         $query  = $db->getQuery(true);
-        $query->select($columnPublished)
-              ->from($tableCategories)
-              ->where($columnId." = ". (int)$categoryId);
+        $query->select("published")
+              ->from("#__vp_categories")
+              ->where("id = ". (int)$categoryId);
         
         $db->setQuery($query,0,1);
         
@@ -203,8 +173,9 @@ class VpHelper {
     
     public static function getExtraImages($projectId){
     	
-    	settype($projectId,"integer");
-    	$images = array();
+        $images = array();
+        
+    	settype($projectId, "integer");
     	if (!$projectId){
     		return $images;
     	}
@@ -212,47 +183,15 @@ class VpHelper {
     	$db     = JFactory::getDBO();
         /** @var $db JDatabaseMySQLi **/
     	
-    	$tableImages     = $db->quoteName("#__vp_images");
-    	$columnProjectsId= $db->quoteName("projects_id");
-    	
-        
-    	$query ="
-	    	SELECT
-	    	   *
-	    	FROM
-	    	   $tableImages
-	        WHERE
-	           $columnProjectsId =" . (int)$projectId;
-    	
+    	$query  = $db->getQuery(true);
+        $query->select("*")
+              ->from("#__vp_images")
+              ->where("projects_id =". (int)$projectId);
+              
         $db->setQuery($query);
         $images = $db->loadAssocList();
         
         return $images;
     }
     
-    public static function getImageSize($image,$percent = false){
-        
-        jimport('joomla.filesystem.file');
-        if(!JFile::exists($image)) {
-            return false;
-        }
-        
-        $size = getimagesize($image);   
-        if(false === $size) {
-            return false;
-        }
-        
-        if(!empty($percent)) {
-            if($size[1] > 1000){
-                // Width
-                $size[0] = abs(($size[0] / 100) * $percent);
-                
-                // Height
-                $size[1] = abs(($size[1] / 100) * $percent);
-            }
-        }
-        
-        return $size;
-        
-    }
 }

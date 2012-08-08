@@ -12,7 +12,7 @@
  */
 
 // No direct access.
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modeladmin');
 
@@ -26,37 +26,52 @@ jimport('joomla.application.component.modeladmin');
 class VipPortfolioModelCategory extends JModelAdmin {
     
     /**
-     * Images directory
      * 
+     * A folder where the images will be saved
      * @var string
      */
-    public $imagesDir = "";
-    
-    public $imageTypes  = array();
+    public $imagesFolder  = "";
     
     /**
-     * Thumbnail width
-     * @var integer
+     * 
+     * Mime types allowed for uploading
+     * @var string
      */
-    public $thumbWidth = 200;
+    public $uploadMime = array();
     
     /**
-     * Thumbnail height
-     * @var integer
+     * 
+     * Maximum allowed file size
+     * @var string
      */
-    public $thumbHeight = 150;
+    public $uploadMaxSize = 0;
+    
+    /**
+     * 
+     * A list of image extensions allowed for upload
+     * @var string
+     */
+    public $imageExtensions = array();
     
     /**
      * Image width
      * @var integer
      */
-    public $imageWidth = 800;
+    public $imageWidth;
     
     /**
      * Image height
      * @var integer
      */
-    public $imageHeight = 600;
+    public $imageHeight;
+    
+    /**
+     * 
+     * Options that flags resizing ability
+     * If it is set to 1, the system will resize original image when they are uploaded.
+     * @var unknown_type
+     */
+    public $resizeImages;
     
     /**
      * @var		string	The prefix to use with controller messages.
@@ -75,10 +90,25 @@ class VipPortfolioModelCategory extends JModelAdmin {
     public function __construct($config = array()){
         parent::__construct($config);
         
-        $this->imagesDir = JPATH_SITE . DS . "media" . DS. "vipportfolio";
+        // Load the component parameters.
+        $params = JComponentHelper::getParams($this->option);
         
-        $this->imageTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
+        // Joomla! media extension parameters
+        $mediaParams = JComponentHelper::getParams("com_media");
+        
+        // Extension parameters
+        $this->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
+        $this->imageWidth      = $params->get("resize_category_image_width", 800);
+        $this->imageHeight     = $params->get("resize_category_image_height", 600);
+        $this->resizeImages    = $params->get("resize_category_image", 0);
+        
+        // Media Manager parameters
+        $this->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
+        $this->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
+        $this->uploadMaxSize   = $mediaParams->get("upload_maxsize");
+        
     }
+    
     /**
      * Returns a reference to the a Table object, always creating it.
      *
@@ -101,11 +131,12 @@ class VipPortfolioModelCategory extends JModelAdmin {
      * @since	1.6
      */
     public function getForm($data = array(), $loadData = true){
-        // Initialise variables.
+        
         $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
         
         // Get the form.
-        $form = $this->loadForm('com_vipportfolio.category', 'category', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm($this->option.'.category', 'category', array('control' => 'jform', 'load_data' => $loadData));
         if(empty($form)){
             return false;
         }
@@ -121,7 +152,7 @@ class VipPortfolioModelCategory extends JModelAdmin {
      */
     protected function loadFormData(){
         // Check the session for previously entered form data.
-        $data = JFactory::getApplication()->getUserState('com_vipportfolio.edit.category.data', array());
+        $data = JFactory::getApplication()->getUserState($this->option.'edit.category.data', array());
         
         if(empty($data)){
             $data = $this->getItem();
@@ -142,10 +173,6 @@ class VipPortfolioModelCategory extends JModelAdmin {
         $id     = JArrayHelper::getValue($data, "id", null);
         $name   = JArrayHelper::getValue($data, "name", "");
         
-        if(!$name){
-            throw new ItpUserException(JText::_('ITP_ERROR_INVALID_NAME'), 404);
-        }
-        
         // Load item data
         $row = $this->getTable();
         $row->load($id);
@@ -155,12 +182,13 @@ class VipPortfolioModelCategory extends JModelAdmin {
 
         $row->set("name", $name);
         $alias = JString::strtolower(JArrayHelper::getValue($data, "alias", ""));
-        $row->set("alias", JApplication::stringURLSafe($alias));
-        $row->set("desc", JArrayHelper::getValue($data, "desc", ""));
         
-        $row->set("meta_title", JArrayHelper::getValue($data, "meta_title", ""));
-        $row->set("meta_keywords", JArrayHelper::getValue($data, "meta_keywords", ""));
-        $row->set("meta_desc", JArrayHelper::getValue($data, "meta_desc", ""));
+        $row->set("alias",          JApplication::stringURLSafe($alias));
+        $row->set("desc",           JArrayHelper::getValue($data, "desc", ""));
+        
+        $row->set("meta_title",     JArrayHelper::getValue($data, "meta_title", ""));
+        $row->set("meta_keywords",  JArrayHelper::getValue($data, "meta_keywords", ""));
+        $row->set("meta_desc",      JArrayHelper::getValue($data, "meta_desc", ""));
         $row->set("meta_canonical", JArrayHelper::getValue($data, "meta_canonical", ""));
         
         $published = JArrayHelper::getValue($data, "published", 0);
@@ -171,19 +199,18 @@ class VipPortfolioModelCategory extends JModelAdmin {
             if(!empty($row->image)){
                 jimport('joomla.filesystem.file');
                 // Remove an image from the filesystem
-                $file = $this->imagesDir.DS. $row->image;
+                $file = $this->imagesFolder .DIRECTORY_SEPARATOR. $row->image;
                 
-                JFile::delete($file);
+                if(is_file($file)) {
+                    JFile::delete($file);
+                }
             
             }
             $row->set("image", $newImage);
         }
         
         $row->set("published", $published);
-        
-        if(!$row->store()){
-            throw new ItpException($row->getError(), 500);
-        }
+        $row->store();
         
         return $row->id;
     
@@ -198,65 +225,64 @@ class VipPortfolioModelCategory extends JModelAdmin {
      */
     public function delete($cids){
         
-        if(!$cids){
-            throw new ItpUserException(JText::_('ITP_ERROR_INVALID_ITEMS_SELECTED'), 404);
-        }
-        
         $db = JFactory::getDbo();
-        /* @var $db JDatabaseMySQLi */
+        /** @var $db JDatabaseMySQLi **/
         
-        // Checks for existing projects into that directory
-        foreach($cids as $id){
-            $query = "
-               SELECT
-                   COUNT(*)
-               FROM
-                   `#__vp_projects` 
-               WHERE
-                   `catid` =" . (int)$id;
+        // Get all images
+        $query = $db->getQuery(true);
+        $query
+            ->select("image")
+            ->from("#__vp_categories")
+            ->where("id IN (" . implode(",", $cids) . ")");
             
-            $db->setQuery($query,0,1);
-            $num = $db->loadResult();
+        $db->setQuery($query);
+        $images = $db->loadColumn();
+        
+        // Delete old image if I upload the new one
+        if(!empty($images)){
+            jimport('joomla.filesystem.file');
             
-            if($num){
-                throw new ItpUserException(JText::_('ITP_ERROR_PROJECT_EXISTS'), 500);
+            foreach( $images as $image ) {
+                // Remove the images from the filesystem
+                $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$image;
+                if(is_file($file)) {
+                    JFile::delete($file);
+                }
             }
         }
         
-        /** Load images **/
-        $query = "
-             SELECT
-                 `image` 
-             FROM
-                 `#__vp_categories`
-             WHERE
-                 `id` IN (" . implode(",", $cids) . ")";
-        
-        $db->setQuery($query,0,1);
-        $image = $db->loadResult();
-        
-        // Delete old image if I upload the new one
-        if(!empty($image)){
-            jimport('joomla.filesystem.file');
-            // Remove an image from the filesystem
-            $file = $this->imagesDir.DS.$image;
-            JFile::delete($file);
-        }
-        
         // Delete categories 
-        $query = "
-            DELETE  
-            FROM 
-                 `#__vp_categories` 
-            WHERE   
-                 `id` IN ( " . implode(',', $cids) . " )";
+        $query = $db->getQuery(true);
+        $query
+            ->delete("#__vp_categories")
+            ->where("id IN (" . implode(",", $cids) . ")");
         
         $db->setQuery($query);
-        
-        if(!$db->query()){
-            throw new ItpException($db->getErrorMsg(), 500);
-        }
+        $db->query();
     
+    }
+    
+    /**
+     * 
+     * Check for existing projects in categories
+     * @param array $cids
+     */
+    public function isProjectsExists($cids) {
+        
+        $db = JFactory::getDbo();
+        /** @var $db JDatabaseMySQLi **/
+        
+        // Checks for existing projects into that directory
+        $query = $db->getQuery("new");
+        $query
+            ->select("COUNT(*) as num")
+            ->from("#__vp_projects")
+            ->where("catid IN (" . implode(",", $cids) . ")");
+        
+        $db->setQuery($query, 0, 1);
+        $num = $db->loadResult();
+        
+        return (bool)$num;
     }
     
     /**
@@ -267,10 +293,6 @@ class VipPortfolioModelCategory extends JModelAdmin {
      */
     public function removeImage($id){
         
-        if(!$id){
-            throw new ItpException(JText::_('ITP_ERROR_RECORDS_DO_NOT_EXIST'), 500);
-        }
-        
         // Load category data
         $row = $this->getTable();
         $row->set("id", $id);
@@ -280,8 +302,11 @@ class VipPortfolioModelCategory extends JModelAdmin {
         if(!empty($row->image)){
             jimport('joomla.filesystem.file');
             // Remove an image from the filesystem
-            $file = $this->imagesDir.DS.$row->image;
-            JFile::delete($file);
+            $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$row->image;
+            
+            if(is_file($file)) {
+                JFile::delete($file);
+            }
         }
         
         $row->set("image", "");
@@ -299,24 +324,26 @@ class VipPortfolioModelCategory extends JModelAdmin {
         
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
-        
-        if(!JFolder::exists($this->imagesDir)){
-            if(!VpHelper::createFolder($this->imagesDir)) {
-                throw new ItpException(JText::sprintf("ITP_ERROR_CANNOT_CREATE_FOLDER",$this->imagesDir), 500);
-            }
-        }
-        
         jimport('joomla.filesystem.path');
         
-        $names = array("image");
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
         
-        /************* Save Image ************/
-        $uploadedFile = JRequest::getVar('jform', '', 'files', 'array');
+        $names         = array("image");
+        $uploadedFile  = $app->input->files->get('jform');
         
+        // Check for errors
         $this->checkUploadErrors($uploadedFile);
-        if(!empty($uploadedFile['name']['image'])){
-//            $options = array("width" => $this->imageWidth, "height"=>$this->imageHeight, "type" => "crop", "startX"=>0, "startY"=>0);
-            $names['image'] = $this->uploadImage($uploadedFile['tmp_name']['image'],$uploadedFile['name']['image'], $this->imagesDir, "image_");
+        
+        // Save Image
+        if(!empty($uploadedFile['image']['name'])){
+            
+            $options = array();
+            if($this->resizeImages) {
+                $options = array("width" => $this->imageWidth, "height"=>$this->imageHeight);
+            }
+            
+            $names['image'] = $this->uploadImage($uploadedFile['image']['tmp_name'],$uploadedFile['image']['name'], $this->imagesFolder, "image_", $options);
         }
 
         return $names['image'];
@@ -325,76 +352,107 @@ class VipPortfolioModelCategory extends JModelAdmin {
     
     protected function checkUploadErrors($uploadedFile){
         
-        if(!empty($uploadedFile['error']['image'])){
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        $serverContentLength = (int)$app->input->server->get('CONTENT_LENGTH');
+        
+        // Verify file size
+        if(
+            $serverContentLength > ($this->uploadMaxSize * 1024 * 1024) OR
+			$serverContentLength > (int)(ini_get('upload_max_filesize'))* 1024 * 1024 OR
+			$serverContentLength > (int)(ini_get('post_max_size'))* 1024 * 1024 OR
+			$serverContentLength > (int)(ini_get('memory_limit'))* 1024 * 1024
+		) {
+		    throw new Exception(JText::_("ITP_ERROR_WARNFILETOOLARGE"));
+		}
+		
+        if(!empty($uploadedFile['image']['error'])){
                 
-            switch($uploadedFile['error']['image']){
+            switch($uploadedFile['image']['error']){
                 case UPLOAD_ERR_INI_SIZE:
-                     throw new ItpUserException(JText::_('ITP_ERROR_UPLOAD_ERR_INI_SIZE'), 500);
+                     throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_INI_SIZE'), 500);
                 case UPLOAD_ERR_FORM_SIZE:
-                    throw new ItpUserException(JText::_('ITP_ERROR_UPLOAD_ERR_FORM_SIZE'), 500);
+                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_FORM_SIZE'), 500);
                 case UPLOAD_ERR_PARTIAL:
-                    throw new ItpUserException(JText::_('ITP_ERROR_UPLOAD_ERR_PARTIAL'), 500);
+                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_PARTIAL'), 500);
                 case UPLOAD_ERR_NO_FILE:
-//                    throw new ItpUserException( JText::_( 'ITP_ERROR_UPLOAD_ERR_NO_FILE' ), 500 );
+//                    throw new Exception( JText::_( 'ITP_ERROR_UPLOAD_ERR_NO_FILE' ), 500 );
                     break;
                 case UPLOAD_ERR_NO_TMP_DIR:
-                    throw new ItpUserException(JText::_('ITP_ERROR_UPLOAD_ERR_NO_TMP_DIR'), 500);
+                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_NO_TMP_DIR'), 500);
                 case UPLOAD_ERR_CANT_WRITE:
-                    throw new ItpUserException(JText::_('ITP_ERROR_UPLOAD_ERR_CANT_WRITE'), 500);
+                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_CANT_WRITE'), 500);
                 case UPLOAD_ERR_EXTENSION:
-                    throw new ItpUserException(JText::_('ITP_ERROR_UPLOAD_ERR_EXTENSION'), 500);
+                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_EXTENSION'), 500);
                 default:
-                    throw new ItpUserException(JText::_('ITP_ERROR_UPLOAD_ERR_UNKNOWN'), 500);
+                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_UNKNOWN'), 500);
             }
         
         }
             
     }
     
-    protected function uploadImage($uploadedFile, $uploadedName, $dir, $prefix = "", $options = array()) {
+    /**
+     * 
+     * Upload an image
+     * @param string $uploadedFile Path and filename
+     * @param string $uploadedName Filename of the uploaded file
+     * @param string $destFolder   Destination directory where the file will be saved
+     * @param string $prefix	   File prefix
+     * @param string $options	   Options for resizing
+     * 
+     */
+    protected function uploadImage($uploadedFile, $uploadedName, $destFolder, $prefix = "", $options = array()) {
         
-        list($width, $height, $type, $attr) = getimagesize($uploadedFile);
+        jimport('joomla.image.image');
+        $imageProperties = JImage::getImageFileProperties($uploadedFile);
         
-        // Checks file extension
-        if(false === array_search($type, $this->imageTypes)){
-            JError::raiseWarning(500,JText::_('ITP_ERROR_IMAGE_TYPE'));
+        // Check mime type of the file
+        if(false === array_search($imageProperties->mime, $this->uploadMime)){
+            throw new Exception(JText::_('ITP_ERROR_IMAGE_TYPE'));
+        }
+        
+        // Check file extension
+        $ext     = JFile::getExt($uploadedName);
+        $ext     = JFile::makeSafe($ext);
+        
+        if(false === array_search($ext, $this->imageExtensions)){
+            throw new Exception(JText::sprintf('ITP_ERROR_IMAGE_EXTENSIONS', $ext));
         }
         
         // Generate the name
-        $ext     = JFile::getExt($uploadedName);
-        $name    = $prefix . substr(JUtility::getHash(time()), 0, 6) . "." . JFile::makeSafe($ext);
-        $newFile = $dir . DS . $name;
+        $name    = $prefix . substr(JUtility::getHash(time()), 0, 6) . "." . $ext;
+        $newFile = $destFolder . DIRECTORY_SEPARATOR. $name;
         
         if(!JFile::upload($uploadedFile, $newFile)){
-            JError::raiseError(500,JText::_('ITP_ERROR_FILE_CANT_BE_UPLOADED'));
+            throw new Exception(JText::_('ITP_ERROR_FILE_CANT_BE_UPLOADED'));
         }
         
-        if(!JFile::exists($newFile)){
-            JError::raiseError(500,JText::_('ITP_ERROR_FILE_CANT_BE_UPLOADED'));
+        if(!is_file($newFile)){
+            throw new Exception('ITP_ERROR_FILE_CANT_BE_UPLOADED');
         }
         
+        $image = new JImage();
+        $image->loadFile($newFile);
+        if (!$image->isLoaded()) {
+            throw new Exception(JText::sprintf('ITP_ERROR_FILE_NOT_FOUND', $newFile));
+        }
+        
+        // Resize image
         if(!empty($options)) {
             
-            /** Make a thumbnail **/
-            require_once JPATH_COMPONENT_ADMINISTRATOR . DS . "libraries" . DS . "phpthumb" . DS . "ThumbLib.inc.php";
-        
-            $width   = JArrayHelper::getValue($options,"width",0);
-            $height  = JArrayHelper::getValue($options,"height",0);
+            $width   = JArrayHelper::getValue($options, "width", $this->imageWidth);
+            $height  = JArrayHelper::getValue($options, "height", $this->imageWidth);
             
-            $image   = PhpThumbFactory::create($newFile);
-            switch($options['type']){
-                case "adaptive":
-                    $image->adaptiveResize($width, $height);
-                    break;
-                default: // crop
-                    $image->crop($options['startX'], $options['startY'], $this->imageWidth, $this->imageHeight);
-                    break;
-            }
+            // Resize the file as a new object
+            $image->resize($width, $height, false);
+            $image->toFile($newFile, IMAGETYPE_PNG);
             
-            $image->save($newFile);
         }
         
         return $name;
     }
+    
     
 }

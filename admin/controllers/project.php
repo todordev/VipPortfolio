@@ -12,7 +12,7 @@
  */
 
 // No direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
@@ -34,7 +34,7 @@ class VipPortfolioControllerProject extends JControllerForm {
      */
     public function save(){
         
-        JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
         
         $msg = "";
         
@@ -153,10 +153,7 @@ class VipPortfolioControllerProject extends JControllerForm {
      *
      */
     public function cancel(){
-        
-        $msg = "";
-        $this->setRedirect(JRoute::_($this->defaultLink . "&view=projects", false), $msg);
-    
+        $this->setRedirect(JRoute::_($this->defaultLink . "&view=projects", false));
     }
     
 }

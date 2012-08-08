@@ -11,8 +11,8 @@
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+// No direct access
+defined('_JEXEC') or die;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
@@ -24,7 +24,11 @@ jimport( 'joomla.application.component.controlleradmin' );
   */
 class VipPortfolioControllerCategories extends JControllerAdmin {
     
-    // Check the table in so it can be edited.... we are done with it anyway
+    /**
+     * 
+     * A link to the extension
+     * @var string
+     */
     private    $defaultLink = 'index.php?option=com_vipportfolio';
     
     /**
@@ -38,15 +42,47 @@ class VipPortfolioControllerCategories extends JControllerAdmin {
      * @since   1.6
      */
     public function getModel($name = 'Category', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
-        
         $model = parent::getModel($name, $prefix, $config);
         return $model;
     }
     
+    
+    public function delete() {
+        
+        // Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		$app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        $cid = $app->input->post->get('cid', array(), "array");
+        
+		if (!is_array($cid) OR empty($cid)){
+		    throw new Exception(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'));
+		}
+		
+		// Get the model.
+		$model = $this->getModel();
+
+		// Make sure the item ids are integers
+		JArrayHelper::toInteger($cid);
+
+		// Remove the items.
+		$pe = $model->isProjectsExists($cid);
+		
+		if(!$model->isProjectsExists($cid)) { // Remove categories
+		    $model->delete($cid);
+		    $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+		} else { // Error: Some of categories contains projects
+		    $this->setMessage(JText::_("COM_VIPPORTFOLIO_ERROR_PROJECT_EXISTS"), "notice");
+		}
+		
+		$this->setRedirect(JRoute::_($this->defaultLink. '&view=' . $this->view_list, false));
+        
+    }
+    
     public function backToControlPanel() {
-        
         $this->setRedirect( JRoute::_($this->defaultLink, false) );
-        
     }
     
 }

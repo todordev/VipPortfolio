@@ -11,8 +11,8 @@
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+// No direct access
+defined('_JEXEC') or die;
 
 jimport( 'joomla.application.component.controlleradmin' );
 
@@ -38,15 +38,12 @@ class VipPortfolioControllerProjects extends JControllerAdmin {
      * @since   1.6
      */
     public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
-        
         $model = parent::getModel($name, $prefix, $config);
         return $model;
     }
     
     public function backToControlPanel() {
-        
         $this->setRedirect( JRoute::_($this->defaultLink, false) );
-        
     }
     
 }

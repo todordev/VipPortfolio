@@ -21,6 +21,9 @@ defined('_JEXEC') or die;
 	<th class="title">
         <?php echo JHtml::_('grid.sort',  'COM_VIPPORTFOLIO_NAME', 'a.name', $this->listDirn, $this->listOrder); ?>
     </th>
+    <th width="10%">
+        <?php echo JText::_('COM_VIPPORTFOLIO_PROJECTS_NUMBER'); ?>
+    </th>
 	<th width="10%">
         <?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $this->listDirn, $this->listOrder); ?>
         <?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'categories.saveorder'); ?>

@@ -10,7 +10,7 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-defined('JPATH_BASE') or die();
+defined('JPATH_BASE') or die;
 
 jimport('joomla.html.html');
 jimport('joomla.form.formfield');
@@ -54,11 +54,6 @@ class JFormFieldVpCategories extends JFormFieldList {
         $db->setQuery($query);
         
         $options = $db->loadAssocList();
-        
-        // Check for a database error.
-        if($db->getErrorNum()){
-            JError::raiseWarning(500, $db->getErrorMsg());
-        }
         
         array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a category').' -', 'value', 'text'));
         

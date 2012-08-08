@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 jimport('joomla.filesystem.file');
 jimport('joomla.application.component.modeladmin');
@@ -25,37 +25,69 @@ jimport('joomla.application.component.modeladmin');
  */
 class VipPortfolioModelProject extends JModelAdmin {
     
-    private $imagesDir = "";
+/**
+     * 
+     * A folder where the images will be saved
+     * @var string
+     */
+    public $imagesFolder  = "";
     
-    public $imageTypes = array();
+    /**
+     * 
+     * Mime types allowed for uploading
+     * @var string
+     */
+    public $uploadMime = array();
+    
+    /**
+     * 
+     * Maximum allowed file size
+     * @var string
+     */
+    public $uploadMaxSize = 0;
+    
+    /**
+     * 
+     * A list of image extensions allowed for upload
+     * @var string
+     */
+    public $imageExtensions = array();
     
     /**
      * Thumbnail width
      * @var integer
      */
-    public $thumbWidth = 200;
+    public $thumbWidth;
     
     /**
      * Thumbnail height
      * @var integer
      */
-    public $thumbHeight = 150;
+    public $thumbHeight;
     
     /**
      * Image width
      * @var integer
      */
-    public $imageWidth = 800;
+    public $imageWidth;
     
     /**
      * Image height
      * @var integer
      */
-    public $imageHeight = 600;
+    public $imageHeight;
     
     /**
-     * @var     string  The prefix to use with controller messages.
-     * @since   1.6
+     * 
+     * Options that flags resizing ability
+     * If it is set to 1, the system will resize original image when they are uploaded.
+     * @var unknown_type
+     */
+    public $resizeImages;
+    
+    /**
+     * @var		string	The prefix to use with controller messages.
+     * @since	1.6
      */
     protected $text_prefix = 'COM_VIPPORTFOLIO';
     
@@ -70,9 +102,26 @@ class VipPortfolioModelProject extends JModelAdmin {
     public function __construct($config = array()){
         parent::__construct($config);
         
-        $this->imagesDir = JPATH_SITE . DS . "media" . DS . "vipportfolio";
+        // Load the component parameters.
+        $params = JComponentHelper::getParams($this->option);
         
-        $this->imageTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
+        // Joomla! media extension parameters
+        $mediaParams = JComponentHelper::getParams("com_media");
+        
+        // Extension parameters
+        $this->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
+        $this->imageWidth      = $params->get("resize_image_width", 800);
+        $this->imageHeight     = $params->get("resize_image_height", 600);
+        $this->thumbWidth      = $params->get("resize_thumb_width", 200);
+        $this->thumbHeight     = $params->get("resize_thumb_height", 150);
+        $this->resizeImages    = $params->get("resize_image", 0);
+        
+        // Media Manager parameters
+        $this->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
+        $this->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
+        $this->uploadMaxSize   = $mediaParams->get("upload_maxsize");
+        
+        
     }
     
     /**
@@ -101,7 +150,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         $app = JFactory::getApplication();
         
         // Get the form.
-        $form = $this->loadForm('com_vipportfolio.project', 'project', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm($this->option.'.project', 'project', array('control' => 'jform', 'load_data' => $loadData));
         if(empty($form)){
             return false;
         }
@@ -117,7 +166,7 @@ class VipPortfolioModelProject extends JModelAdmin {
      */
     protected function loadFormData(){
         // Check the session for previously entered form data.
-        $data = JFactory::getApplication()->getUserState('com_vipportfolio.edit.project.data', array());
+        $data = JFactory::getApplication()->getUserState($this->option.'.edit.project.data', array());
         
         if(empty($data)){
             $data = $this->getItem();
@@ -164,7 +213,7 @@ class VipPortfolioModelProject extends JModelAdmin {
             // Delete old image if I upload the new one
             if(!empty($row->thumb)){
                     // Remove an image from the filesystem
-                    $file = $this->imagesDir.DS.$row->thumb;
+                    $file = $this->imagesDir.DIRECTORY_SEPARATOR.$row->thumb;
                     
                     JFile::delete($file);
             }
@@ -179,8 +228,10 @@ class VipPortfolioModelProject extends JModelAdmin {
             // Delete old image if I upload the new one
             if(!empty($row->image)){
                 // Remove an image from the filesystem
-                $file = $this->imagesDir.DS.$row->image;
-                JFile::delete($file);
+                $file = $this->imagesDir.DIRECTORY_SEPARATOR.$row->image;
+                if(JFile::exists($file)) {
+                    JFile::delete($file);
+                }
             }
             
             $row->set("image", $images['image']);
@@ -236,13 +287,13 @@ class VipPortfolioModelProject extends JModelAdmin {
         /** Delete images **/
         foreach($rows as $images){
             if(!empty($images->thumb)){
-                $file = $this->imagesDir.DS.$images->thumb; 
+                $file = $this->imagesDir.DIRECTORY_SEPARATOR.$images->thumb; 
                 if(JFile::exists($file)) {
                     JFile::delete($file);
                 }
             }
             if(!empty($images->image)){
-                $file = $this->imagesDir.DS.$images->image; 
+                $file = $this->imagesDir.DIRECTORY_SEPARATOR.$images->image; 
                 if(JFile::exists($file)) {
                     JFile::delete($file);
                 }    
@@ -286,7 +337,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         if(strcmp("thumb", $type) == 0){
             
             // Remove an image from the filesystem
-            $file = $this->imagesDir.DS.$row->thumb;
+            $file = $this->imagesDir.DIRECTORY_SEPARATOR.$row->thumb;
             JFile::delete($file);
             
             // Remove the image from the DB
@@ -296,7 +347,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         if(strcmp("image", $type) == 0){
             
             // Remove an image from the filesystem
-            $file = $this->imagesDir.DS.$row->image;
+            $file = $this->imagesDir.DIRECTORY_SEPARATOR.$row->image;
             JFile::delete($file);
             
             // Remove the image from the DB
@@ -338,12 +389,12 @@ class VipPortfolioModelProject extends JModelAdmin {
         
         foreach($fileNames as $name) {
             
-            $file = $this->imagesDir.DS.$name;
+            $file = $this->imagesDir.DIRECTORY_SEPARATOR.$name;
             if(JFile::exists($file)) {
                 JFile::delete($file);
             }
             
-            $file = $this->imagesDir.DS. "ethumb_".$name;
+            $file = $this->imagesDir.DIRECTORY_SEPARATOR. "ethumb_".$name;
             if(JFile::exists($file)) {
                 JFile::delete($file);
             }
@@ -392,10 +443,10 @@ class VipPortfolioModelProject extends JModelAdmin {
         if(!empty($name)){
             
             // Remove an image from the filesystem
-            $file = $this->imagesDir.DS.$name;
+            $file = $this->imagesDir.DIRECTORY_SEPARATOR.$name;
             JFile::delete($file);
             
-            $file = $this->imagesDir.DS. "ethumb_".$name;
+            $file = $this->imagesDir.DIRECTORY_SEPARATOR. "ethumb_".$name;
             JFile::delete($file);
             
             $query = "
@@ -425,7 +476,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         jimport('joomla.filesystem.folder');
         
         if(!JFolder::exists($this->imagesDir)){
-            if(!VpHelper::createFolder($this->imagesDir)) {
+            if(!VipPortfolioHelper::createFolder($this->imagesDir)) {
                 throw new ItpException(JText::sprintf("ITP_ERROR_CANNOT_CREATE_FOLDER",$this->imagesDir), 500);
             }
         }
@@ -502,7 +553,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         $ext     = JFile::getExt($uploadedName);
         $random  = uniqid(mt_rand(0,1000), true) + time();
         $name    = $prefix . substr(JUtility::getHash($random), 0, 6) . "." . JFile::makeSafe($ext);
-        $newFile = $dir . DS . $name;
+        $newFile = $dir . DIRECTORY_SEPARATOR. $name;
         
         if(!JFile::upload($uploadedFile, $newFile)){
             JError::raiseError(500,JText::_('ITP_ERROR_FILE_CANT_BE_UPLOADED'));
@@ -515,7 +566,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         if(!empty($options)) {
             
             /** Make a thumbnail **/
-            require_once JPATH_COMPONENT_ADMINISTRATOR . DS . "libraries" . DS . "phpthumb" . DS . "ThumbLib.inc.php";
+            require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR. "libraries" . DIRECTORY_SEPARATOR. "phpthumb" . DIRECTORY_SEPARATOR. "ThumbLib.inc.php";
         
             $width   = JArrayHelper::getValue($options,"width",0);
             $height  = JArrayHelper::getValue($options,"height",0);
@@ -538,7 +589,7 @@ class VipPortfolioModelProject extends JModelAdmin {
     
     private function uploadExtraImage(){
         
-        require_once JPATH_COMPONENT_ADMINISTRATOR . DS . "libraries" . DS . "phpthumb" . DS . "ThumbLib.inc.php";
+        require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR. "libraries" . DIRECTORY_SEPARATOR. "phpthumb" . DIRECTORY_SEPARATOR. "ThumbLib.inc.php";
         
         $names = array();
         
@@ -558,8 +609,8 @@ class VipPortfolioModelProject extends JModelAdmin {
                 $imageName = $this->uploadImage($uploadedExtraImages['tmp_name'][$key],$uploadedExtraImages['name'][$key], $this->imagesDir);
                 
                 /** Make a thumbnail **/
-                $file = $this->imagesDir . DS . $imageName;
-                $fileThumb = $this->imagesDir . DS . "ethumb_" . $imageName;
+                $file = $this->imagesDir . DIRECTORY_SEPARATOR. $imageName;
+                $fileThumb = $this->imagesDir . DIRECTORY_SEPARATOR. "ethumb_" . $imageName;
                 
                 $thumb = PhpThumbFactory::create($file);
                 $thumb->adaptiveResize(48, 48);
@@ -607,7 +658,7 @@ class VipPortfolioModelProject extends JModelAdmin {
     
     }
     
-/**
+	/**
      * A protected method to get a set of ordering conditions.
      *
      * @param   object  A record object.

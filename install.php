@@ -12,56 +12,86 @@
  */
 
 // no direct access
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined('_JEXEC') or die;
 
 /**
  * Script file of VipPortfolio component
  */
-class com_vipPortfolioInstallerScript
-{
-        /**
-         * method to install the component
-         *
-         * @return void
-         */
-        function install($parent) 
-        {
+class com_vipPortfolioInstallerScript {
+    /**
+     * method to install the component
+     *
+     * @return void
+     */
+    public function install($parent) {
+    
+    }
+    
+    /**
+     * method to uninstall the component
+     *
+     * @return void
+     */
+    public function uninstall($parent) {
+    }
+    
+    /**
+     * method to update the component
+     *
+     * @return void
+     */
+    public function update($parent) {
+    }
+    
+    /**
+     * method to run before an install/update/uninstall method
+     *
+     * @return void
+     */
+    public function preflight($type, $parent) {
+    }
+    
+    /**
+     * method to run after an install/update/uninstall method
+     *
+     * @return void
+     * @todo Translate message
+     */
+    public function postflight($type, $parent) {
+    
+        jimport('joomla.filesystem.folder');
+        
+        $app = JFactory::getApplication();
+        /** @var JAdministrator **/
+        $params = $app->getParams("com_vipportfolio");
+        $folder = JPATH_BASE.$params->get("images_directory");
+        
+        echo $folder;
+        $folder = JFolder::makeSafe($folder);
+        echo $folder;
+        
+        if(!is_dir($folder)){
             
+            jimport('joomla.filesystem.file');
+        
+            // Create user folder
+            if(true !== JFolder::create($folder)) {
+                $message = JText::sprintf("ITP_ERROR_CANNOT_CREATE_FOLDER", $folder);
+                JLog::add($message);
+                echo $message;
+                return false;
+            }
+            
+            // Copy index.html
+            $indexFile = $folder . DIRECTORY_SEPARATOR ."index.html";
+            $html = '<html><body bgcolor="#FFFFFF"></body></html>';
+            if(true !== JFile::write($indexFile,$html)) {
+                $message = JText::sprintf("ITP_ERROR_CANNOT_SAVE_FILE", $indexFile);
+                JLog::add($message);
+            }
+            
+            echo JText::sprintf("ITP_MESSAGE_FOLDER_CREATED_SUCCESSFULLY", $folder); 
         }
- 
-        /**
-         * method to uninstall the component
-         *
-         * @return void
-         */
-        function uninstall($parent) 
-        {
-        }
- 
-        /**
-         * method to update the component
-         *
-         * @return void
-         */
-        function update($parent) 
-        {
-        }
- 
-        /**
-         * method to run before an install/update/uninstall method
-         *
-         * @return void
-         */
-        function preflight($type, $parent) 
-        {
-        }
- 
-        /**
-         * method to run after an install/update/uninstall method
-         *
-         * @return void
-         */
-        function postflight($type, $parent) 
-        {
-        }
+        
+    }
 }

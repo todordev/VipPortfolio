@@ -66,7 +66,7 @@ method="post" name="adminForm" id="category-form" class="form-validate">
     <?php echo JHtml::_('form.token'); ?>
 </form>
 <?php if (!empty($this->item->image)) {?>
-<img src="<?php echo (JURI::root() . "media/vipportfolio/" . $this->item->image); ?>" alt="<?php echo $this->item->name;?>" />
+<img src="<?php echo (JURI::root() . $this->params->get("images_directory") . "/". $this->item->image); ?>" alt="<?php echo $this->item->name;?>" />
 <div>
     <img src="<?php echo (JURI::root() . "media/com_vipportfolio/images/remove_image.gif"); ?>" alt="<?php echo $this->item->name;?>" />
     <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&amp;task=category.removeImage&amp;id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>

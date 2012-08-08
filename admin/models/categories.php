@@ -18,6 +18,8 @@ jimport('joomla.application.component.modellist');
 
 class VipPortfolioModelCategories extends JModelList {
     
+    protected $numbers = array();
+    
     /**
      * Constructor.
      *
@@ -54,8 +56,6 @@ class VipPortfolioModelCategories extends JModelList {
      * @since   1.6
      */
     protected function populateState($ordering = null, $direction = null) {
-        // Initialise variables.
-        $app = JFactory::getApplication('administrator');
 
         // Load the filter state.
         $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
@@ -65,7 +65,7 @@ class VipPortfolioModelCategories extends JModelList {
         $this->setState('filter.published', $published);
 
         // Load the parameters.
-        $params = JComponentHelper::getParams('com_vipportfolio');
+        $params = JComponentHelper::getParams($this->option);
         $this->setState('params', $params);
 
         // List state information.
@@ -88,7 +88,6 @@ class VipPortfolioModelCategories extends JModelList {
         // Compile the store id.
         $id.= ':' . $this->getState('filter.search');
         $id.= ':' . $this->getState('filter.published');
-//        $id.= ':' . $this->getState('filter.id');
 
         return parent::getStoreId($id);
     }
@@ -109,8 +108,8 @@ class VipPortfolioModelCategories extends JModelList {
         $query->select(
             $this->getState(
                 'list.select',
-                'a.id, a.name, a.desc, a.alias, a.image,' .
-                'a.published,a.ordering,' . 
+                'a.id, a.name, a.desc, a.alias, a.image, ' .
+                'a.published, a.ordering, ' . 
                 'a.meta_title, a.meta_desc, a.meta_keywords, a.meta_canonical'
             )
         );
@@ -142,6 +141,54 @@ class VipPortfolioModelCategories extends JModelList {
         $query->order($db->escape($orderCol.' '.$orderDirn));
 
         return $query;
+    }
+    
+    public function getNumbers() {
+        
+        // Get a storage key.
+		$storeNumbers = $this->getStoreId("getNumbers");
+
+		// Try to load the data from internal storage.
+		if (isset($this->cache[$storeNumbers])) {
+			return $this->cache[$storeNumbers];
+		}
+            
+        // Get a storage key.
+		$storeData = $this->getStoreId();
+
+		// Try to load the data from internal storage.
+		if (isset($this->cache[$storeData])){
+			$data = $this->cache[$storeData];
+		} else {
+		    $data = $this->getItems();
+		}
+		
+		$itemsIds = array();
+		foreach( $data as $item ) {
+		    $itemsIds[] = $item->id;
+		}
+		
+        $db     = JFactory::getDbo();
+        $query  = $db->getQuery(true);
+        
+        $query
+            ->select("catid, COUNT(*) AS number")
+            ->from("#__vp_projects")
+            ->where("catid IN (" . implode(",", $itemsIds) . ")")
+            ->group("catid");
+        
+        $db->setQuery($query);
+        $results = $db->loadAssocList("catid", "number");
+        
+        if(!$results) {
+            $results = array(); 
+        }
+        
+        // Add the items to the internal cache.
+		$this->cache[$storeNumbers] = $results;
+
+		return $this->cache[$storeNumbers];
+        
     }
     
 }

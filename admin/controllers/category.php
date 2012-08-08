@@ -12,7 +12,7 @@
  */
 
 // No direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.controllerform');
 
@@ -28,88 +28,110 @@ class VipPortfolioControllerCategory extends JControllerForm {
     // Check the table in so it can be edited.... we are done with it anyway
     private    $defaultLink = 'index.php?option=com_vipportfolio';
     
+	/**
+     * Proxy for getModel.
+     * @since   1.6
+     */
+    public function getModel($name = 'Category', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
+        $model = parent::getModel($name, $prefix, $config);
+        return $model;
+    }
+    
     /**
      * Save an item
      *
      */
     public function save() {
         
-        JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
         
-        $msg = "";
-
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        // Initialize variables
+        $itemId  = $app->input->getInt("id");
+        $msg     = "";
+        $link    = "";
+        
         // Gets the data from the form
-        $data       = JRequest::getVar('jform', array(), 'post', 'array');
-        
-        $model = $this->getModel( "Category", "VipPortfolioModel");
+        $data    = $app->input->post->get('jform', array(), 'post', 'array');
+        $model   = $this->getModel();
         
         // Validate the posted data.
         // Sometimes the form needs some posted data, such as for plugins and modules.
         $form = $model->getForm($data, false);
-        /* @var $form JForm */
+        /** @var $form JForm **/
        
+        if (!$form) {
+            throw new Exception($model->getError(), 500);
+        }
+        
         try {
-            
-            if (!$form) {
-                throw new ItpException($model->getError(), 500);
-            }
             
             // Test if the data is valid.
             $validData = $model->validate($form, $data);
     
             // Check for validation errors.
             if ($validData === false) {
-                $itemId = JArrayHelper::getValue($data, "id");
-                // Get the validation messages.
-                throw new ItpUserException($model->getError(), 500);
+                
+                $this->defaultLink .= "&view=".$this->view_item."&layout=edit";
+            
+                if($itemId) {
+                    $this->defaultLink .= "&id=" . $itemId;
+                } 
+                
+                $this->setMessage($model->getError(), "notice");
+                $this->setRedirect(JRoute::_($this->defaultLink, false));
+                return;
             }
             
             $itemId = $model->save($validData);
-            $msg = JText::_( 'COM_VIPPORTFOLIO_CATEGORY_SAVED' );
 
-        } catch ( ItpUserException $e ) {
-            
-            JError::raiseWarning(500, $e->getMessage());
-            $this->defaultLink .= "&view=category&layout=edit";
-            if(!empty($itemId)) {
-                $this->defaultLink .= "&id=" . (int)$itemId; 
-            }
-            $this->setRedirect(JRoute::_($this->defaultLink, false));
-            return false;
-            
         } catch ( Exception $e ) {
-            
-            $itpSecurity = new ItpSecurity( $e );
-            $itpSecurity->alertMe();
-           
-            JError::raiseError( 500, JText::_( 'ITP_ERROR_SYSTEM' ) );
-            return false;
-            
+            JLog::add($e->getMessage());
+            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
         }
         
+        $msg  = JText::_('COM_VIPPORTFOLIO_CATEGORY_SAVED');
+        $link = $this->prepareRedirectLink($itemId);
+        
+        $this->setRedirect(JRoute::_($link, false), $msg);
+        
+    }
+    
+    /**
+     * 
+     * Prepare redirect link. 
+     * If has clicked apply, will be redirected to edit form and will be loaded the item data
+     * If has clicked save2new, will be redirected to edit form, and you will be able to add a new record
+     * If has clicked save, will be redirected to the list of items
+     *
+     * @param integer $itemId 
+     */
+    protected function prepareRedirectLink($itemId = 0) {
+        
         $task = $this->getTask();
+        $link = $this->defaultLink;
         
         // Prepare redirection
         switch($task) {
-            
             case "apply":
-                $this->defaultLink .= "&view=category&layout=edit";
+                $link .= "&view=".$this->view_item."&layout=edit";
                 if(!empty($itemId)) {
-                    $this->defaultLink .= "&id=" . (int)$itemId; 
+                    $link .= "&id=" . (int)$itemId; 
                 }
                 break;
                 
             case "save2new":
-                $this->defaultLink .= "&view=category&layout=edit";
+                $link .= "&view=".$this->view_item."&layout=edit";
                 break;
                 
             default:
-                $this->defaultLink .= "&view=categories";
+                $link .= "&view=".$this->view_list;
                 break;
         }
         
-        $this->setRedirect( JRoute::_($this->defaultLink, false), $msg );
-        
+        return $link;
     }
     
     /**
@@ -118,26 +140,26 @@ class VipPortfolioControllerCategory extends JControllerForm {
      */
     public function removeImage() {
         
-        $id = JRequest::getInt( 'id', 0, "get" );
-
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        $id = $app->input->get->getInt('id', 0);
+        if(!$id){
+            throw new Exception(JText::_('ITP_ERROR_IMAGE_DOES_NOT_EXIST'));
+        }
+        
         try {
             
-            // Gets the model
-            $model = $this->getModel("Category", "VipPortfolioModel");
+            $model = $this->getModel();
             $model->removeImage($id);
             
-            $this->defaultLink .= "&amp;view=category&;layout=edit&id=" . (int)$id;
-            $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');
-
         } catch ( Exception $e ) {
-            
-            $itpSecurity = new ItpSecurity( $e );
-            $itpSecurity->alertMe();
-           
-            JError::raiseError( 500, JText::_( 'ITP_ERROR_SYSTEM' ) );
-            jexit(JText::_( 'ITP_ERROR_SYSTEM' ));
-            
+            JLog::add($e->getMessage());
+            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
         }
+        
+        $this->defaultLink .= "&amp;view=".$this->view_item."&layout=edit&id=" . (int)$id;
+        $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');
         
         $this->setRedirect( JRoute::_($this->defaultLink, false), $msg );
         
@@ -148,10 +170,7 @@ class VipPortfolioControllerCategory extends JControllerForm {
      *
      */
     public function cancel() {
-        
-        $msg = "";
-        $this->setRedirect( JRoute::_($this->defaultLink . "&view=categories", false), $msg );
-        
+        $this->setRedirect( JRoute::_($this->defaultLink . "&view=".$this->view_list, false));
     }
     
 }

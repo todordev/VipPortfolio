@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -21,6 +21,14 @@ class VipPortfolioViewProject extends JView {
     protected $state;
     protected $item;
     protected $form;
+    
+    protected $documentTitle;
+    protected $option;
+    
+    public function __construct($config) {
+        parent::__construct($config);
+        $this->option = JFactory::getApplication()->input->get("option");
+    }
     
     /**
      * Display the view
@@ -31,15 +39,9 @@ class VipPortfolioViewProject extends JView {
         $this->item = $this->get('Item');
         $this->form = $this->get('Form');
         
-        // Check for errors.
-        if(count($errors = $this->get('Errors'))){
-            JError::raiseError(500, implode("\n", $errors));
-            return false;
-        }
-        
         $extraImages = array();
         if($this->item->id) {
-            $extraImages = VpHelper::getExtraImages($this->item->id);
+            $extraImages = VipPortfolioHelper::getExtraImages($this->item->id);
         }
         $this->assignRef("extraImages", $extraImages);
         
@@ -57,11 +59,13 @@ class VipPortfolioViewProject extends JView {
      */
     protected function addToolbar(){
         
-        JRequest::setVar('hidemainmenu', true);
+        JFactory::getApplication()->input->set('hidemainmenu', true);
+
         $isNew = ($this->item->id == 0);
-        
-        JToolBarHelper::title($isNew ? JText::_('COM_VIPPORTFOLIO_PROJECT_ADD')
-		                             : JText::_('COM_VIPPORTFOLIO_PROJECT_EDIT'), 'vip-projects-new');
+        $this->documentTitle= $isNew ? JText::_('COM_VIPPORTFOLIO_PROJECT_ADD')
+                                      : JText::_('COM_VIPPORTFOLIO_PROJECT_EDIT');
+                                      
+        JToolBarHelper::title($this->documentTitle, 'vip-projects-new');
 		                             
         JToolBarHelper::apply('project.apply');
         JToolBarHelper::save2new('project.save2new');
@@ -82,27 +86,24 @@ class VipPortfolioViewProject extends JView {
 	 */
 	protected function setDocument() {
 	    
-	    $option = JRequest::getCmd("option");
-	    
 	    // Add behaviors
-		//JHtml::_('behavior.modal', 'a.vip-modal');
         JHtml::_('behavior.tooltip');
         JHtml::_('behavior.formvalidation');
         
-		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_PROJECT_ADMINISTRATION'));
+		$this->document->setTitle($this->documentTitle);
         
         // Add styles
-        $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/slimbox/css/slimbox.css');
-        $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/js/messageclass/message.css');
+        $this->document->addStyleSheet('../media/'.$this->option.'/js/slimbox/css/slimbox.css');
+        $this->document->addStyleSheet('../media/'.$this->option.'/js/messageclass/message.css');
         
         // Add JS libraries
-        $this->document->addScript(JURI::root() . 'media/'.$option.'/js/trashable.js');
-        $this->document->addScript(JURI::root() . 'media/'.$option.'/js/messageclass/message.js');
-        $this->document->addScript(JURI::root() . 'media/'.$option.'/slimbox/slimbox.js');
+        $this->document->addScript('../media/'.$this->option.'/js/trashable.js');
+        $this->document->addScript('../media/'.$this->option.'/js/messageclass/message.js');
+        $this->document->addScript('../media/'.$this->option.'/js/slimbox/slimbox.js');
         
 		// Add scripts
-		$this->document->addScript(JURI::root() . 'administrator/components/'.$option.'/models/forms/'.$this->getName().'.js');
-		$this->document->addScript(JURI::root() . 'administrator/components/'.$option.'/views/'.$this->getName().'/submitbutton.js');
+		$this->document->addScript('../media/'.$this->option.'/js/admin/forms/'.strtolower($this->getName()).'.js');
+		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
         
 	}
 

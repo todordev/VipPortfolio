@@ -12,15 +12,24 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
 class VipPortfolioViewCpanel extends JView {
     
+protected $option;
+    
+    public function __construct($config){
+        parent::__construct($config);
+        $this->option = JFactory::getApplication()->input->get("option");
+    }
+    
     public function display($tpl = null){
         
         JHtml::_('behavior.modal', 'a.modal');
+        
+        $this->version = new VipPortfolioVersion();
         
         $this->addToolbar();
         $this->setDocument();
@@ -44,9 +53,10 @@ class VipPortfolioViewCpanel extends JView {
 	 */
 	protected function setDocument() {
 	    
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_VIPPORTFOLIO_CPANEL_ADMINISTRATION'));
+		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_CPANEL_ADMINISTRATION'));
 		
+		// Header styles
+		$this->document->addStyleSheet('../media/'.$this->option.'/css/bootstrap.min.css');
 	}
 	
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <extension type="package" version="2.5" method="upgrade">
-	<name>VipPortfolio Packages</name>
-	<packagename>VipPortfolio</packagename>
+	<name>Vip Portfolio Packages</name>
+	<packagename>vipportfolio</packagename>
 	<creationDate>August, 2010</creationDate>
 	<author>Todor Iliev</author>
 	<authorEmail>todor@itprism.com</authorEmail>
 	<authorUrl>http://itprism.com</authorUrl>
 	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html</license>
-	<version>3.2</version>
+	<version>3.3</version>
 	<url>http://www.itprism.com</url>
 	<packager>Todor Iliev</packager>
 	<packagerurl>http://www.itprism.com</packagerurl>

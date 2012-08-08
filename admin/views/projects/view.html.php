@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -28,13 +28,7 @@ class VipPortfolioViewProjects extends JView {
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         
-        // Check for errors.
-        if(count($errors = $this->get('Errors'))){
-            JError::raiseError(500, implode("\n", $errors));
-            return false;
-        }
-        
-        $categories = VpHelper::getCategories();
+        $categories = VipPortfolioHelper::getCategories();
         $this->assignRef("categories", $categories);
         
         // Prepare filters
@@ -70,7 +64,7 @@ class VipPortfolioViewProjects extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::deleteList(JText::_("COM_VIPPORTFOLIO_DELETE_ITEMS_QUESTION"), "projects.delete");
         JToolBarHelper::divider();
-        JToolBarHelper::custom('projects.backToControlPanel', "vip-properties-back", "", JText::_("COM_VIPPORTFOLIO_BACK"), false);
+        JToolBarHelper::custom('projects.backToControlPanel', "vip-properties-back", "", JText::_("COM_VIPPORTFOLIO_CPANEL_TITLE"), false);
         
     }
     
@@ -79,10 +73,8 @@ class VipPortfolioViewProjects extends JView {
 	 *
 	 * @return void
 	 */
-	protected function setDocument() 
-	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_VIPPORTFOLIO_PROJECT_ADMINISTRATION'));
+	protected function setDocument() {
+		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_PROJECTS_ADMINISTRATION'));
 	}
     
 }

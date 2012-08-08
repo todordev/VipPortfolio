@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -22,19 +22,23 @@ class VipPortfolioViewCategory extends JView {
     protected $item;
     protected $form;
     
+    protected $documentTitle;
+    protected $option;
+    
+    public function __construct($config) {
+        parent::__construct($config);
+        $this->option = JFactory::getApplication()->input->get("option");
+    }
+    
     /**
      * Display the view
      */
     public function display($tpl = null){
-        $this->state= $this->get('State');
-        $this->item = $this->get('Item');
-        $this->form = $this->get('Form');
+        $this->state  = $this->get('State');
+        $this->item   = $this->get('Item');
+        $this->form   = $this->get('Form');
         
-        // Check for errors.
-        if(count($errors = $this->get('Errors'))){
-            JError::raiseError(500, implode("\n", $errors));
-            return false;
-        }
+        $this->params = $this->state->get("params");
         
         // Prepare actions, behaviors, scritps and document
         $this->addToolbar();
@@ -50,12 +54,14 @@ class VipPortfolioViewCategory extends JView {
      */
     protected function addToolbar(){
         
-        JRequest::setVar('hidemainmenu', true);
-        $isNew = ($this->item->id == 0);
+        JFactory::getApplication()->input->set('hidemainmenu', true);
         
+        $isNew = ($this->item->id == 0);
+        $this->documentTitle= $isNew ? JText::_('COM_VIPPORTFOLIO_CATEGORY_ADD')
+                                      : JText::_('COM_VIPPORTFOLIO_CATEGORY_EDIT');
+                                      
         // Set toolbar items for this page
-        JToolBarHelper::title($isNew ? JText::_('COM_VIPPORTFOLIO_CATEGORY_ADD')
-		                             : JText::_('COM_VIPPORTFOLIO_CATEGORY_EDIT'), 'vip-categories-new');
+        JToolBarHelper::title($this->documentTitle, 'vip-categories-new');
 		                             
         JToolBarHelper::apply('category.apply');
         JToolBarHelper::save2new('category.save2new');
@@ -76,18 +82,13 @@ class VipPortfolioViewCategory extends JView {
 	 */
 	protected function setDocument() {
 	    
-	    $option = JRequest::getCmd("option");
-	    
 	    // Add behaviors
-		//JHtml::_('behavior.modal', 'a.vip-modal');
         JHtml::_('behavior.tooltip');
         JHtml::_('behavior.formvalidation');
         
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_VIPPORTFOLIO_CATEGORIES_ADMINISTRATION'));
-		
+        $this->document->setTitle($this->documentTitle);
 		// Add scripts
-		$document->addScript(JURI::root() . 'administrator/components/'.$option.'/views/'.$this->getName().'/submitbutton.js');
+		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
 	}
 	
 
