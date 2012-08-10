@@ -25,35 +25,86 @@ jimport('joomla.application.component.controllers');
  */
 class VipPortfolioControllerProject extends JController {
     
+	/**
+     * Proxy for getModel.
+     * @since   1.6
+     */
+    public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
+        $model = parent::getModel($name, $prefix, $config);
+        return $model;
+    }
+    
     /** 
      * Deletes Extra Image
      *
      */
     public function removeExtraImage() {
        
-        $id     = JRequest::getInt( 'id', 0, "post" );
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        // Initialize variables
+        $itemId  = $app->input->post->get("id");
         
         try {
             
-            // Gets the model
-            $model = $this->getModel( "Project", "VipPortfolioModel" );
-            $model->removeExtraImage($id);
+            // Get the model
+            $model = $this->getModel();
+            $model->removeExtraImage($itemId);
             
-            $response = array(
-            	"success" => true,
-                "title"=> JText::_( 'COM_VIPPORTFOLIO_SUCCESS' ),
-                "text" => JText::_( 'COM_VIPPORTFOLIO_IMAGE_DELETED' ),
-            );
-
         } catch ( Exception $e ) {
-            
-            $itpSecurity = new ItpSecurity( $e );
-            $itpSecurity->alertMe();
-           
-            JError::raiseError( 500, JText::_( 'ITP_ERROR_SYSTEM' ) );
-            jexit(JText::_( 'ITP_ERROR_SYSTEM' ));
-            
+            JLog::add($e->getMessage());
+            throw new Exception($e->getMessage());
         }
+        
+        $response = array(
+        	"success" => true,
+            "title"=> JText::_( 'COM_VIPPORTFOLIO_SUCCESS' ),
+            "text" => JText::_( 'COM_VIPPORTFOLIO_IMAGE_DELETED' ),
+            "data" => array("item_id"=>$itemId)
+        );
+        
+        echo json_encode($response);
+    }
+    
+    public function addExtraImage() {
+       
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        // Initialize variables
+        $itemId  = $app->input->get->get("id");
+        $files   = $app->input->files->get("file");
+        
+        if(!$files) {
+            $response = array(
+            	"success" => false,
+                "title"=> JText::_( 'COM_VIPPORTFOLIO_FAIL' ),
+                "text" => JText::_( 'ITP_ERROR_FILE_UPLOAD' ),
+            );
+                
+            echo json_encode($response);
+            return;
+        }
+        
+        try {
+           
+            // Get the model
+            $model = $this->getModel();
+            $images = $model->uploadExtraImages($files);
+            $images = $model->storeExtraImages($images, $itemId);
+            
+        } catch ( Exception $e ) {
+            JLog::add($e->getMessage());
+            throw new Exception($e->getMessage());
+        }
+        
+        $response = array(
+        	"success" => true,
+            "title"=> JText::_( 'COM_VIPPORTFOLIO_SUCCESS' ),
+            "text" => JText::_( 'COM_VIPPORTFOLIO_IMAGE_SAVED' ),
+            "data" => $images
+        );
         
         echo json_encode($response);
     }

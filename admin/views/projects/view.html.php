@@ -24,12 +24,12 @@ class VipPortfolioViewProjects extends JView {
     
     public function display($tpl = null){
         
-        $this->state = $this->get('State');
-        $this->items = $this->get('Items');
+        $this->state      = $this->get('State');
+        $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         
-        $categories = VipPortfolioHelper::getCategories();
-        $this->assignRef("categories", $categories);
+        $categories       = VipPortfolioHelper::getCategories();
+        $this->categories = $categories;
         
         // Prepare filters
         $listOrder  = $this->escape($this->state->get('list.ordering'));

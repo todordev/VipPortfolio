@@ -78,6 +78,7 @@
 			<filename>index.html</filename>
 			<filename>config.xml</filename> 
 			<filename>vipportfolio.php</filename>
+			<filename>README.md</filename>
 		</files>
 		
 		<languages folder="admin">

@@ -35,15 +35,17 @@ class VipPortfolioViewProject extends JView {
      */
     public function display($tpl = null){
         
-        $this->state= $this->get('State');
-        $this->item = $this->get('Item');
-        $this->form = $this->get('Form');
+        $this->state  = $this->get('State');
+        $this->item   = $this->get('Item');
+        $this->form   = $this->get('Form');
+        
+        $this->params = $this->state->get("params");
         
         $extraImages = array();
         if($this->item->id) {
             $extraImages = VipPortfolioHelper::getExtraImages($this->item->id);
         }
-        $this->assignRef("extraImages", $extraImages);
+        $this->extraImages = $extraImages;
         
         // Prepare actions, behaviors, scritps and document
         $this->addToolbar();
@@ -93,16 +95,15 @@ class VipPortfolioViewProject extends JView {
 		$this->document->setTitle($this->documentTitle);
         
         // Add styles
-        $this->document->addStyleSheet('../media/'.$this->option.'/js/slimbox/css/slimbox.css');
         $this->document->addStyleSheet('../media/'.$this->option.'/js/messageclass/message.css');
         
         // Add JS libraries
-        $this->document->addScript('../media/'.$this->option.'/js/trashable.js');
         $this->document->addScript('../media/'.$this->option.'/js/messageclass/message.js');
-        $this->document->addScript('../media/'.$this->option.'/js/slimbox/slimbox.js');
+        $this->document->addScript('../media/'.$this->option.'/js/formupload/Request.File.js');
+        $this->document->addScript('../media/'.$this->option.'/js/formupload/Form.MultipleFileInput.js');
+        $this->document->addScript('../media/'.$this->option.'/js/formupload/Form.Upload.js');
         
 		// Add scripts
-		$this->document->addScript('../media/'.$this->option.'/js/admin/forms/'.strtolower($this->getName()).'.js');
 		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
         
 	}

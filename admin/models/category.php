@@ -331,19 +331,20 @@ class VipPortfolioModelCategory extends JModelAdmin {
         
         $names         = array("image");
         $uploadedFile  = $app->input->files->get('jform');
+        $uploadedFile  = JArrayHelper::getValue($uploadedFile, "image");
         
         // Check for errors
         $this->checkUploadErrors($uploadedFile);
         
         // Save Image
-        if(!empty($uploadedFile['image']['name'])){
+        if(!empty($uploadedFile['name'])){
             
             $options = array();
             if($this->resizeImages) {
                 $options = array("width" => $this->imageWidth, "height"=>$this->imageHeight);
             }
             
-            $names['image'] = $this->uploadImage($uploadedFile['image']['tmp_name'],$uploadedFile['image']['name'], $this->imagesFolder, "image_", $options);
+            $names['image'] = $this->uploadImage($uploadedFile['tmp_name'],$uploadedFile['name'], $this->imagesFolder, "image_", $options);
         }
 
         return $names['image'];
@@ -367,9 +368,9 @@ class VipPortfolioModelCategory extends JModelAdmin {
 		    throw new Exception(JText::_("ITP_ERROR_WARNFILETOOLARGE"));
 		}
 		
-        if(!empty($uploadedFile['image']['error'])){
+        if(!empty($uploadedFile['error'])){
                 
-            switch($uploadedFile['image']['error']){
+            switch($uploadedFile['error']){
                 case UPLOAD_ERR_INI_SIZE:
                      throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_INI_SIZE'), 500);
                 case UPLOAD_ERR_FORM_SIZE:
@@ -433,19 +434,19 @@ class VipPortfolioModelCategory extends JModelAdmin {
             throw new Exception('ITP_ERROR_FILE_CANT_BE_UPLOADED');
         }
         
-        $image = new JImage();
-        $image->loadFile($newFile);
-        if (!$image->isLoaded()) {
-            throw new Exception(JText::sprintf('ITP_ERROR_FILE_NOT_FOUND', $newFile));
-        }
-        
         // Resize image
         if(!empty($options)) {
+            
+            $image = new JImage();
+            $image->loadFile($newFile);
+            if (!$image->isLoaded()) {
+                throw new Exception(JText::sprintf('ITP_ERROR_FILE_NOT_FOUND', $newFile));
+            }
             
             $width   = JArrayHelper::getValue($options, "width", $this->imageWidth);
             $height  = JArrayHelper::getValue($options, "height", $this->imageWidth);
             
-            // Resize the file as a new object
+            // Resize the file
             $image->resize($width, $height, false);
             $image->toFile($newFile, IMAGETYPE_PNG);
             

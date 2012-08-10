@@ -1,6 +1,6 @@
 Vip Portfolio for Joomla! 
 ==========================
-( Version 3.1 )
+( Version 3.3 )
 --------------------------
 
 Changelog
@@ -18,7 +18,10 @@ v3.3
   - Replaced is the option that turns on and off the modal box. Now you can choose the type of modal window.
   
 * Removed PHP Thumb library. The image will be resized by JImage object
-* Improved deleting categories
+* Removed the field to upload a thumbnail. Now the system create a thumbnail automatically.
+* Added AJAX file uploader. 
+* Improved categories deleting
+* Improved database structure
 * Improved
 
 v3.2

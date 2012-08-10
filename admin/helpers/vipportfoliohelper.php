@@ -81,11 +81,6 @@ class VipPortfolioHelper {
      */
     public static function getCategoryName($id) {
     	
-        $db               = JFactory::getDBO();
-        $tableCategories  = $db->quoteName("#__vp_categories");
-    	$columnId         = $db->quoteName("id");
-    	$columnName       = $db->quoteName("name");
-    	
     	$db              = JFactory::getDBO();
     	/** @var $db JDatabaseMySQLi **/
     	
@@ -186,7 +181,7 @@ class VipPortfolioHelper {
     	$query  = $db->getQuery(true);
         $query->select("*")
               ->from("#__vp_images")
-              ->where("projects_id =". (int)$projectId);
+              ->where("project_id =". (int)$projectId);
               
         $db->setQuery($query);
         $images = $db->loadAssocList();

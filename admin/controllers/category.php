@@ -63,7 +63,7 @@ class VipPortfolioControllerCategory extends JControllerForm {
         /** @var $form JForm **/
        
         if (!$form) {
-            throw new Exception($model->getError(), 500);
+            throw new Exception($model->getError());
         }
         
         try {
@@ -83,6 +83,11 @@ class VipPortfolioControllerCategory extends JControllerForm {
                 $this->setMessage($model->getError(), "notice");
                 $this->setRedirect(JRoute::_($this->defaultLink, false));
                 return;
+            }
+            
+            // If does not exist alias, I will generate the new one from the title
+            if(!$validData["alias"]) {
+                $validData["alias"] = JFilterOutput::stringURLSafe($validData['name']);    
             }
             
             $itemId = $model->save($validData);

@@ -13,7 +13,6 @@
 
 // no direct access
 defined('_JEXEC') or die;
-JHtml::_('behavior.tooltip');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_vipportfolio&view=projects'); ?>" method="post" name="adminForm" id="adminForm">
     <fieldset id="filter-bar">
@@ -47,5 +46,4 @@ JHtml::_('behavior.tooltip');
 <input type="hidden" name="filter_order" value="<?php echo $this->listOrder; ?>" />
 <input type="hidden" name="filter_order_Dir" value="<?php echo $this->listDirn; ?>" />
 <?php echo JHtml::_('form.token'); ?>
-
 </form>

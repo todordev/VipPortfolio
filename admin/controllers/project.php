@@ -36,76 +36,92 @@ class VipPortfolioControllerProject extends JControllerForm {
         
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
         
-        $msg = "";
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        // Initialize variables
+        $itemId  = $app->input->getInt("id");
+        $msg     = "";
+        $link    = "";
         
         // Gets the data from the form
-        $data = JRequest::getVar('jform', array(), 'post', 'array');
+        $data = $app->input->get('jform', array(), 'post', 'array');
         
-        $model = $this->getModel("Project", "VipPortfolioModel");
+        $model = $this->getModel();
         /** @var $model VipPortfolioModelProject */
+        
         $form = $model->getForm($data, false);
         /** @var $form JForm */
         
+        if (!$form) {
+            throw new Exception($model->getError());
+        }
+        
         try{
             
-            if(!$form){
-                throw new ItpException($model->getError(), 500);
-            }
-            
-            // Test if the data is valid.
+            // Test for valid data.
             $validData = $model->validate($form, $data);
             
             // Check for validation errors.
             if($validData === false){
-                $itemId = JArrayHelper::getValue($data, "id");
-                // Get the validation messages.
-                throw new ItpUserException($model->getError(), 500);
+                $this->defaultLink .= "&view=".$this->view_item."&layout=edit";
+            
+                if($itemId) {
+                    $this->defaultLink .= "&id=" . $itemId;
+                } 
+                
+                $this->setMessage($model->getError(), "notice");
+                $this->setRedirect(JRoute::_($this->defaultLink, false));
+                return;
             }
             
             $itemId = $model->save($validData);
-            $msg = JText::_('COM_VIPPORTFOLIO_PROJECT_SAVED');
         
-        }catch(ItpUserException $e){
-            
-            JError::raiseWarning(500, $e->getMessage());
-            $this->defaultLink .= "&view=project&layout=edit";
-            if(!empty($itemId)) {
-                $this->defaultLink .= "&id=" . (int)$itemId; 
-            }
-            $this->setRedirect(JRoute::_($this->defaultLink, false));
-            return false;
-                
-        }catch(Exception $e){
-            
-            $itpSecurity = new ItpSecurity($e);
-            $itpSecurity->alertMe();
-            
-            JError::raiseError(500, JText::_('ITP_ERROR_SYSTEM'));
-            return false;
-        
+        } catch ( Exception $e ) {
+            JLog::add($e->getMessage());
+            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
         }
         
-        // Prepare redirection
+        $msg  = JText::_('COM_VIPPORTFOLIO_PROJECT_SAVED');
+        $link = $this->prepareRedirectLink($itemId);
+        
+        $this->setRedirect(JRoute::_($link, false), $msg);
+    
+    }
+    
+	/**
+     * 
+     * Prepare redirect link. 
+     * If has clicked apply, will be redirected to edit form and will be loaded the item data
+     * If has clicked save2new, will be redirected to edit form, and you will be able to add a new record
+     * If has clicked save, will be redirected to the list of items
+     *
+     * @param integer $itemId 
+     */
+    protected function prepareRedirectLink($itemId = 0) {
+        
         $task = $this->getTask();
+        $link = $this->defaultLink;
+        
+        // Prepare redirection
         switch($task) {
             case "apply":
-                $this->defaultLink .= "&view=project&layout=edit";
+                $link .= "&view=".$this->view_item."&layout=edit";
                 if(!empty($itemId)) {
-                    $this->defaultLink .= "&id=" . (int)$itemId; 
+                    $link .= "&id=" . (int)$itemId; 
                 }
                 break;
                 
             case "save2new":
-                $this->defaultLink .= "&view=project&layout=edit";
+                $link .= "&view=".$this->view_item."&layout=edit";
                 break;
                 
             default:
-                $this->defaultLink .= "&view=projects";
+                $link .= "&view=".$this->view_list;
                 break;
         }
         
-        $this->setRedirect(JRoute::_($this->defaultLink, false), $msg);
-    
+        return $link;
     }
     
     /**
@@ -114,37 +130,30 @@ class VipPortfolioControllerProject extends JControllerForm {
      */
     public function removeImage(){
         
-        $id = JRequest::getInt("id", 0, "GET");
-        $type = JRequest::getVar("type", "", "GET", "string");
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
         
-        $this->defaultLink .= "&view=project&layout=edit&id=" . (int)$id;
+        $id   = $app->input->get->getInt('id', 0);
+        $type = $app->input->get->get('type', "string");
+        if(!$id){
+            throw new Exception(JText::_('ITP_ERROR_IMAGE_DOES_NOT_EXIST'));
+        }
         
         try{
             
             // Get the model
-            $model = $this->getModel("Project", "VipPortfolioModel");
+            $model = $this->getModel();
             /** @var $model VipPortfolioModelProject */
+            
             $model->removeImage($id, $type);
             
-            $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');
-        
-        }catch(ItpUserException $e){
-            
-            JError::raiseWarning(500, $e->getMessage());
-            $this->setRedirect(JRoute::_($this->defaultLink, false));
-            return false;
-        
-        }catch(Exception $e){
-            
-            $itpSecurity = new ItpSecurity($e);
-            $itpSecurity->alertMe();
-            
-            JError::raiseError(500, JText::_('ITP_ERROR_SYSTEM'));
-            jexit(JText::_('ITP_ERROR_SYSTEM'));
-        
+        } catch ( Exception $e ) {
+            JLog::add($e->getMessage());
+            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
         }
         
-        $this->setRedirect(JRoute::_($this->defaultLink, false), $msg);
+        $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');
+        $this->setRedirect(JRoute::_($this->defaultLink."&view=".$this->view_item."&layout=edit&id=" . (int)$id, false), $msg);
     
     }
     
@@ -153,7 +162,7 @@ class VipPortfolioControllerProject extends JControllerForm {
      *
      */
     public function cancel(){
-        $this->setRedirect(JRoute::_($this->defaultLink . "&view=projects", false));
+        $this->setRedirect(JRoute::_($this->defaultLink . "&view=".$this->view_list, false));
     }
     
 }

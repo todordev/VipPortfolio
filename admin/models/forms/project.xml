@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fieldset>
-		<field name="id" type="text" default="0" label="JGLOBAL_FIELD_ID_LABEL" 
-			readonly="true" class="readonly"
-			description="JGLOBAL_FIELD_ID_DESC"/>
+		<field 
+			name="id" 
+			type="text" 
+			default="0" 
+			label="JGLOBAL_FIELD_ID_LABEL" 
+			readonly="true" 
+			class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"
+			/>
 
-		<field name="title" type="text" class="inputbox"
-			size="40" label="JGLOBAL_TITLE"
-			description="COM_VIPPORTFOLIO_FIELD_TITLE_DESC" required="true" />
+		<field 
+		    name="title" 
+		    type="text" 
+		    class="inputbox"
+			size="40" 
+			label="JGLOBAL_TITLE"
+			description="COM_VIPPORTFOLIO_FIELD_TITLE_DESC" 
+			required="true" 
+			filter="trim" />
 
 		<field
 	        name="catid"
@@ -22,22 +34,13 @@
 			description="JFIELD_PUBLISHED_DESC"
 			class="inputbox"
 			size="1"
-			default="1">
+			default="1" >
 			<option
 				value="1">JPUBLISHED</option>
 			<option
 				value="0">JUNPUBLISHED</option>
 		</field>
 		
-		<field
-            name="thumb"
-            type="file"
-            label="COM_VIPPORTFOLIO_FIELD_THUMB"
-            description="COM_VIPPORTFOLIO_FIELD_THUMB_DESC"
-            class="inputbox"
-            size="60"
-            />
-            
 		<field
             name="image"
             type="file"
@@ -49,18 +52,22 @@
             
         <field
             name="url"
-            type="text"
+            type="url"
             label="COM_VIPPORTFOLIO_URL"
             description="COM_VIPPORTFOLIO_FIELD_URL_DESC"
             class="inputbox"
             size="60"
+            filter="trim"
+            validate="url"
             />
 		
 		<field name="description" type="editor" buttons="true" hide="pagebreak,readmore,article,image"
             class="inputbox"
             filter="safehtml"
             width="500"
-            label="JGLOBAL_DESCRIPTION" description="COM_VIPPORTFOLIO_FIELD_DESCRIPTION_DESC" />
+            label="JGLOBAL_DESCRIPTION" 
+            description="COM_VIPPORTFOLIO_FIELD_DESCRIPTION_DESC" 
+            />
 
 	</fieldset>
 </form>

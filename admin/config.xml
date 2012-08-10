@@ -10,14 +10,10 @@
            <option value="1">JSHOW</option>
        </field>
        
-       <field name="spacer1" type="spacer" hr="true" />
-       <field name="subcategories" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_RESIZE_THUMB_LABEL" />
-       
-       <field name="resize_thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_DESC" />
-       <field name="resize_thumb_height" type="text" default="150" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_DESC" />
-        
-       <field name="spacer2" type="spacer" hr="true" />
-       <field name="subcategories1" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_RESIZE_ORIGINAL_LABEL" />
+	</fieldset>
+	
+	<fieldset name="images" label="COM_VIPPORTFOLIO_IMAGES_TITLE" description="COM_VIPPORTFOLIO_IMAGES_PARAMS">
+	
        <field name="resize_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_IMAGE_RESIZE" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC" >
             <option value="0">JNO</option>
             <option value="1">JYES</option>
@@ -26,23 +22,33 @@
         <field name="resize_image_width" type="text" default="800" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH_DESC" />
         <field name="resize_image_height" type="text" default="600" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT_DESC" />
         
-        <field name="spacer3" type="spacer" hr="true" />
+        <field name="spacer" type="spacer" hr="true" />
+        <field name="subcategories" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_RESIZE_THUMB_LABEL" />
+        <field name="resize_thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="resize_thumb_height" type="text" default="150" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+       
+        <field name="spacer2" type="spacer" hr="true" />
         <field name="subcategories2" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_RESIZE_CATEGORY_IMAGE_LABEL" />
         <field name="resize_category_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC" >
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         
-        <field name="resize_category_image_width" type="text" default="800" size="50" label="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_WIDTH" description="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_WIDTH_DESC" />
-        <field name="resize_category_image_height" type="text" default="600" size="50" label="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_HEIGHT" description="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_HEIGHT_DESC" />
+        <field name="resize_category_image_width" type="text" default="800" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH" description="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_WIDTH_DESC" />
+        <field name="resize_category_image_height" type="text" default="600" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT" description="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_HEIGHT_DESC" />
+        
+        <field name="spacer3" type="spacer" hr="true" />
+        <field name="subcategories3" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_EXTRA_IMAGE_THUMB_LABEL" />
+        <field name="extra_image_thumb_width" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_EXTRA_THUMB_WIDTH_DESC" />
+        <field name="extra_image_thumb_height" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_EXTRA_THUMB_HEIGHT_DESC" />
         
         <field name="spacer4" type="spacer" hr="true" />
         <field name="images_directory" type="text" default="images/vipportfolio" size="50" label="COM_VIPPORTFOLIO_IMAGES_DIRECTORY" description="COM_VIPPORTFOLIO_IMAGES_DIRECTORY_DESC" />
-       
+        
 	</fieldset>
 
 	<fieldset name="list" label="COM_VIPPORTFOLIO_PROJECTS_LIST_TITLE" description="COM_VIPPORTFOLIO_PROJECTS_LIST_PARAMS">
-	    <field name="modal" type="radio" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
+	    <field name="modal" type="list" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
 	       <option value="">COM_VIPPORTFOLIO_CONFIG_NONE</option>
 	       <option value="native">COM_VIPPORTFOLIO_CONFIG_JOOMLA_NATIVE</option>
            <option value="slimbox">Slimbox</option>
@@ -55,6 +61,10 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+        <field name="open_link" type="list" default="_self"  label="COM_VIPPORTFOLIO_OPEN_LINK" description="COM_VIPPORTFOLIO_OPEN_LINK_DESC" >
+            <option value="_self">COM_VIPPORTFOLIO_SAME_TAB</option>
+            <option value="_blank">COM_VIPPORTFOLIO_NEW_TAB</option>
+        </field>
         <field name="extra_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_EXTRA_IMAGE" description="COM_VIPPORTFOLIO_EXTRA_IMAGE_DESC" >
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
@@ -66,7 +76,7 @@
 	</fieldset>
     
     <fieldset name="line" label="COM_VIPPORTFOLIO_PROJECTS_LINEAL" description="COM_VIPPORTFOLIO_PROJECTS_LINEAL_PARAMS">
-        <field name="lModal" type="radio" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
+        <field name="lModal" type="list" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
            <option value="">COM_VIPPORTFOLIO_CONFIG_NONE</option>
            <option value="native">COM_VIPPORTFOLIO_CONFIG_JOOMLA_NATIVE</option>
            <option value="slimbox">Slimbox</option>
@@ -78,6 +88,10 @@
         <field name="lTitleLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" >
             <option value="0">JNO</option>
             <option value="1">JYES</option>
+        </field>
+        <field name="lOpenLink" type="list" default="_self"  label="COM_VIPPORTFOLIO_OPEN_LINK" description="COM_VIPPORTFOLIO_OPEN_LINK_DESC" >
+            <option value="_self">COM_VIPPORTFOLIO_SAME_TAB</option>
+            <option value="_blank">COM_VIPPORTFOLIO_NEW_TAB</option>
         </field>
         <field name="lDisplayTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_TITLE" description="COM_VIPPORTFOLIO_SHOW_TITLE_DESC" >
             <option value="0">JHIDE</option>
@@ -114,7 +128,7 @@
     </fieldset>
     
     <fieldset name="catstabbed" label="COM_VIPPORTFOLIO_CATEGORY_TABBED_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_TABBED_PARAMS">
-        <field name="ctabModal" type="radio" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
+        <field name="ctabModal" type="list" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
             <option value="">COM_VIPPORTFOLIO_CONFIG_NONE</option>
             <option value="native">COM_VIPPORTFOLIO_CONFIG_JOOMLA_NATIVE</option>
             <option value="slimbox">Slimbox</option>
@@ -122,6 +136,10 @@
         <field name="ctabsTitleLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" >
             <option value="0">JNO</option>
             <option value="1">JYES</option>
+        </field>
+        <field name="open_link" type="list" default="_self"  label="COM_VIPPORTFOLIO_OPEN_LINK" description="COM_VIPPORTFOLIO_OPEN_LINK_DESC" >
+            <option value="_self">COM_VIPPORTFOLIO_SAME_TAB</option>
+            <option value="_blank">COM_VIPPORTFOLIO_NEW_TAB</option>
         </field>
         <field name="ctabsDisplayTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_TITLE" description="COM_VIPPORTFOLIO_SHOW_TITLE_DESC" >
             <option value="0">JNO</option>
