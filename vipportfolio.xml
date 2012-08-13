@@ -7,7 +7,7 @@
 	<authorUrl>http://itprism.com</authorUrl>
 	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html</license>
-	<version>3.2</version>
+	<version>3.3</version>
 	<description>COM_VIPPORTFOLIO_DESCRIPTION</description>
 
 	<install>
@@ -52,7 +52,7 @@
 	</files>
 
 	<languages folder="site">
-		<language tag="en-GB">languages/en-GB/en-GB.com_vipportfolio.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
 	</languages>
 	
 	
@@ -78,12 +78,11 @@
 			<filename>index.html</filename>
 			<filename>config.xml</filename> 
 			<filename>vipportfolio.php</filename>
-			<filename>README.md</filename>
 		</files>
 		
 		<languages folder="admin">
-			<language tag="en-GB">languages/en-GB/en-GB.com_vipportfolio.ini</language>
-			<language tag="en-GB">languages/en-GB/en-GB.com_vipportfolio.sys.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.sys.ini</language>
 		</languages>
 			
 		</administration>

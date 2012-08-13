@@ -61,18 +61,13 @@ class com_vipPortfolioInstallerScript {
     
         jimport('joomla.filesystem.folder');
         
-        $app = JFactory::getApplication();
-        /** @var JAdministrator **/
-        $params = $app->getParams("com_vipportfolio");
-        $folder = JPATH_BASE.$params->get("images_directory");
+        $params = JComponentHelper::getParams("com_vipportfolio");
+        $destFolder = $params->get("images_directory", "images/vipportfolio");
+        $folder = JPATH_SITE.DIRECTORY_SEPARATOR.$destFolder;
         
-        echo $folder;
         $folder = JFolder::makeSafe($folder);
-        echo $folder;
         
         if(!is_dir($folder)){
-            
-            jimport('joomla.filesystem.file');
         
             // Create user folder
             if(true !== JFolder::create($folder)) {
@@ -82,6 +77,8 @@ class com_vipPortfolioInstallerScript {
                 return false;
             }
             
+            jimport('joomla.filesystem.file');
+            
             // Copy index.html
             $indexFile = $folder . DIRECTORY_SEPARATOR ."index.html";
             $html = '<html><body bgcolor="#FFFFFF"></body></html>';
@@ -90,7 +87,13 @@ class com_vipPortfolioInstallerScript {
                 JLog::add($message);
             }
             
-            echo JText::sprintf("ITP_MESSAGE_FOLDER_CREATED_SUCCESSFULLY", $folder); 
+            echo JText::sprintf("ITP_MESSAGE_FOLDER_CREATED_SUCCESSFULLY", $destFolder); 
+        }
+        
+        if(!is_writable($folder)) {
+            echo JText::sprintf("ITP_MESSAGE_FOLDER_NOT_WRITABLE", $destFolder); 
+        } else {
+            echo JText::sprintf("ITP_MESSAGE_FOLDER_WRITABLE", $destFolder); 
         }
         
     }
