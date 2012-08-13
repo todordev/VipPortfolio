@@ -15,7 +15,7 @@
 
 		<field
 			name="published"
-			type="list"
+			type="radio"
 			label="JSTATUS"
 			description="JFIELD_PUBLISHED_DESC"
 			class="inputbox"
@@ -35,14 +35,12 @@
             class="inputbox"
             size="60"
             />
-		
+            
 		<field name="desc" type="editor" buttons="true" hide="pagebreak,readmore,article,image"
             class="inputbox"
             filter="safehtml"
             width="500"
             label="JGLOBAL_DESCRIPTION" description="COM_VIPPORTFOLIO_FIELD_DESCRIPTION_DESC" />
-
-		<field name="spacer" type="spacer" class="text" label="COM_VIPPORTFOLIO_FIELD_SEO" />
 
         <field name="meta_title" type="text" class="inputbox"
             size="60" label="COM_VIPPORTFOLIO_META_TITLE" />

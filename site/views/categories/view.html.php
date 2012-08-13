@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -22,56 +22,56 @@ class VipPortfolioViewCategories extends JView {
     protected $items = null;
     protected $pagination = null;
     
+    protected $option;
+    
+    public function __construct($config) {
+        parent::__construct($config);
+        $this->option = JFactory::getApplication()->input->get("option");
+    }
+    
     public function display($tpl = null) {
         
-        $option     = JRequest::getCmd("option", "com_vipportfolio", "GET");
+        $app = JFactory::getApplication();
+        /** @var $app JSite **/
         
         // Initialise variables
-        $state      = $this->get('State');
-        $items      = $this->get('Items');
-        $pagination = $this->get('Pagination');
-    
-        $params     = &$state->params;
+        $this->state          = $this->get('State');
+        $this->items          = $this->get('Items');
+        $this->pagination     = $this->get('Pagination');
+        $this->params         = $this->state->params;
         
-        //Escape strings for HTML output
-        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-        
-        $this->assignRef('params', $params);
-        $this->assignRef('items', $items);
-        $this->assignRef('pagination', $pagination);
-        
-        $this->assign('projectLayout', JRequest::getCmd("project_layout", "default"));
+        $this->projectLayout  = $app->input->getCmd("project_layout", "default");
         
         $layout = $this->getLayout();
         
     	switch( $layout ) {
             case "tabbed":
-                $this->tabbedLayout($layout, $option);
+                $this->tabbedLayout($layout);
                 break;
 
             case "imagemenu":
-                $this->imagemenuLayout($layout, $option);
+                $this->imagemenuLayout($layout);
                 break;
                 
     		default:
     			$layout =   "default";
     			// Add template style
-                $this->document->addStyleSheet( JURI::base() . 'media/'.$option.'/categories/' . $layout . '/style.css', 'text/css', null );
+                $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $layout . '/style.css', 'text/css', null );
     			break;
     	}
         
-        $this->assignRef( "version",    new VpVersion() );
+        $this->version =   new VipPortfolioVersion();
         
-        $this->prepareLightBox($option);
+        $this->prepareLightBox();
         $this->prepareDocument();
                 
         parent::display($tpl);
     }
     
-    protected function tabbedLayout($layout, $option) {
+    protected function tabbedLayout($layout) {
         
         // Add template style
-        $this->document->addStyleSheet( JURI::base() . 'media/'.$option.'/categories/' . $layout . '/style.css', 'text/css', null );
+        $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $layout . '/style.css', 'text/css', null );
                 
         // Only loads projects from the published categories
         foreach ($this->items as $item){
@@ -79,28 +79,28 @@ class VipPortfolioViewCategories extends JView {
         }
         
         $published = 1;
-        $projects_ = VpHelper::getProjects($categories, $published);
+        $projects_ = VipPortfolioHelper::getProjects($categories, $published);
         
         $projects  = array();
         foreach ($projects_ as &$item){
             $projects[$item['catid']][] = $item;  
         }
         
-        $this->assignRef('projects',    $projects);
+        $this->projects = $projects;
         
     }
     
-    protected function imagemenuLayout($layout, $option) {
+    protected function imagemenuLayout($layout) {
         
         // Add template style
-        $this->document->addStyleSheet( JURI::base() . 'media/'.$option.'/categories/' . $layout . '/style.css', 'text/css', null );
-        $this->document->addScript(JURI::root() . 'media/'.$option.'/js/imagemenu/ImageMenu.js');
+        $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $layout . '/style.css', 'text/css', null );
+        $this->document->addScript('media/'.$this->option.'/js/imagemenu/ImageMenu.js');
         
         $cssStyles = "";
         foreach($this->items as $item) {
             $cssStyles .= "
             #itp-vp-image-menu ul li.item" .$item->id."  a {
-                background: url('".JURI::root() . "media/vipportfolio/" . $item->image."') repeat scroll 0%;
+                background: url('". $this->params->get("images_directory")."/" . $item->image."') repeat scroll 0%;
             }
             ";
         }
@@ -124,41 +124,36 @@ class VipPortfolioViewCategories extends JView {
                 
     }
     
-    protected function prepareLightBox($option) {
+    protected function prepareLightBox() {
         
-        $modalParams    = "";
+        $modal          = "";
         $layout         = $this->getLayout();
         $hasModal       = false;
         
         switch($layout) {
             case "tabbed":
-                $hasModal = (bool)$this->params->get("ctabModal");
-                break;
-            default:
+                $modal = $this->params->get("ctabModal");
                 break;
         }
         
-        if ($hasModal) {
-            switch($this->params->get("modalLib")) {
+        switch($modal) {
+            
+            case "slimbox":
                 
-                case "slimbox":
-                    
-                    JHTML::_('behavior.framework');
-                    
-                    $this->document->addStyleSheet(JURI::root() . 'media/'.$option.'/js/slimbox/css/slimbox.css');
-                    $this->document->addScript(JURI::root() . 'media/'.$option.'/js/slimbox/slimbox.js');
-                    
-                    break;
+                JHTML::_('behavior.framework');
                 
-                default: // Joomla! native
-                    // Adds a JavaScript needs for modal windows
-                    JHTML::_('behavior.modal', 'a.vip-modal');
-                    break;
-            }
+                $this->document->addStyleSheet('media/'.$this->option.'/js/slimbox/css/slimbox.css');
+                $this->document->addScript('media/'.$this->option.'/js/slimbox/slimbox.js');
+                
+                break;
+            
+            case "native": // Joomla! native
+                // Adds a JavaScript needs for modal windows
+                JHTML::_('behavior.modal', 'a.vip-modal');
+                break;
         }
         
-        $this->assign("hasModal", $hasModal);
-        $this->assign("modalLib", $this->params->get("modalLib"));
+        $this->modal    = $modal;
     }
     
     /**
@@ -167,6 +162,9 @@ class VipPortfolioViewCategories extends JView {
     protected function prepareDocument(){
         $app = JFactory::getApplication();
         $menus = $app->getMenu();
+        
+        //Escape strings for HTML output
+        $this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
         
         // Because the application sets a default page title,
         // we need to get it from the menu item itself
@@ -177,7 +175,7 @@ class VipPortfolioViewCategories extends JView {
             $this->params->def('page_heading', JText::_('COM_VIPPORTFOLIO_CATEGORIES_DEFAULT_PAGE_TITLE'));
         }
         
-        /*** Set page title ***/
+        // Set page title
         $title = $this->params->get('page_title', '');
         if(empty($title)){
             $title = $app->getCfg('sitename');
@@ -186,12 +184,12 @@ class VipPortfolioViewCategories extends JView {
         }
         $this->document->setTitle($title);
         
-        /*** Meta Description ***/
+        // Meta Description
         if($this->params->get('menu-meta_description')){
             $this->document->setDescription($this->params->get('menu-meta_description'));
         }
         
-        /*** Meta keywords ***/
+        // Meta keywords
         if($this->params->get('menu-meta_keywords')){
             $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
         }

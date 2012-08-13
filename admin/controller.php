@@ -31,7 +31,7 @@ class VipPortfolioController extends JController {
         $this->option = JFactory::getApplication()->input->getCmd("option");
 	}
 
-	public function display( ) {
+	public function display($cachable = false, $urlparams = false) {
 
 		$document = JFactory::getDocument();
 		/** @var $document JDocumentHtml **/

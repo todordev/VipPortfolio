@@ -10,8 +10,9 @@ v3.3
 ----------
 
 * New options
-  - Images directory
+  - A directory of images
   - Options for images resizing
+  - Open link in new tab or in the same one
   
 * Options changed
   - Removed the options where you select the modal box type

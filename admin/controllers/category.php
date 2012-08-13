@@ -33,7 +33,40 @@ class VipPortfolioControllerCategory extends JControllerForm {
      * @since   1.6
      */
     public function getModel($name = 'Category', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
+        
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
         $model = parent::getModel($name, $prefix, $config);
+        
+        // Load the component parameters.
+        $params       = JComponentHelper::getParams($this->option);
+        
+        // Extension parameters
+        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
+        
+        // Get values from the user state
+        $resizeImage = $app->input->getInt('resize_image', 0);
+        $app->setUserState($this->option.'.category.resize_image', $resizeImage, 'uint');
+        
+        $imageWidth = $app->input->getInt('image_width');
+        $app->setUserState($this->option.'.category.image_width', $imageWidth, 'uint');
+        
+        $imageHeight = $app->input->getInt('image_height');
+        $app->setUserState($this->option.'.category.image_height', $imageHeight, 'uint');
+        
+        $model->resizeImage     = $resizeImage;
+        $model->imageWidth      = $imageWidth;
+        $model->imageHeight     = $imageHeight;
+        
+        // Joomla! media extension parameters
+        $mediaParams = JComponentHelper::getParams("com_media");
+        
+        // Media Manager parameters
+        $model->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
+        $model->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
+        $model->uploadMaxSize   = $mediaParams->get("upload_maxsize");
+        
         return $model;
     }
     

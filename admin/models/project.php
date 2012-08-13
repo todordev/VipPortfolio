@@ -95,49 +95,13 @@ class VipPortfolioModelProject extends JModelAdmin {
      * If it is set to 1, the system will resize original image when they are uploaded.
      * @var unknown_type
      */
-    public $resizeImages;
+    public $resizeImage;
     
     /**
      * @var		string	The prefix to use with controller messages.
      * @since	1.6
      */
     protected $text_prefix = 'COM_VIPPORTFOLIO';
-    
-    /**
-     * Constructor.
-     *
-     * @param   array   $config An optional associative array of configuration settings.
-     *
-     * @see     JController
-     * @since   1.6
-     */
-    public function __construct($config = array()){
-        parent::__construct($config);
-        
-        // Load the component parameters.
-        $params = JComponentHelper::getParams($this->option);
-        
-        // Joomla! media extension parameters
-        $mediaParams = JComponentHelper::getParams("com_media");
-        
-        // Extension parameters
-        $this->imagesURI           = $params->get("images_directory");
-        $this->imagesFolder        = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
-        $this->imageWidth          = $params->get("resize_image_width", 800);
-        $this->imageHeight         = $params->get("resize_image_height", 600);
-        $this->thumbWidth          = $params->get("resize_thumb_width", 200);
-        $this->thumbHeight         = $params->get("resize_thumb_height", 150);
-        $this->extraThumbWidth     = $params->get("extra_image_thumb_width", 50);
-        $this->extraThumbHeight    = $params->get("extra_image_thumb_height", 50);
-        $this->resizeImages        = $params->get("resize_image", 0);
-        
-        // Media Manager parameters
-        $this->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
-        $this->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
-        $this->uploadMaxSize   = $mediaParams->get("upload_maxsize");
-        
-        
-    }
     
     /**
      * Returns a reference to the a Table object, always creating it.
@@ -312,7 +276,6 @@ class VipPortfolioModelProject extends JModelAdmin {
      *
      * @param integer Project id
      * @param string  Shows the type of image - the thumbnail or the original image
-     * @exception ItpException
      */
     public function removeImage($id, $type){
         
@@ -352,7 +315,6 @@ class VipPortfolioModelProject extends JModelAdmin {
      * Delete all additionl images
      *
      * @param array Projects IDs
-     * @exception ItpException
      */
     protected function removeExtraImages($projectsIds){
         
@@ -404,7 +366,6 @@ class VipPortfolioModelProject extends JModelAdmin {
      * Only delete an additionl image
      *
      * @param integer Image ID
-     * @exception ItpException
      */
     public function removeExtraImage($id){
         
@@ -451,7 +412,6 @@ class VipPortfolioModelProject extends JModelAdmin {
     /**
      * Saves the images
      * 
-     * @throws ItpException 
      */
     public function saveImages(){
         
@@ -474,7 +434,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         if(!empty($uploadedFile['name'])){
             
             $names['image'] = $this->uploadImage($uploadedFile, $this->imagesFolder, "image_");
-            if($this->resizeImages) {
+            if($this->resizeImage) {
                 $this->resizeImage($names['image']);
             }
             
@@ -746,5 +706,35 @@ class VipPortfolioModelProject extends JModelAdmin {
         $condition[] = 'catid = '.(int) $table->catid;
         return $condition;
     }
+    
+	/**
+	 * Stock method to auto-populate the model state.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function populateState() {
+		
+	    parent::populateState();
+	    
+	    $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+		
+		$resizeImage = $app->getUserStateFromRequest($this->option.'.project.resize_image', 'resize_image', 0, 'uint');
+		$this->setState('resize_image', $resizeImage);
+		
+		$imageWidth = $app->getUserStateFromRequest($this->option.'.project.image_width', 'image_width');
+		$this->setState('image_width', $imageWidth);
+		
+		$imageHeight = $app->getUserStateFromRequest($this->option.'.project.image_height', 'image_height');
+		$this->setState('image_height', $imageHeight);
+		
+		$thumbWidth = $app->getUserStateFromRequest($this->option.'.project.thumb_width', 'thumb_width', 200, "uint");
+		$this->setState('thumb_width', $thumbWidth);
+		
+		$thumbHeight = $app->getUserStateFromRequest($this->option.'.project.thumb_height', 'thumb_height', 300, "uint");
+		$this->setState('thumb_height', $thumbHeight);
+	}
     
 }

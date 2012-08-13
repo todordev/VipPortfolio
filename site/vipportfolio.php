@@ -14,13 +14,10 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-require_once ( JPATH_COMPONENT_ADMINISTRATOR . DS. "libraries" . DS ."itpinit.php" );
-
-jimport('joomla.log.loggers.formattedtext');
+require_once ( JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR. "libraries" . DIRECTORY_SEPARATOR ."init.php" );
 
 jimport('joomla.application.component.controller');
-//require_once JPATH_COMPONENT.'/helpers/route.php';
 
 $controller = JController::getInstance('VipPortfolio');
-$controller->execute(JRequest::getCmd('task'));
+$controller->execute(JFactory::getApplication()->input->getCmd('task'));
 $controller->redirect();

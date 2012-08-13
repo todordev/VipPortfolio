@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -22,77 +22,103 @@ class VipPortfolioViewFb extends JView {
     protected $items = null;
     protected $pagination = null;
     
+    protected $option;
+    
+    public function __construct($config) {
+        parent::__construct($config);
+        $this->option = JFactory::getApplication()->input->get("option");
+    }
+    
     /**
      * Display the view
      *
      * @return  mixed   False on error, null otherwise.
      */
-    function display($tpl = null){
+    public function display($tpl = null){
+        
+        $app = JFactory::getApplication();
+        /** @var $app JSite **/
         
         // Check for valid category
-        $categoryId = JRequest::getInt("catid", 0, "GET");
+        $this->categoryId = $app->input->get->getInt("catid");
+        $this->category   = null;
         
-        if(!empty($categoryId)){
+        if(!$this->categoryId){
+            $this->category = VipPortfolioHelper::getCategory($this->categoryId);
             // Checking for published category
-            $published = VpHelper::isCategoryPublished($categoryId);
-            if(!$published){
-                throw new ItpException(JText::_("ITP_ERROR_CATEGORY_DOES_NOT_EXIST"), 404);
+            if(!$this->category OR !$this->category->published){
+                throw new Exception(JText::_("ITP_ERROR_CATEGORY_DOES_NOT_EXIST"));
             }
         }
         
         // Initialise variables
-        $state      = $this->get('State');
-        $items      = $this->get('Items');
-        $pagination = $this->get('Pagination');
-    
-        $params     = &$state->params;
-        
-        if($params->get("catDesc")) {
-            $category = VpHelper::getCategory($categoryId);
-            $this->assignRef('category', $category);
-        }
-        
-        //Escape strings for HTML output
-        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-        
-        $this->assignRef('params', $params);
-        $this->assignRef('items', $items);
-        $this->assignRef('pagination', $pagination);
+        $this->state      = $this->get('State');
+        $this->items      = $this->get('Items');
+        $this->pagination = $this->get('Pagination');
+        $this->params     = $this->state->params;
         
         $layout = $this->getLayout();
         
         switch($layout){
             
             default:
-                
                 $layout = "default";
-                // Add template style
-                $this->document->addStyleSheet(JURI::root() . 'media/com_vipportfolio/projects/' . $layout . '/style.css', 'text/css');
-                $this->defaultLayout();
-                
+                $this->defaultLayout($layout);
                 break;
         }
         
-        $this->assignRef("version", new VpVersion());
-        $document = JFactory::getDocument();
-        $this->assign("format", $document->getType());
+        $this->version = new VipPortfolioVersion();
+        $this->format = $this->document->getType();
+        
+        $this->prepareDocument($layout);
         
         parent::display($tpl);
     }
     
-    
-    
-    protected function defaultLayout(){
+    protected function defaultLayout($layout){
         
+        // Add template style
+        $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $layout . '/style.css', 'text/css');
+                
         if($this->params->get("extra_image")){
             foreach($this->items as $item){
                 // Extra Images
-                $extraImages[$item->id] = VpHelper::getExtraImages($item->id);
+                $extraImages[$item->id] = VipPortfolioHelper::getExtraImages($item->id);
             }
-            $this->assignRef('extraImages', $extraImages);
-            $this->assign('extraMax', $this->params->get("extra_max"));
+            $this->extraImages = $extraImages;
+            $this->extraMax = $this->params->get("extra_max");
         }
     
+    }
+    
+    /**
+     * Prepares the document
+     */
+    protected function prepareDocument($layout){
+        
+        //Escape strings for HTML output
+        $this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+        
+        // Add template style
+        $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $layout . '/style.css', 'text/css');
+        $this->document->addStyleSheet('media/'.$this->option.'/css/fb.css', 'text/css');
+        $this->document->addStyleSheet('media/'.$this->option.'/js/lightface/css/LightFace.css');
+        
+        // Add scripts
+		$this->document->addScript('media/'.$this->option.'/js/lightface/LightFace.js');
+		$this->document->addScript('media/'.$this->option.'/js/lightface/LightFace.Image.js');
+		
+		$js = "window.addEvent('domready',function(){
+
+          var modal = new LightFace.Image();
+          $$('a[rel=\"lightface\"]').addEvent('click', function(event) {
+        	    event.preventDefault();
+                modal.load(this.href,'" . JText::_("COM_VIPPORTFOLIO_IMAGE_PREVIEW") ."').open();
+          });
+      });";
+        
+        $this->document->addScriptDeclaration($js);
+        
     }
     
 }

@@ -12,45 +12,44 @@
  */
 
 // no direct access
-defined('_JEXEC') or die;?>
-<div id="itp-vp<?php echo $this->pageclass_sfx;?>">
-    <?php if ($this->params->get('show_page_heading', 1)) { ?>
-        <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
-        <?php } ?>
-        
-        <?php if($this->params->get("catDesc")) {?>
-        <?php echo $this->category->desc; ?>
-        <?php }?>
-        
-    <?php if ( isset($this->item) ) { ?>
+defined('_JEXEC') or die;
+?>
+<?php if ($this->params->get('show_page_heading', 1)) { ?>
+    <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
+    <?php } ?>
     
-    <?php 
-    if($this->hasModal) {
-        switch($this->modalLib) {
-            case "slimbox":
-                echo $this->loadTemplate("slimbox");
-                break;
-                
-            default: // Native modal
-                echo $this->loadTemplate("nativemodal");
-                break;
-        }
-    } else {
-        echo $this->loadTemplate("nomodal");
+    <?php if($this->params->get("catDesc")) {?>
+    <?php   if(!empty($this->category)) { echo $this->category->desc; }; ?>
+    <?php }?>
+    
+<?php if ( isset($this->item) ) { ?>
+
+<?php 
+if($this->modal) {
+    switch($this->modal) {
+        case "slimbox":
+            echo $this->loadTemplate("slimbox");
+            break;
+            
+        case "native": // Native modal
+            echo $this->loadTemplate("nativemodal");
+            break;
     }
-    
-    ?>
-    
-    <div class="pagination">
-    
-        <?php if ($this->params->def('show_pagination_results', 1)) : ?>
-            <p class="counter">
-                <?php echo $this->pagination->getPagesCounter(); ?>
-            </p>
-        <?php endif; ?>
-    
-        <?php echo $this->pagination->getPagesLinks(); ?>
-    </div>
-    <?php } // if ( isset($this->item) ) {?>
+} else {
+    echo $this->loadTemplate("nomodal");
+}
+
+?>
+
+<div class="pagination">
+
+    <?php if ($this->params->def('show_pagination_results', 1)) : ?>
+        <p class="counter">
+            <?php echo $this->pagination->getPagesCounter(); ?>
+        </p>
+    <?php endif; ?>
+
+    <?php echo $this->pagination->getPagesLinks(); ?>
 </div>
-<?php echo $this->version->url;?>
+<?php } // if ( isset($this->item) ) {?>
+<?php echo $this->version->backlink;?>

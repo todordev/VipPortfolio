@@ -12,7 +12,8 @@
  */
 
 // no direct access
-defined('_JEXEC') or die;?>
+defined('_JEXEC') or die;
+?>
 <?php switch($this->format) {
     case "raw":
         echo $this->loadTemplate("raw");

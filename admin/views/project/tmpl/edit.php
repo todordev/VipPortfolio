@@ -35,6 +35,8 @@ defined('_JEXEC') or die;
                 <li><?php echo $this->form->getLabel('id'); ?>
                 <?php echo $this->form->getInput('id'); ?></li>
                 
+                <li><?php echo $this->form->getLabel('image'); ?>
+                    <?php echo $this->form->getInput('image'); ?></li> 
             </ul>
             
             <div class="clr"></div>
@@ -43,12 +45,50 @@ defined('_JEXEC') or die;
             <?php echo $this->form->getInput('description'); ?>
             <div class="clr"></div>
             
-            <ul class="adminformlist">
-                <li><?php echo $this->form->getLabel('image'); ?>
-                    <?php echo $this->form->getInput('image'); ?></li> 
-            </ul>
                 
         </fieldset>
+        
+        <fieldset class="adminform">
+            <legend><?php echo JText::_("COM_VIPPORTFOLIO_RESIZE_OPTIONS"); ?></legend>
+            <ul class="adminformlist">
+            
+            	<li>
+            		<label class="hasTip" for="thumb_width" title="<?php echo JText::_("COM_VIPPORTFOLIO_THUMB_RESIZE_WIDTH_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_THUMB_WIDTH");?></label>  
+            		<input type="text" name="thumb_width" value="<?php echo $this->state->get("thumb_width", 300);?>" class="inputbox" id="thumb_width" />
+        		</li>
+        		
+        		<li>
+            		<label class="hasTip" for="thumb_height" title="<?php echo JText::_("COM_VIPPORTFOLIO_THUMB_RESIZE_HEIGHT_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_THUMB_HEIGHT");?></label>  
+            		<input type="text" name="thumb_height" value="<?php echo $this->state->get("thumb_height", 200);?>" class="inputbox" id="thumb_height" />
+        		</li>
+        		
+        		<li>
+        			<span class="spacer">
+        				<span class="before"></span>
+        					<span class="">
+        						<hr/>
+        					</span>
+        					<span class="after">
+    						</span>
+					</span>        			
+            	<li>
+            		<label class="hasTip" for="resize_image" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE");?></label>  
+            		<input type="checkbox" name="resize_image" value="1" class="inputbox" id="resize_image" <?php echo (!$this->state->get("resize_image", 0)) ? "" : 'checked="checked"'; ?> />
+        		</li>
+        		
+        		<li>
+            		<label class="hasTip" for="image_width" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_WIDTH");?></label>  
+            		<input type="text" name="image_width" value="<?php echo $this->state->get("image_width", "");?>" class="inputbox" id="image_width" />
+        		</li>
+        		
+        		<li>
+            		<label class="hasTip" for="image_height" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_HEIGHT");?></label>  
+            		<input type="text" name="image_height" value="<?php echo $this->state->get("image_height", "");?>" class="inputbox" id="image_height" />
+        		</li>
+        		
+            </ul>
+        </fieldset>
+        
     </div>
     
     <input type="hidden" name="task" value="" />

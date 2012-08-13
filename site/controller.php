@@ -34,8 +34,8 @@ class VipPortfolioController extends JController {
         // Set the default view name and format from the Request.
         // Note we are using catid to avoid collisions with the router and the return page.
         // Frontend is a bit messier than the backend.
-        $viewName  = JRequest::getCmd('view', 'projects');
-        JRequest::setVar('view', $viewName);
+        $viewName  = JFactory::getApplication()->input->getCmd('view', 'projects');
+        JFactory::getApplication()->input->set('view', $viewName);
 
         $safeurlparams = array(
             'id'                => 'INT',
@@ -48,17 +48,8 @@ class VipPortfolioController extends JController {
             'catid'             => 'INT',
         );
 
-        try {
-            return parent::display($cachable, $safeurlparams);
-        } catch ( Exception $e ) {
-            
-            $itpSecurity = new ItpSecurity( $e );
-            $itpSecurity->AlertMe();
-           
-            JError::raiseError( 500, JText::_( 'ITP_ERROR_SYSTEM' ) );
-            jexit( JText::_( 'ITP_ERROR_SYSTEM' ) );
-            
-        }
+        parent::display($cachable, $safeurlparams);
+        return $this;
         
     }
 	

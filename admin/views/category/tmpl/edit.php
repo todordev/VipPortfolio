@@ -28,13 +28,13 @@ method="post" name="adminForm" id="category-form" class="form-validate">
     
                 <li><?php echo $this->form->getLabel('published'); ?>
                 <?php echo $this->form->getInput('published'); ?></li>   
-    
-                <li><?php echo $this->form->getLabel('image'); ?>
-                <?php echo $this->form->getInput('image'); ?></li>   
                 
                 <li><?php echo $this->form->getLabel('id'); ?>
                 <?php echo $this->form->getInput('id'); ?></li>
                 
+                <li><?php echo $this->form->getLabel('image'); ?>
+                    <?php echo $this->form->getInput('image'); ?></li> 
+                    
             </ul>
             
             <div class="clr"></div>
@@ -42,6 +42,10 @@ method="post" name="adminForm" id="category-form" class="form-validate">
             <div class="clr"></div>
             <?php echo $this->form->getInput('desc'); ?>
             <div class="clr"></div>
+        </fieldset>
+        
+        <fieldset class="adminform">
+            <legend><?php echo JText::_("COM_VIPPORTFOLIO_FIELD_SEO"); ?></legend>
             
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('spacer'); ?></li>
@@ -56,11 +60,32 @@ method="post" name="adminForm" id="category-form" class="form-validate">
     
                 <li><?php echo $this->form->getLabel('meta_canonical'); ?>
                 <?php echo $this->form->getInput('meta_canonical'); ?></li>   
-                
             </ul>
-
+            
         </fieldset>
+        
+        <fieldset class="adminform">
+            <legend><?php echo JText::_("COM_VIPPORTFOLIO_RESIZE_OPTIONS"); ?></legend>
+            <ul class="adminformlist">
+            	<li>
+            		<label class="hasTip" for="resize_image" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE");?></label>  
+            		<input type="checkbox" name="resize_image" value="1" class="inputbox" id="resize_image" <?php echo (!$this->state->get("resize_image", 0)) ? "" : 'checked="checked"'; ?> />
+        		</li>
+        		
+        		<li>
+            		<label class="hasTip" for="image_width" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_WIDTH");?></label>  
+            		<input type="text" name="image_width" value="<?php echo $this->state->get("image_width", "");?>" class="inputbox" id="image_width" />
+        		</li>
+        		
+        		<li>
+            		<label class="hasTip" for="image_height" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_HEIGHT");?></label>  
+            		<input type="text" name="image_height" value="<?php echo $this->state->get("image_height", "");?>" class="inputbox" id="image_height" />
+        		</li>
+            </ul>
+        </fieldset>
+        
     </div>
+    
     <div class="clr"></div>
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?>

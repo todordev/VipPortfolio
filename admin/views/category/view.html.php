@@ -37,7 +37,7 @@ class VipPortfolioViewCategory extends JView {
         $this->state  = $this->get('State');
         $this->item   = $this->get('Item');
         $this->form   = $this->get('Form');
-        
+
         $this->params = $this->state->get("params");
         
         // Prepare actions, behaviors, scritps and document

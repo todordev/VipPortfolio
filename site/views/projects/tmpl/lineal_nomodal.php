@@ -13,17 +13,18 @@
 
 // no direct access
 defined('_JEXEC') or die;?>
-<div class="itp-vp-lbox" style="width: <?php echo $this->params->get('lThumbWidth', 300); ?>; height: <?php echo $this->params->get('lThumbHeight', 300); ?>;">
+<div class="itp-vp-lbox" style="width: <?php echo $this->params->get('lineal_thumb_width', 300); ?>; height: <?php echo $this->params->get('lineal_thumb_height', 300); ?>;">
     <?php if( !empty( $this->item->thumb ) ) { ?>
     <div class="itp-vp-limage-box">
        <?php if ($this->params->get("lLinkable")) {?>
-       <a href="media/vipportfolio/<?php echo $this->item->image;?>" > 
+       <a href="<?php echo $this->params->get("images_directory") . "/".$this->item->image;?>" > 
        <?php }?>
     	<img
-    	width="<?php echo $this->params->get('lThumbWidth', 300); ?>" height="<?php echo $this->params->get('lThumbHeight', 300); ?>" 
-    	src="media/vipportfolio/<?php echo $this->item->thumb;?>" 
-    	alt="<?php echo htmlentities( strip_tags($this->item->title), ENT_QUOTES,"UTF-8" );?>" 
-    	title="<?php echo htmlentities( strip_tags($this->item->title), ENT_QUOTES,"UTF-8" );?>" 
+    	width="<?php echo $this->params->get('lineal_thumb_width', 300); ?>" 
+    	height="<?php echo $this->params->get('lineal_thumb_height', 300); ?>" 
+    	src="<?php echo $this->params->get("images_directory") . "/".$this->item->thumb;?>" 
+    	alt="<?php echo $this->escape($this->item->title);?>" 
+    	title="<?php echo $this->escape($this->item->title);?>" 
     	/>  
         <?php if ($this->params->get("lLinkable")) {?></a><?php } ?>
     	
@@ -32,10 +33,11 @@ defined('_JEXEC') or die;?>
          if (isset($this->extraImages[$this->item->id]) AND !empty($this->extraImages[$this->item->id])){
               $i = 0;
              foreach($this->extraImages[$this->item->id] as $eImage){?>
-                <a href="media/vipportfolio/<?php echo $eImage['name'];?>">
+                <a href="<?php echo $this->params->get("images_directory") . "/".$eImage['image'];?>">
                     <img
-                    width="48" height="48" 
-                    src="media/vipportfolio/ethumb_<?php echo $eImage['name'];?>" 
+                    width="<?php echo $this->params->get('lineal_extra_thumb_width', 50); ?>" 
+                    height="<?php echo $this->params->get('lineal_extra_thumb_height', 50); ?>" 
+                    src="<?php echo $this->params->get("images_directory") . "/".$eImage['thumb'];?>" 
                     alt="" 
                     title="" 
                     />  

@@ -10,27 +10,24 @@
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
  */
-
 // no direct access
-defined('_JEXEC') or die;?>
+defined('_JEXEC') or die;
+?>
+<?php if ($this->params->get('show_page_heading', 1)) { ?>
+<h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
+<?php } ?>
 
-<div class="itp-vp<?php echo $this->pageclass_sfx;?>">
-    <?php if ($this->params->get('show_page_heading', 1)) { ?>
-    <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
-    <?php } ?>
-    
-    <div id="itp-vp-image-menu">
-        <ul>
-        <?php foreach ( $this->items as $item ) {?>
-            <li class="item<?php echo $item->id;?>">
-                <a href="<?php echo JRoute::_('index.php?option=com_vipportfolio&amp;view=projects&amp;layout=' . $this->projectLayout .'&amp;catid=' . $item->id);?>">
-                <?php echo $item->name;?>
-                </a>
-            </li>
-        <?php }?>
-        </ul>
-    </div>
-    <div class="clear">&nbsp;</div>
-    
+<div id="itp-vp-image-menu">
+    <ul>
+    <?php foreach ( $this->items as $item ) {?>
+        <li class="item<?php echo $item->id;?>">
+            <a href="<?php echo JRoute::_('index.php?option=com_vipportfolio&view=projects&layout=' . $this->projectLayout .'&catid=' . $item->id);?>">
+            <?php echo $this->escape($item->name);?>
+            </a>
+        </li>
+    <?php }?>
+    </ul>
 </div>
-<?php echo $this->version->url;?>
+<div class="clr">&nbsp;</div>
+    
+<?php echo $this->version->backlink;?>

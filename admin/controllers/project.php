@@ -28,6 +28,63 @@ class VipPortfolioControllerProject extends JControllerForm {
     // Check the table in so it can be edited.... we are done with it anyway
     private $defaultLink = 'index.php?option=com_vipportfolio';
     
+	/**
+     * Proxy for getModel.
+     * @since   1.6
+     */
+    public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
+        
+        $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+        
+        $model = parent::getModel($name, $prefix, $config);
+        
+        // Load the component parameters.
+        $params       = JComponentHelper::getParams($this->option);
+        
+        // Extension parameters
+        $model->imagesURI       = $params->get("images_directory");
+        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
+        
+        // Get values from the user state
+        $resizeImage = $app->input->getInt('resize_image', 0);
+        $app->setUserState($this->option.'.project.resize_image', $resizeImage);
+       
+        $imageWidth = $app->input->getInt('image_width');
+        $app->setUserState($this->option.'.project.image_width', $imageWidth);
+        
+        $imageHeight = $app->input->getInt('image_height');
+        $app->setUserState($this->option.'.project.image_height', $imageHeight);
+        
+        // Thumbnail size
+        $thumbWidth = $app->input->getInt('thumb_width', 200);
+        $app->setUserState($this->option.'.project.thumb_width', $thumbWidth);
+        
+        $thumbHeight = $app->input->getInt('thumb_height', 300);
+        $app->setUserState($this->option.'.project.thumb_height', $thumbHeight);
+        
+        $model->resizeImage         = $resizeImage;
+        $model->imageWidth          = $imageWidth;
+        $model->imageHeight         = $imageHeight;
+        $model->thumbWidth          = $thumbWidth;
+        $model->thumbHeight         = $thumbHeight;
+        
+        // Extra image thumbnail size
+        $model->extraThumbWidth     = $params->get("extra_image_thumb_width", 50);
+        $model->extraThumbHeight    = $params->get("extra_image_thumb_height", 50);
+        
+        // Joomla! media extension parameters
+        $mediaParams = JComponentHelper::getParams("com_media");
+        
+        // Media Manager parameters
+        $model->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
+        $model->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
+        $model->uploadMaxSize   = $mediaParams->get("upload_maxsize");
+        
+        return $model;
+    }
+    
+    
     /**
      * Save an item
      *

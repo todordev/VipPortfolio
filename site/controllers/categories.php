@@ -11,8 +11,8 @@
  * other free or open source software licenses.
  */
 
-// Check to ensure this file is included in Joomla!
-defined('_JEXEC') or die();
+// No direct access
+defined('_JEXEC') or die;
 
 jimport( 'joomla.application.component.controller' );
 
@@ -40,8 +40,8 @@ class VipPortfolioControllerCategories extends JController {
         // Set the default view name and format from the Request.
         // Note we are using catid to avoid collisions with the router and the return page.
         // Frontend is a bit messier than the backend.
-        $viewName  = JRequest::getCmd('view', 'categories');
-        JRequest::setVar('view', $viewName);
+        $viewName  = JFactory::getApplication()->input->getCmd('view', 'categories');
+        JFactory::getApplication()->input->set('view', $viewName);
 
         $safeurlparams = array(
             'id'                => 'INT',
@@ -53,17 +53,8 @@ class VipPortfolioControllerCategories extends JController {
             'layout'            => 'CMD',
         );
 
-        try {
-            return parent::display($cachable, $safeurlparams);
-        } catch ( Exception $e ) {
-            
-            $itpSecurity = new ItpSecurity( $e );
-            $itpSecurity->AlertMe();
-           
-            JError::raiseError( 500, JText::_( 'ITP_ERROR_SYSTEM' ) );
-            jexit( JText::_( 'ITP_ERROR_SYSTEM' ) );
-            
-        }
+        parent::display($cachable, $safeurlparams);
+        return $this;
         
     }
 

@@ -71,43 +71,13 @@ class VipPortfolioModelCategory extends JModelAdmin {
      * If it is set to 1, the system will resize original image when they are uploaded.
      * @var unknown_type
      */
-    public $resizeImages;
+    public $resizeImage;
     
     /**
      * @var		string	The prefix to use with controller messages.
      * @since	1.6
      */
     protected $text_prefix = 'COM_VIPPORTFOLIO';
-    
-    /**
-     * Constructor.
-     *
-     * @param   array   $config An optional associative array of configuration settings.
-     *
-     * @see     JController
-     * @since   1.6
-     */
-    public function __construct($config = array()){
-        parent::__construct($config);
-        
-        // Load the component parameters.
-        $params = JComponentHelper::getParams($this->option);
-        
-        // Joomla! media extension parameters
-        $mediaParams = JComponentHelper::getParams("com_media");
-        
-        // Extension parameters
-        $this->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
-        $this->imageWidth      = $params->get("resize_category_image_width", 800);
-        $this->imageHeight     = $params->get("resize_category_image_height", 600);
-        $this->resizeImages    = $params->get("resize_category_image", 0);
-        
-        // Media Manager parameters
-        $this->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
-        $this->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
-        $this->uploadMaxSize   = $mediaParams->get("upload_maxsize");
-        
-    }
     
     /**
      * Returns a reference to the a Table object, always creating it.
@@ -166,7 +136,6 @@ class VipPortfolioModelCategory extends JModelAdmin {
      * 
      * @param $data        All data for the category in an array
      * 
-     * @exception ItpUserException
      */
     public function save($data){
         
@@ -220,8 +189,6 @@ class VipPortfolioModelCategory extends JModelAdmin {
      * Delete records from the DB
      *
      * @param array $cids
-     * @exception ItpUserException
-     * @exception ItpException
      */
     public function delete($cids){
         
@@ -289,7 +256,6 @@ class VipPortfolioModelCategory extends JModelAdmin {
      * Delete image only
      *
      * @param integer Item id
-     * @exception ItpException
      */
     public function removeImage($id){
         
@@ -318,7 +284,6 @@ class VipPortfolioModelCategory extends JModelAdmin {
     /**
      * Saves the image and the thumb
      * 
-     * @throws ItpException 
      */
     public function saveImages(){
         
@@ -340,7 +305,7 @@ class VipPortfolioModelCategory extends JModelAdmin {
         if(!empty($uploadedFile['name'])){
             
             $options = array();
-            if($this->resizeImages) {
+            if($this->resizeImage) {
                 $options = array("width" => $this->imageWidth, "height"=>$this->imageHeight);
             }
             
@@ -454,6 +419,30 @@ class VipPortfolioModelCategory extends JModelAdmin {
         
         return $name;
     }
+    
+	/**
+	 * Stock method to auto-populate the model state.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function populateState() {
+		
+	    parent::populateState();
+	    
+	    $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+		
+		$resizeImage = $app->getUserStateFromRequest($this->option.'.category.resize_image', 'resize_image', 0, 'uint');
+		$this->setState('resize_image', $resizeImage);
+		
+		$imageWidth = $app->getUserStateFromRequest($this->option.'.category.image_width', 'image_width');
+		$this->setState('image_width', $imageWidth);
+		
+		$imageHeight = $app->getUserStateFromRequest($this->option.'.category.image_height', 'image_height');
+		$this->setState('image_height', $imageHeight);
+	}
     
     
 }

@@ -13,20 +13,20 @@
 
 // no direct access
 defined('_JEXEC') or die;?>
-
- <?php foreach ( $this->items as $item ) {?>
+<?php foreach ( $this->items as $item ) {?>
     <div class="itp-vp-box" style="width: <?php echo $this->params->get('thumb_width', 200); ?>; height: <?php echo $this->params->get('thumb_height', 200); ?>;">
         <?php if( !empty( $item->thumb ) ) { ?>
         <div class="itp-vp-image-box">
            <?php if ($this->params->get("image_linkable") OR ($this->hasModal) ) {?>
-               <a href="media/vipportfolio/<?php echo $item->image;?>" class="vip-modal" rel="{handler: 'image'}" >
+               <a href="<?php echo $this->params->get("images_directory") . "/".$item->image;?>" class="vip-modal" rel="{handler: 'image'}" >
            <?php }?>
         
             <img
-            width="<?php echo $this->params->get('thumb_width', 200); ?>" height="<?php echo $this->params->get('thumb_height', 200); ?>" 
-            src="<?php echo "media/vipportfolio/" . $item->thumb;?>" 
-            alt="<?php echo htmlentities( strip_tags($item->title), ENT_QUOTES,"UTF-8" );?>" 
-            title="<?php echo htmlentities( strip_tags($item->title), ENT_QUOTES,"UTF-8" );?>" 
+            width="<?php echo $this->params->get('thumb_width', 200); ?>" 
+            height="<?php echo $this->params->get('thumb_height', 200); ?>"
+            src="<?php echo $this->params->get("images_directory") . "/". $item->thumb;?>" 
+            alt="<?php echo $this->escape($item->title);?>" 
+            title="<?php echo $this->escape($item->title);?>" 
             />  
             
             <?php if ($this->params->get("image_linkable") OR ($this->hasModal) ) {?></a><?php } ?>
@@ -38,10 +38,11 @@ defined('_JEXEC') or die;?>
                   $i = 0;
                  foreach($this->extraImages[$item->id] as $eImage){?>
                   
-                    <a href="media/vipportfolio/<?php echo $eImage['name'];?>" class="vip-modal" rel="{handler: 'image'}" >
+                    <a href="<?php echo $this->params->get("images_directory") . "/".$eImage['image'];?>" class="vip-modal" rel="{handler: 'image'}" >
                         <img
-                        width="48" height="48" 
-                        src="media/vipportfolio/ethumb_<?php echo $eImage['name'];?>" 
+                        width="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
+                        height="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
+                        src="<?php echo $this->params->get("images_directory") . "/". $eImage['thumb'];?>" 
                         alt="" 
                         title="" 
                         />  

@@ -13,37 +13,13 @@
 	</fieldset>
 	
 	<fieldset name="images" label="COM_VIPPORTFOLIO_IMAGES_TITLE" description="COM_VIPPORTFOLIO_IMAGES_PARAMS">
-	
-       <field name="resize_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_IMAGE_RESIZE" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC" >
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-        
-        <field name="resize_image_width" type="text" default="800" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH_DESC" />
-        <field name="resize_image_height" type="text" default="600" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT_DESC" />
-        
+
+        <field name="images_directory" type="text" default="images/vipportfolio" size="50" label="COM_VIPPORTFOLIO_IMAGES_DIRECTORY" description="COM_VIPPORTFOLIO_IMAGES_DIRECTORY_DESC" />
+        	
         <field name="spacer" type="spacer" hr="true" />
-        <field name="subcategories" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_RESIZE_THUMB_LABEL" />
-        <field name="resize_thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
-        <field name="resize_thumb_height" type="text" default="150" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
-       
-        <field name="spacer2" type="spacer" hr="true" />
-        <field name="subcategories2" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_RESIZE_CATEGORY_IMAGE_LABEL" />
-        <field name="resize_category_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE" description="COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC" >
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-        
-        <field name="resize_category_image_width" type="text" default="800" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH" description="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_WIDTH_DESC" />
-        <field name="resize_category_image_height" type="text" default="600" size="50" label="COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT" description="COM_VIPPORTFOLIO_CATEGORY_IMAGE_RESIZE_HEIGHT_DESC" />
-        
-        <field name="spacer3" type="spacer" hr="true" />
-        <field name="subcategories3" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_EXTRA_IMAGE_THUMB_LABEL" />
+        <field name="subcategories" type="spacer" class="spacer" label="COM_VIPPORTFOLIO_EXTRA_IMAGE_THUMB_LABEL" />
         <field name="extra_image_thumb_width" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_EXTRA_THUMB_WIDTH_DESC" />
         <field name="extra_image_thumb_height" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_EXTRA_THUMB_HEIGHT_DESC" />
-        
-        <field name="spacer4" type="spacer" hr="true" />
-        <field name="images_directory" type="text" default="images/vipportfolio" size="50" label="COM_VIPPORTFOLIO_IMAGES_DIRECTORY" description="COM_VIPPORTFOLIO_IMAGES_DIRECTORY_DESC" />
         
 	</fieldset>
 
@@ -65,14 +41,21 @@
             <option value="_self">COM_VIPPORTFOLIO_SAME_TAB</option>
             <option value="_blank">COM_VIPPORTFOLIO_NEW_TAB</option>
         </field>
+        <field name="pp_page" type="text" default="6" size="50" label="COM_VIPPORTFOLIO_PP_PAGE" description="COM_VIPPORTFOLIO_PP_PAGE_DESC" />
+        
+        <field name="spacer" type="spacer" hr="true" />
+        <field name="thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="thumb_height" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+        
+        <field name="spacer2" type="spacer" hr="true" />
         <field name="extra_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_EXTRA_IMAGE" description="COM_VIPPORTFOLIO_EXTRA_IMAGE_DESC" >
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
+        <field name="ei_thumb_width" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_EXTRA_THUMB_WIDTH" description="COM_VIPPORTFOLIO_EXTRA_THUMB_WIDTH_DESC" />
+        <field name="ei_thumb_height" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_EXTRA_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_EXTRA_THUMB_HEIGHT_DESC" />
         <field name="extra_max" type="text" default="3" size="50" label="COM_VIPPORTFOLIO_EI_NUM" description="COM_VIPPORTFOLIO_EI_NUM_DESC" />
-	    <field name="thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
-	    <field name="thumb_height" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
-	    <field name="pp_page" type="text" default="6" size="50" label="COM_VIPPORTFOLIO_PP_PAGE" description="COM_VIPPORTFOLIO_PP_PAGE_DESC" />
+	    
 	</fieldset>
     
     <fieldset name="line" label="COM_VIPPORTFOLIO_PROJECTS_LINEAL" description="COM_VIPPORTFOLIO_PROJECTS_LINEAL_PARAMS">
@@ -101,13 +84,19 @@
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
-        <field name="lExtraImage" type="radio" default="0"  label="COM_VIPPORTFOLIO_EXTRA_IMAGE" description="COM_VIPPORTFOLIO_EXTRA_IMAGE_DESC" >
+        <field name="spacer3" type="spacer" hr="true" />
+        <field name="lineal_thumb_width" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="lineal_thumb_height" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+        
+        <field name="spacer4" type="spacer" hr="true" />
+        <field name="lineal_extra_image" type="radio" default="0"  label="COM_VIPPORTFOLIO_EXTRA_IMAGE" description="COM_VIPPORTFOLIO_EXTRA_IMAGE_DESC" >
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
-        <field name="lExtraMax" type="text" default="3" size="50" label="COM_VIPPORTFOLIO_EI_NUM" description="COM_VIPPORTFOLIO_EI_NUM_DESC" />
-        <field name="lThumbWidth" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
-        <field name="lThumbHeight" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+        <field name="lineal_extra_thumb_width" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="lineal_extra_thumb_height" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+        <field name="lineal_extra_max" type="text" default="3" size="50" label="COM_VIPPORTFOLIO_EI_NUM" description="COM_VIPPORTFOLIO_EI_NUM_DESC" />
+        
     </fieldset>
     
     <fieldset name="scrollgallery" label="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_TITLE" description="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_PARAMS">
@@ -115,10 +104,11 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
-        <field name="sgImageWidth" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_WIDTH_DESC" />
-        <field name="sgImageHeight" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_HEIGHT_DESC" />
-        <field name="sgThumbWidth" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
-        <field name="sgThumbHeight" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+        <field name="spacer5" type="spacer" hr="true" />
+        <field name="sg_image_width" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_WIDTH_DESC" />
+        <field name="sg_image_height" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_HEIGHT_DESC" />
+        <field name="sg_thumb_width" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="sg_thumb_height" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
     </fieldset>
     
     <fieldset name="catslist" label="COM_VIPPORTFOLIO_CATEGORY_LIST_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_LIST_PARAMS">
@@ -163,8 +153,9 @@
         </field>
         <field name="ctabsInnerTitleMaxChars" type="text" default="20" size="50" label="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS_DESC" />
         <field name="ctabsInnerMaxChars" type="text" default="80" size="50" label="COM_VIPPORTFOLIO_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_MAX_CHARACTERS_DESC" />
-        <field name="ctabsThumbWidth" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
-        <field name="ctabsThumbHeight" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+        <field name="spacer5" type="spacer" hr="true" />
+        <field name="ctabs_thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
+        <field name="ctabs_thumb_height" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
     </fieldset>
     
     <fieldset name="catsimgmenu" label="COM_VIPPORTFOLIO_CATEGORY_IMAGEMENU_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_IMAGEMENU_PARAMS">

@@ -30,7 +30,30 @@ class VipPortfolioControllerProject extends JController {
      * @since   1.6
      */
     public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
-        $model = parent::getModel($name, $prefix, $config);
+        
+        $option = JFactory::getApplication()->input->get("option");
+        
+        $model  = parent::getModel($name, $prefix, $config);
+        
+        // Load the component parameters.
+        $params                 = JComponentHelper::getParams($option);
+        
+        // Extension parameters
+        $model->imagesURI       = $params->get("images_directory");
+        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
+        
+        // Extra image thumbnail size
+        $model->extraThumbWidth     = $params->get("extra_image_thumb_width", 50);
+        $model->extraThumbHeight    = $params->get("extra_image_thumb_height", 50);
+        
+        // Joomla! media extension parameters
+        $mediaParams = JComponentHelper::getParams("com_media");
+        
+        // Media Manager parameters
+        $model->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
+        $model->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
+        $model->uploadMaxSize   = $mediaParams->get("upload_maxsize");
+        
         return $model;
     }
     

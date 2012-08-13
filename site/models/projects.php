@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
 
@@ -32,7 +32,8 @@ class VipPortfolioModelProjects extends JModelList {
             	'a.title', 'description', 'a.description', 
             	'url', 'a.url', 'thumb', 'a.thumb', 'image', 
             	'a.image', 'catid', 'a.catid', 'published', 
-            	'a.published', 'ordering', 'a.ordering');
+            	'a.published', 'ordering', 'a.ordering'
+            );
         }
         
         parent::__construct($config);
@@ -47,10 +48,12 @@ class VipPortfolioModelProjects extends JModelList {
      * @since   1.6
      */
     protected function populateState($ordering = 'ordering', $direction = 'ASC'){
-        $app = JFactory::getApplication();
         
-        $this->setState('filter.catid', JRequest::getInt('catid'));
-        $layout = JRequest::getCmd('layout', "default");
+        $app = JFactory::getApplication();
+        /** @var $app JSite **/
+        
+        $this->setState('filter.catid', $app->input->getInt('catid'));
+        $layout = $app->input->getCmd('layout', "default");
         $this->setState('filter.layout', $layout);
         
         $params = $app->getParams();
@@ -66,29 +69,27 @@ class VipPortfolioModelProjects extends JModelList {
                 break;
                 
             default:
-                $value = JRequest::getInt('limit', $app->getCfg('list_limit', 0));
+                $value = $app->input->getInt('limit', $app->getCfg('list_limit', 0));
                 break;
         }
         
         $this->setState('list.limit', $value);
         
-        $value = JRequest::getInt('limitstart', 0);
+        $value = $app->input->getInt('limitstart', 0);
         $this->setState('list.start', $value);
         
-        $orderCol = JRequest::getCmd('filter_order', 'a.ordering');
+        $orderCol = $app->input->getCmd('filter_order', 'a.ordering');
         if(!in_array($orderCol, $this->filter_fields)){
             $orderCol = 'a.ordering';
         }
         $this->setState('list.ordering', $orderCol);
         
-        $listOrder = JRequest::getCmd('filter_order_Dir', 'ASC');
+        $listOrder = $app->input->getCmd('filter_order_Dir', 'ASC');
         if(!in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))){
             $listOrder = 'ASC';
         }
         $this->setState('list.direction', $listOrder);
         
-        //        $this->setState('filter.language', $app->getLanguageFilter());
-
     }
     
     /**
@@ -119,9 +120,10 @@ class VipPortfolioModelProjects extends JModelList {
      * @since   1.6
      */
     public function getListQuery(){
+        
         // Create a new query object.
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
+        $db     = $this->getDbo();
+        $query  = $db->getQuery(true);
         
         // Select the required fields from the table.
         $query->select(
@@ -141,11 +143,6 @@ class VipPortfolioModelProjects extends JModelList {
         if(is_numeric($categoryId)){
             $query->where('a.catid = ' . (int)$categoryId);
         }
-        
-        // Filter by language
-        /*if ($this->getState('filter.language')) {
-            $query->where('a.language in ('.$db->quote(JFactory::getLanguage()->getTag()).','.$db->quote('*').')');
-        }*/
         
         // Add the list ordering clause.
         $query->order($this->getState('list.ordering', 'a.ordering') . ' ' . $this->getState('list.direction', 'ASC'));

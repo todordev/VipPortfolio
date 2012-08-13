@@ -71,12 +71,13 @@ defined('_JEXEC') or die;?>
             <!--  Start Images -->
             <?php if( !empty( $item->thumb ) ) { ?>
             <div class="itp-vp-image-box">
-               <a href="<?php echo JURI::root(); ?>media/vipportfolio/<?php echo $item->image;?>"  rel="lightface">   
+               <a href="<?php echo $this->params->get("images_directory") . "/".$item->image;?>"  rel="lightface">   
                 <img
-                width="<?php echo $this->params->get('thumb_width', 200); ?>" height="<?php echo $this->params->get('thumb_height', 200); ?>" 
-                src="<?php echo JURI::root() . "media/vipportfolio/" . $item->thumb;?>" 
-                alt="<?php echo htmlentities( strip_tags($item->title), ENT_QUOTES,"UTF-8" );?>" 
-                title="<?php echo htmlentities( strip_tags($item->title), ENT_QUOTES,"UTF-8" );?>" 
+                width="<?php echo $this->params->get('thumb_width', 200); ?>" 
+                height="<?php echo $this->params->get('thumb_height', 200); ?>" 
+                src="<?php echo $this->params->get("images_directory") . "/".$item->thumb;?>" 
+                alt="<?php echo $this->escape($item->title);?>" 
+                title="<?php echo $this->escape($item->title);?>" 
                 
                 />  
               </a>
@@ -87,10 +88,11 @@ defined('_JEXEC') or die;?>
                       $i = 0;
                      foreach($this->extraImages[$item->id] as $eImage){?>
                       
-                        <a href="media/vipportfolio/<?php echo $eImage['name'];?>" rel="lightface" >
+                        <a href="<?php echo $this->params->get("images_directory") . "/".$eImage['image'];?>" rel="lightface" >
                             <img
-                            width="48" height="48" 
-                            src="media/vipportfolio/ethumb_<?php echo $eImage['name'];?>" 
+                            width="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
+                        	height="<?php echo $this->params->get('ei_thumb_width', 50); ?>"  
+                            src="<?php echo $this->params->get("images_directory") . "/".$eImage['thumb'];?>" 
                             alt="" 
                             title="" 
                             />  
@@ -110,9 +112,9 @@ defined('_JEXEC') or die;?>
             <div class="itp-vp-text-box">
              <h3 class="itp-vp-title" >
              <?php if($this->params->get("title_linkable") AND $item->url) { ?>
-             <a href="<?php echo $item->url;?>"><?php echo $item->title;?></a>
+             <a href="<?php echo $item->url;?>"><?php echo $this->escape($item->title);?></a>
              <?php }else{?>
-             <?php echo $item->title;?>
+             <?php echo $this->escape($item->title);?>
              <?php }?>
              </h3>
             <p><?php echo $item->description;?></p>
@@ -121,6 +123,6 @@ defined('_JEXEC') or die;?>
         </div>
         <?php }?>
     </div>
-    <?php echo $this->version->url;?>
+    <?php echo $this->version->backlink;?>
    </body>
 </html>

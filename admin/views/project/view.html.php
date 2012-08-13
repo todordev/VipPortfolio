@@ -38,7 +38,7 @@ class VipPortfolioViewProject extends JView {
         $this->state  = $this->get('State');
         $this->item   = $this->get('Item');
         $this->form   = $this->get('Form');
-        
+
         $this->params = $this->state->get("params");
         
         $extraImages = array();
