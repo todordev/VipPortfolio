@@ -28,8 +28,6 @@
 		</schemas>
 	</update>
 	
-    <scriptfile>install.php</scriptfile>
-		
 	<media destination="com_vipportfolio" folder="media">
 		<filename>index.html</filename>
 		<folder>categories</folder>

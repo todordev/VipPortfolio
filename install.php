@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
 /**
  * Script file of VipPortfolio component
  */
-class com_vipPortfolioInstallerScript {
+class pkg_vipPortfolioInstallerScript {
     /**
      * method to install the component
      *

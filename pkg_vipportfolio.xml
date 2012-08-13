@@ -21,4 +21,6 @@
 	<files folder="packages">
 		<file type="component" 	id="com_vipportfolio" >com_vipportfolio.zip</file>
 	</files>
+	
+	<scriptfile>install.php</scriptfile>
 </extension>
