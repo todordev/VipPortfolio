@@ -43,7 +43,7 @@ class VipPortfolioControllerCategory extends JControllerForm {
         $params       = JComponentHelper::getParams($this->option);
         
         // Extension parameters
-        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
+        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
         
         // Get values from the user state
         $resizeImage = $app->input->getInt('resize_image', 0);

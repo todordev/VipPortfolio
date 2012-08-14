@@ -95,6 +95,7 @@ defined('_JEXEC') or die;
     <?php echo JHtml::_('form.token'); ?>
     </form>
     
+    <?php if(!empty($this->item->id)){?>
     <div class="width-40 itp-prjextra">
        
             <fieldset class="adminform">
@@ -118,8 +119,8 @@ defined('_JEXEC') or die;
                     <?php if(!empty($this->extraImages)){?>
                        <?php foreach($this->extraImages as $image) {?>
                        <div class="ai_box" id="ai_box<?php echo $image['id'];?>">
-                           <a href="<?php echo JURI::root() . $this->params->get("images_directory") . "/". $image['image']; ?>">
-                               <img src="<?php echo JURI::root() . $this->params->get("images_directory") . "/". $image['thumb']; ?>" />
+                           <a href="<?php echo JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['image']; ?>">
+                               <img src="<?php echo JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['thumb']; ?>" />
                            </a>
                            
                            <img class="ai_ri" data-image-id="<?php echo $image['id'];?>" src="../media/com_vipportfolio/images/icon_remove_16.png" />
@@ -132,13 +133,14 @@ defined('_JEXEC') or die;
                 
             </fieldset>
     </div>
+    <?php }?>
     
 </div>
 
 <div class="clr"></div>
 <?php if (!empty($this->item->thumb)) {?>
 <h4><?php echo JText::_("COM_VIPPORTFOLIO_THUMBNAIL");?></h4>
-<img src="<?php echo (JURI::root() . $this->params->get("images_directory") . "/". $this->item->thumb); ?>"  />
+<img src="<?php echo (JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->thumb); ?>"  />
 <div>
     <img src="<?php echo (JURI::root() . "media/com_vipportfolio/images/remove_image.gif"); ?>" />
     <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&amp;task=project.removeImage&amp;type=thumb&amp;id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
@@ -147,7 +149,7 @@ defined('_JEXEC') or die;
 <div>&nbsp;</div>
 <?php if (!empty($this->item->image)) {?>
 <h4><?php echo JText::_("COM_VIPPORTFOLIO_LARGE_IMAGE");?></h4>
-<img src="<?php echo (JURI::root() . $this->params->get("images_directory") . "/". $this->item->image); ?>" />
+<img src="<?php echo (JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image); ?>" />
 <div>
     <img src="<?php echo (JURI::root() . "media/com_vipportfolio/images/remove_image.gif"); ?>" />
     <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&amp;task=project.removeImage&amp;type=image&amp;id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>

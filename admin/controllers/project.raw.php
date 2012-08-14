@@ -39,8 +39,8 @@ class VipPortfolioControllerProject extends JController {
         $params                 = JComponentHelper::getParams($option);
         
         // Extension parameters
-        $model->imagesURI       = $params->get("images_directory");
-        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory");
+        $model->imagesURI       = $params->get("images_directory", "images/vipportfolio");
+        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
         
         // Extra image thumbnail size
         $model->extraThumbWidth     = $params->get("extra_image_thumb_width", 50);
