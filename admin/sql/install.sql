@@ -19,7 +19,7 @@ COLLATE utf8_general_ci ;
 
 CREATE TABLE IF NOT EXISTS `#__vp_images` (
   `id` smallint(6) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(24) NOT NULL,
+  `image` varchar(24) NOT NULL,
   `thumb` varchar(24) NOT NULL,
   `project_id` smallint(6) UNSIGNED NOT NULL,
   PRIMARY KEY(`id`),

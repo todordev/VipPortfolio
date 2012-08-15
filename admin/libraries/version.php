@@ -61,7 +61,7 @@ class VipPortfolioVersion {
      * 
      * @var string
      */
-    public $releaseDate= '05-August-2012';
+    public $releaseDate= '15-August-2012';
     
     /**
      * License
