@@ -27,11 +27,11 @@ defined('_JEXEC') or die;
         <!--  Start Images -->
         <?php if( !empty( $item->thumb ) ) { ?>
         <div class="itp-vp-image-box">
-           <a href="<?php echo $this->params->get("images_directory") . "/".$item->image;?>"  rel="lightface">   
+           <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>"  rel="lightface">   
             <img
             width="<?php echo $this->params->get('thumb_width', 200); ?>" 
             height="<?php echo $this->params->get('thumb_height', 200); ?>" 
-            src="<?php echo $this->params->get("images_directory") . "/".$item->thumb;?>" 
+            src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$item->thumb;?>" 
             alt="<?php echo $this->escape($item->title);?>" 
             title="<?php echo $this->escape($item->title);?>" 
             />  
@@ -43,11 +43,11 @@ defined('_JEXEC') or die;
                   $i = 0;
                  foreach($this->extraImages[$item->id] as $eImage){?>
                   
-                    <a href="<?php echo $this->params->get("images_directory") . "/".$eImage['image'];?>" rel="lightface" >
+                    <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>" rel="lightface" >
                         <img
                         width="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
                     	height="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
-                        src="<?php echo $this->params->get("images_directory") . "/".$eImage['thumb'];?>" 
+                        src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['thumb'];?>" 
                         alt="" 
                         title="" 
                         />  

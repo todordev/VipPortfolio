@@ -92,6 +92,8 @@ class VipPortfolioViewCategories extends JView {
     
     protected function imagemenuLayout($layout) {
         
+        JHTML::_('behavior.framework');
+        
         // Add template style
         $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $layout . '/style.css', 'text/css', null );
         $this->document->addScript('media/'.$this->option.'/js/imagemenu/ImageMenu.js');
@@ -100,7 +102,7 @@ class VipPortfolioViewCategories extends JView {
         foreach($this->items as $item) {
             $cssStyles .= "
             #itp-vp-image-menu ul li.item" .$item->id."  a {
-                background: url('". $this->params->get("images_directory")."/" . $item->image."') repeat scroll 0%;
+                background: url('". $this->params->get("images_directory", "images/vipportfolio")."/" . $item->image."') repeat scroll 0%;
             }
             ";
         }
@@ -148,6 +150,9 @@ class VipPortfolioViewCategories extends JView {
                 break;
             
             case "native": // Joomla! native
+                
+                JHTML::_('behavior.framework');
+                
                 // Adds a JavaScript needs for modal windows
                 JHTML::_('behavior.modal', 'a.vip-modal');
                 break;

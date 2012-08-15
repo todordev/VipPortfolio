@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
             <div id="thumbareaContent">
             <?php foreach ( $this->items as $item ) { ?>
             <img 
-            src="<?php echo $this->params->get("images_directory") . "/".$item->thumb;?>" 
+            src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$item->thumb;?>" 
             width="<?php echo $this->params->get('sg_thumb_width', 200); ?>" 
             height="<?php echo $this->params->get('sg_thumb_height', 200); ?>"  />
             <?php }?>
@@ -42,7 +42,7 @@ defined('_JEXEC') or die;
         	<div id="imageareaContent">
         	    <?php foreach ( $this->items as $item ) {?>
             		<img 
-                    src="<?php echo $this->params->get("images_directory") . "/".$item->image;?>"
+                    src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>"
                     alt="<?php echo $this->escape( strip_tags($item->title) );?>" 
                     title="<?php echo $this->escape( strip_tags($item->title) );?>" 
                     <?php if($this->params->get('sg_image_width', 500)) { ?>
@@ -63,7 +63,7 @@ defined('_JEXEC') or die;
                     	<p><?php echo $this->escape( strip_tags($item->description) );?></p>
                 	</div>
                 	<img 
-                    src="<?php echo $this->params->get("images_directory") . "/".$item->image;?>"
+                    src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>"
                     alt="<?php echo $this->escape( strip_tags($item->title) );?>" 
                     title="<?php echo $this->escape( strip_tags($item->title) );?>" 
                     <?php if($this->params->get('sg_image_width', 500)) { ?>

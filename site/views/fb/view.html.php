@@ -96,6 +96,8 @@ class VipPortfolioViewFb extends JView {
      */
     protected function prepareDocument($layout){
         
+        JHTML::_('behavior.framework');
+        
         //Escape strings for HTML output
         $this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
         
@@ -103,7 +105,7 @@ class VipPortfolioViewFb extends JView {
         $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $layout . '/style.css', 'text/css');
         $this->document->addStyleSheet('media/'.$this->option.'/css/fb.css', 'text/css');
         $this->document->addStyleSheet('media/'.$this->option.'/js/lightface/css/LightFace.css');
-        
+
         // Add scripts
 		$this->document->addScript('media/'.$this->option.'/js/lightface/LightFace.js');
 		$this->document->addScript('media/'.$this->option.'/js/lightface/LightFace.Image.js');

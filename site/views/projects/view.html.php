@@ -104,17 +104,19 @@ class VipPortfolioViewProjects extends JView {
             
             case "slimbox":
                 
-                    JHTML::_('behavior.framework');
-                    
-                    $this->document->addStyleSheet('media/'.$this->option.'/js/slimbox/css/slimbox.css');
-                    $this->document->addScript('media/'.$this->option.'/js/slimbox/slimbox.js');
+                JHTML::_('behavior.framework');
+                
+                $this->document->addStyleSheet('media/'.$this->option.'/js/slimbox/css/slimbox.css');
+                $this->document->addScript('media/'.$this->option.'/js/slimbox/slimbox.js');
                     
                 break;
             
             case "native": // Joomla! native
                 
-                    // Adds a JavaScript needs for modal windows
-                    JHTML::_('behavior.modal', 'a.vip-modal');
+                JHTML::_('behavior.framework');
+                
+                // Adds a JavaScript needs for modal windows
+                JHTML::_('behavior.modal', 'a.vip-modal');
                 
                 break;
         }
@@ -156,6 +158,8 @@ class VipPortfolioViewProjects extends JView {
     }
     
     protected function scrollgalleryLayout($layout){
+        
+        JHTML::_('behavior.framework');
         
         // Add template style
         $this->document->addStyleSheet('media/'. $this->option. '/projects/' . $layout . '/style.css', 'text/css', null);

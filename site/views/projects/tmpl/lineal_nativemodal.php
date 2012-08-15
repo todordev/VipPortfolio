@@ -16,12 +16,12 @@ defined('_JEXEC') or die;?>
 <div class="itp-vp-lbox" style="width: <?php echo $this->params->get('lineal_thumb_width', 300); ?>; height: <?php echo $this->params->get('lineal_thumb_height', 300); ?>;">
     <?php if( !empty( $this->item->thumb ) ) { ?>
     <div class="itp-vp-limage-box">
-       <a href="<?php echo $this->params->get("images_directory") . "/".$this->item->image;?>" class="vip-modal" rel="{handler: 'image'}" > 
+       <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->image;?>" class="vip-modal" rel="{handler: 'image'}" > 
        
     	<img
     	width="<?php echo $this->params->get('lineal_thumb_width', 300); ?>" 
     	height="<?php echo $this->params->get('lineal_thumb_height', 300); ?>" 
-    	src="<?php echo $this->params->get("images_directory") . "/".$this->item->thumb;?>" 
+    	src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->thumb;?>" 
     	alt="<?php echo $this->escape($this->item->title);?>" 
     	title="<?php echo $this->escape($this->item->title);?>" 
     	/>  
@@ -32,11 +32,11 @@ defined('_JEXEC') or die;?>
          if (isset($this->extraImages[$this->item->id]) AND !empty($this->extraImages[$this->item->id])){
               $i = 0;
              foreach($this->extraImages[$this->item->id] as $eImage){?>
-                <a href="<?php echo $this->params->get("images_directory") . "/".$eImage['image'];?>" class="vip-modal" rel="{handler: 'image'}">
+                <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>" class="vip-modal" rel="{handler: 'image'}">
                     <img
                     width="<?php echo $this->params->get('lineal_extra_thumb_width', 50); ?>" 
                     height="<?php echo $this->params->get('lineal_extra_thumb_height', 50); ?>" 
-                    src="<?php echo $this->params->get("images_directory") . "/".$eImage['thumb'];?>" 
+                    src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['thumb'];?>" 
                     alt="" 
                     title="" 
                     />  

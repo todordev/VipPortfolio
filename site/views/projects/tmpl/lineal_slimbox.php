@@ -17,12 +17,12 @@ defined('_JEXEC') or die;?>
 <?php if( !empty( $this->item->thumb ) ) { ?>
 <div class="itp-vp-limage-box">
    <?php if ($this->params->get("lLinkable") OR ($this->hasModal) ) {?>
-       <a href="<?php echo $this->params->get("images_directory") . "/".$this->item->image;?>" rel="lightbox-item<?php echo $this->item->id;?>"  >
+       <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->image;?>" rel="lightbox-item<?php echo $this->item->id;?>"  >
    <?php }?>
 
 	<img
 	width="<?php echo $this->params->get('lineal_thumb_width', 300); ?>" height="<?php echo $this->params->get('lineal_thumb_height', 300); ?>" 
-	src="<?php echo $this->params->get("images_directory") . "/".$this->item->thumb;?>" 
+	src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->thumb;?>" 
 	alt="<?php echo $this->escape($this->item->title);?>" 
 	title="<?php echo $this->escape($this->item->title);?>" 
 	/>  
@@ -35,11 +35,11 @@ defined('_JEXEC') or die;?>
           $i = 0;
          foreach($this->extraImages[$this->item->id] as $eImage){?>
           
-            <a href="<?php echo $this->params->get("images_directory") . "/".$eImage['image'];?>" rel="lightbox-item<?php echo $this->item->id;?>" >
+            <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>" rel="lightbox-item<?php echo $this->item->id;?>" >
                 <img
                 width="<?php echo $this->params->get('lineal_extra_thumb_width', 50); ?>" 
                 height="<?php echo $this->params->get('lineal_extra_thumb_height', 50); ?>" 
-                src="<?php echo $this->params->get("images_directory") . "/".$eImage['thumb'];?>" 
+                src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['thumb'];?>" 
                 alt="" 
                 title="" 
                 />  
