@@ -46,17 +46,17 @@ echo $pane->startPane('optionsPane');
             <?php 
             // Initialize modal dialog
             if(!$this->modal) { ?>
-            	<a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'];?>" >
+            	<a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'];?>" >
             <?php }else{
                 
                 if("slimbox" == $this->modal ) { // Slimbox
-                    echo '<a href="'.  $this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'].'" rel="lightbox-item'.$item->id.'" >';
+                    echo '<a href="'.  JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'].'" rel="lightbox-item'.$item->id.'" >';
                 }else { // Native
-                    echo '<a href="'.  $this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'].'" class="vip-modal" rel="{handler: \'image\'}" >';
+                    echo '<a href="'.  JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'].'" class="vip-modal" rel="{handler: \'image\'}" >';
                 }
             }
             ?>
-            <img src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$project['thumb'];?>" alt="<?php echo $this->escape($project['title']);?>"
+            <img src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$project['thumb'];?>" alt="<?php echo $this->escape($project['title']);?>"
 	            <?php if($this->params->get("ctabsDisplayTips")){?> 
 	            class="hasTip" 
 	            title="<?php echo $this->escape(strip_tags($project['title']));?> :: <?php echo $this->escape(strip_tags($project['description']));?>"

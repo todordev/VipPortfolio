@@ -17,12 +17,12 @@ defined('_JEXEC') or die;?>
     <?php if( !empty( $this->item->thumb ) ) { ?>
     <div class="itp-vp-limage-box">
        <?php if ($this->params->get("lLinkable")) {?>
-       <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->image;?>" > 
+       <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->image;?>" > 
        <?php }?>
     	<img
     	width="<?php echo $this->params->get('lineal_thumb_width', 300); ?>" 
     	height="<?php echo $this->params->get('lineal_thumb_height', 300); ?>" 
-    	src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->thumb;?>" 
+    	src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->thumb;?>" 
     	alt="<?php echo $this->escape($this->item->title);?>" 
     	title="<?php echo $this->escape($this->item->title);?>" 
     	/>  
@@ -33,11 +33,11 @@ defined('_JEXEC') or die;?>
          if (isset($this->extraImages[$this->item->id]) AND !empty($this->extraImages[$this->item->id])){
               $i = 0;
              foreach($this->extraImages[$this->item->id] as $eImage){?>
-                <a href="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>">
+                <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>">
                     <img
                     width="<?php echo $this->params->get('lineal_extra_thumb_width', 50); ?>" 
                     height="<?php echo $this->params->get('lineal_extra_thumb_height', 50); ?>" 
-                    src="<?php echo $this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['thumb'];?>" 
+                    src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['thumb'];?>" 
                     alt="" 
                     title="" 
                     />  

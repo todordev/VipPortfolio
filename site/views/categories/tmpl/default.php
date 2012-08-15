@@ -23,7 +23,8 @@ defined('_JEXEC') or die;
         <?php if ( !empty( $item->image ) ) {?>
             <img 
             width="<?php echo $this->params->get("clistThumbWidth", 350); ?>" 
-            height="<?php echo $this->params->get("clistThumbHeight", 100); ?>" src="<?php echo JURI::root() . $this->params->get("images_directory", "images/vipportfolio")."/". $item->image;?>" alt="<?php echo $item->name;?>" title="<?php echo $item->name;?>" />
+            height="<?php echo $this->params->get("clistThumbHeight", 100); ?>" 
+            src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio")."/".$item->image;?>" alt="<?php echo $item->name;?>" title="<?php echo $item->name;?>" />
         <?php } else {?>
             <?php echo $item->name;?>
         <?php }?>
