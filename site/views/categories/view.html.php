@@ -102,7 +102,7 @@ class VipPortfolioViewCategories extends JView {
         foreach($this->items as $item) {
             $cssStyles .= "
             #itp-vp-image-menu ul li.item" .$item->id."  a {
-                background: url('". $this->params->get("images_directory", "images/vipportfolio")."/" . $item->image."') repeat scroll 0%;
+                background: url('/". $this->params->get("images_directory", "images/vipportfolio")."/" . $item->image."') repeat scroll 0%;
             }
             ";
         }
