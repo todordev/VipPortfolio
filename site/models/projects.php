@@ -155,33 +155,6 @@ class VipPortfolioModelProjects extends JModelList {
     public function getStart(){
         return $this->getState('list.start');
     }
-    
-    
-	/**
-     * Increment the hit counter for the article.
-     *
-     * @param	int		Optional primary key of the article to increment.
-     *
-     * @return	boolean	True if successful; false otherwise and internal error set.
-     * @todo move this to model with type ModelItem 
-     */
-    public function hit($id) {
-        
-        if(!empty($id)) {
-
-            $db    = $this->getDbo();
-            /** @var $db JDatabaseMySQLi **/
-            
-            $query = $db->getQuery(true);
-            
-            $query
-                ->update("#__vp_projects")
-                ->set("hits += 1")
-                ->where("id = ". $db->quote($id));
-                
-            $db->setQuery($query);
-            $db->query();
-        }
-    }
+	
     
 }

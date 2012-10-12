@@ -34,10 +34,10 @@ class VipPortfolioControllerProject extends JControllerForm {
      */
     public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
         
+        $model = parent::getModel($name, $prefix, $config);
+        
         $app = JFactory::getApplication();
         /** @var $app JAdministrator **/
-        
-        $model = parent::getModel($name, $prefix, $config);
         
         // Load the component parameters.
         $params       = JComponentHelper::getParams($this->option);
@@ -97,14 +97,13 @@ class VipPortfolioControllerProject extends JControllerForm {
         /** @var $app JAdministrator **/
         
         // Initialize variables
-        $itemId  = $app->input->getInt("id");
         $msg     = "";
         $link    = "";
         
         // Gets the data from the form
-        $data = $app->input->get('jform', array(), 'post', 'array');
-        
-        $model = $this->getModel();
+        $data    = $app->input->post->get('jform', array(), 'array');
+        $itemId  = JArrayHelper::getValue($data, "id", 0, "int");
+        $model   = $this->getModel();
         /** @var $model VipPortfolioModelProject */
         
         $form = $model->getForm($data, false);

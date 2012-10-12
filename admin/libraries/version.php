@@ -26,7 +26,7 @@ class VipPortfolioVersion {
      * 
      * @var string
      */
-    public $product    = 'VipPortfolio';
+    public $product    = 'Vip Portfolio';
     
     /**
      * Main Release Level
@@ -40,7 +40,7 @@ class VipPortfolioVersion {
      * 
      * @var integer
      */
-    public $devLevel  = '3';
+    public $devLevel  = '4';
     
     /**
      * Release Type
@@ -61,7 +61,7 @@ class VipPortfolioVersion {
      * 
      * @var string
      */
-    public $releaseDate= '15-August-2012';
+    public $releaseDate= '14-October-2012';
     
     /**
      * License

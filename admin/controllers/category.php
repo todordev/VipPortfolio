@@ -34,10 +34,10 @@ class VipPortfolioControllerCategory extends JControllerForm {
      */
     public function getModel($name = 'Category', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
         
+        $model = parent::getModel($name, $prefix, $config);
+        
         $app = JFactory::getApplication();
         /** @var $app JAdministrator **/
-        
-        $model = parent::getModel($name, $prefix, $config);
         
         // Load the component parameters.
         $params       = JComponentHelper::getParams($this->option);
@@ -82,12 +82,12 @@ class VipPortfolioControllerCategory extends JControllerForm {
         /** @var $app JAdministrator **/
         
         // Initialize variables
-        $itemId  = $app->input->getInt("id");
         $msg     = "";
         $link    = "";
         
         // Gets the data from the form
-        $data    = $app->input->post->get('jform', array(), 'post', 'array');
+        $data    = $app->input->post->get('jform', array(), 'array');
+        $itemId  = JArrayHelper::getValue($data, "id", 0, "int");
         $model   = $this->getModel();
         
         // Validate the posted data.
@@ -100,10 +100,10 @@ class VipPortfolioControllerCategory extends JControllerForm {
         }
         
         try {
-            
+             
             // Test if the data is valid.
             $validData = $model->validate($form, $data);
-    
+
             // Check for validation errors.
             if ($validData === false) {
                 
@@ -196,7 +196,7 @@ class VipPortfolioControllerCategory extends JControllerForm {
             throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
         }
         
-        $this->defaultLink .= "&amp;view=".$this->view_item."&layout=edit&id=" . (int)$id;
+        $this->defaultLink .= "&view=".$this->view_item."&layout=edit&id=" . (int)$id;
         $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');
         
         $this->setRedirect( JRoute::_($this->defaultLink, false), $msg );

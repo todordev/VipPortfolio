@@ -71,10 +71,8 @@ class VipPortfolioViewProjects extends JView {
                 break;
                 
             default:
-                
                 $layout = "default";
                 $this->defaultLayout($layout);
-                
                 break;
         }
         

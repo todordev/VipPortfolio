@@ -9,6 +9,7 @@
 			readonly="true" 
 			class="readonly"
 			description="JGLOBAL_FIELD_ID_DESC"
+			filter="int"
 			/>
 
 		<field 
@@ -25,7 +26,9 @@
 	        name="catid"
 	        type="vpcategories"
 	        label="JCATEGORY"
-	        description="COM_VIPPORTFOLIO_CATEGORIES_FIELD_DESC" />
+	        description="COM_VIPPORTFOLIO_CATEGORIES_FIELD_DESC"
+	        filter="int" 
+	        />
 
 		<field
 			name="published"
@@ -61,7 +64,7 @@
             validate="url"
             />
 		
-		<field name="description" type="editor" buttons="true" hide="pagebreak,readmore,article,image"
+		<field name="description" type="editor" buttons="false" show="toggle"
             class="inputbox"
             filter="safehtml"
             width="500"

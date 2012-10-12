@@ -1,10 +1,17 @@
 Vip Portfolio for Joomla! 
 ==========================
-( Version 3.3 )
+( Version 3.4 )
 --------------------------
 
 Changelog
 ---------
+
+v3.4
+----------
+* [[#1]](https://github.com/ITPrism/VipPortfolio/issues/1 "Description html strip when submit") Fixed the bug with text formating.
+* [[#3]](https://github.com/ITPrism/VipPortfolio/issues/3 "bug 'open link' new tab/same tab") Fixed the bug where links do not open in new tab.
+* Removed Facebook Layout
+* Improved
 
 v3.3
 ----------

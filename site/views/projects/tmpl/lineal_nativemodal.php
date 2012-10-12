@@ -25,7 +25,7 @@ defined('_JEXEC') or die;?>
     	alt="<?php echo $this->escape($this->item->title);?>" 
     	title="<?php echo $this->escape($this->item->title);?>" 
     	/>  
-        <?php if ( $this->params->get("lLinkable") OR ($this->hasModal) ) {?></a><?php } ?>
+        <?php if ( $this->params->get("lLinkable") OR !empty($this->modal) ) {?></a><?php } ?>
     	
     	<div class="itp-vp-extra-image">
          <?php 

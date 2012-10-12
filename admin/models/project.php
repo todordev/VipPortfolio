@@ -244,13 +244,13 @@ class VipPortfolioModelProject extends JModelAdmin {
         // Delete images
         foreach($rows as $image){
             if(!empty($image->thumb)){
-                $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$image->thumb; 
+                $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$image->thumb;
                 if(is_file($file)) {
                     JFile::delete($file);
                 }
             }
             if(!empty($image->image)){
-                $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$image->image; 
+                $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$image->image;
                 if(is_file($file)) {
                     JFile::delete($file);
                 }    
@@ -683,8 +683,8 @@ class VipPortfolioModelProject extends JModelAdmin {
             
             if(!empty($results)) {
                 foreach($results as &$result) {
-                    $result["image"] = JURI::root()."/".$this->imagesURI."/".$result["image"];
-                    $result["thumb"] = JURI::root()."/".$this->imagesURI."/".$result["thumb"];
+                    $result["image"] = JURI::root().$this->imagesURI."/".$result["image"];
+                    $result["thumb"] = JURI::root().$this->imagesURI."/".$result["thumb"];
                 }
             }
             

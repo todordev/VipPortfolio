@@ -36,9 +36,9 @@ class VipPortfolioViewCategories extends JView {
         $listDirn   = $this->escape($this->state->get('list.direction'));
         $saveOrder  = (strcmp($listOrder, 'a.ordering') != 0 ) ? false : true;
         
-        $this->assign("listOrder", $listOrder);
-        $this->assign("listDirn",  $listDirn);
-        $this->assign("saveOrder", $saveOrder);
+        $this->listOrder = $listOrder;
+        $this->listDirn  = $listDirn;
+        $this->saveOrder = $saveOrder;
         
         // Prepare actions
         $this->addToolbar();

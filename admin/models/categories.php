@@ -168,21 +168,25 @@ class VipPortfolioModelCategories extends JModelList {
 		    $itemsIds[] = $item->id;
 		}
 		
-        $db     = JFactory::getDbo();
-        $query  = $db->getQuery(true);
-        
-        $query
-            ->select("catid, COUNT(*) AS number")
-            ->from("#__vp_projects")
-            ->where("catid IN (" . implode(",", $itemsIds) . ")")
-            ->group("catid");
-        
-        $db->setQuery($query);
-        $results = $db->loadAssocList("catid", "number");
-        
-        if(!$results) {
-            $results = array(); 
-        }
+		// Get the number of projects in categories
+		$results = array();
+		if(!empty($itemsIds)) {
+            $db     = JFactory::getDbo();
+            $query  = $db->getQuery(true);
+            
+            $query
+                ->select("catid, COUNT(*) AS number")
+                ->from("#__vp_projects")
+                ->where("catid IN (" . implode(",", $itemsIds) . ")")
+                ->group("catid");
+            
+            $db->setQuery($query);
+            $results = $db->loadAssocList("catid", "number");
+            
+            if(!$results) {
+                $results = array(); 
+            }
+		}
         
         // Add the items to the internal cache.
 		$this->cache[$storeNumbers] = $results;

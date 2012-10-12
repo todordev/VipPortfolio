@@ -34,10 +34,16 @@ defined('_JEXEC') or die;
             <span><?php echo JText::_("COM_VIPPORTFOLIO_PROJECTS")?></span> 
         </a>
     </div>
+    <div class="itp-cpitem">
+        <a href="http://itprism.com/help/28-vipportfolio-documentation-guide" target="_blank">
+        <img src="../media/com_vipportfolio/images/help_48.png" alt="<?php echo JText::_("COM_VIPPORTFOLIO_HELP");?>" />
+            <span><?php echo JText::_("COM_VIPPORTFOLIO_HELP")?></span> 
+        </a>
+    </div>
 </div>
 <div id="itp-itprism">
     <a href="http://itprism.com/free-joomla-extensions/others/portfolio-presentation-gallery" title="<?php echo JText::_("COM_VIPPORTFOLIO");?>" target="_blank"><img src="../media/com_vipportfolio/images/vip_portfolio.png" alt="<?php echo JText::_("COM_VIPPORTFOLIO");?>" /></a>
-    <a href="http://itprism.com" title="A Product of ITPrism.com"><img src="../media/com_vipportfolio/images/product_of_itprism.png" alt="A Product of ITPrism.com" /></a>
+    <a href="http://itprism.com" title="<?php echo JText::_("ITP_PRODUCT");?>"><img src="../media/com_vipportfolio/images/product_of_itprism.png" alt="<?php echo JText::_("ITP_PRODUCT");?>" /></a>
     <p><?php echo JText::_("COM_VIPPORTFOLIO_YOUR_VOTE"); ?></p>
     <p><?php echo JText::_("COM_VIPPORTFOLIO_SPONSORSHIP"); ?></p>
     <p><?php echo JText::_("COM_VIPPORTFOLIO_SUBSCRIPTION"); ?></p>

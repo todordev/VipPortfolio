@@ -17,6 +17,7 @@ defined('_JEXEC') or die;
 <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
 <?php } ?>
     
+<?php if(!empty($this->items)){?>
 <div class="itp-vp-box">
 <?php
 jimport ('joomla.html.pane');
@@ -113,5 +114,5 @@ echo $pane->startPane('optionsPane');
 }
 echo $pane->endPane();?>
 </div>
-    
+<?php }?>
 <?php echo $this->version->backlink;?>

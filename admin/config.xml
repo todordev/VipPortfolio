@@ -168,8 +168,4 @@
         <field name="cimgmenuDuration" type="text" default="400" size="50" label="COM_VIPPORTFOLIO_DURATION" description="COM_VIPPORTFOLIO_DURATION_DESC" />
     </fieldset>
     
-    <fieldset name="fblist" label="COM_VIPPORTFOLIO_PROJECTS_FBLIST_TITLE" description="COM_VIPPORTFOLIO_PROJECTS_FBLIST_PARAMS">
-        <field name="fbpp_page" type="text" default="10" size="50" label="COM_VIPPORTFOLIO_PP_PAGE" description="COM_VIPPORTFOLIO_PP_PAGE_DESC" />
-        <field name="fbpp_app_id" type="text" default="" size="50" label="COM_VIPPORTFOLIO_APP_ID" description="COM_VIPPORTFOLIO_APP_ID_DESC" />
-    </fieldset>
 </config>

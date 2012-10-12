@@ -39,6 +39,14 @@ class VipPortfolioControllerProjects extends JControllerAdmin {
      */
     public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
         $model = parent::getModel($name, $prefix, $config);
+        
+        // Load the component parameters.
+        $params       = JComponentHelper::getParams($this->option);
+        
+        // Extension parameters
+        $model->imagesURI       = $params->get("images_directory", "images/vipportfolio");
+        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
+        
         return $model;
     }
     

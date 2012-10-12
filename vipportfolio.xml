@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
 	<name>com_vipportfolio</name>
-	<creationDate>August, 2010</creationDate>
 	<author>Todor Iliev</author>
 	<authorEmail>todor@itprism.com</authorEmail>
 	<authorUrl>http://itprism.com</authorUrl>
 	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html</license>
-	<version>3.3</version>
+	<creationDate>14 October, 2012</creationDate>
+    <version>3.4</version>
 	<description>COM_VIPPORTFOLIO_DESCRIPTION</description>
 
 	<install>
@@ -59,9 +59,9 @@
 		<submenu>
 			<menu img="../media/com_vipportfolio/images/menu_icon_cpanel.gif" link="option=com_vipportfolio">COM_VIPPORTFOLIO_CP</menu>
 			<menu img="../media/com_vipportfolio/images/menu_icon_projects_new.gif" link="option=com_vipportfolio&amp;view=project&amp;layout=edit">COM_VIPPORTFOLIO_NEW_PROJECT</menu>
-			<menu img="../media/com_vipportfolio/images/menu_icon_projects.gif" link="option=com_vipportfolio&amp;view=projects">COM_VIPPORTFOLIO_PROJECT_LIST</menu>
+			<menu img="../media/com_vipportfolio/images/menu_icon_projects.gif" link="option=com_vipportfolio&amp;view=projects">COM_VIPPORTFOLIO_PROJECTS</menu>
 			<menu img="../media/com_vipportfolio/images/menu_icon_folder_new.gif" link="option=com_vipportfolio&amp;view=category&amp;layout=edit">COM_VIPPORTFOLIO_NEW_CATEGORY</menu>
-			<menu img="../media/com_vipportfolio/images/menu_icon_folder.gif" link="option=com_vipportfolio&amp;view=categories">COM_VIPPORTFOLIO_CATEGORY_LIST</menu>
+			<menu img="../media/com_vipportfolio/images/menu_icon_folder.gif" link="option=com_vipportfolio&amp;view=categories">COM_VIPPORTFOLIO_CATEGORIES</menu>
 		</submenu>
 	
 		<files folder="admin">		    		
@@ -79,9 +79,8 @@
 		</files>
 		
 		<languages folder="admin">
-			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
-			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.sys.ini</language>
-		</languages>
-			
-		</administration>
+            <language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
+            <language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.sys.ini</language>
+        </languages>
+	</administration>
 </extension>

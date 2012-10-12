@@ -212,6 +212,7 @@ class VipPortfolioModelCategory extends JModelAdmin {
             foreach( $images as $image ) {
                 // Remove the images from the filesystem
                 $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$image;
+                
                 if(is_file($file)) {
                     JFile::delete($file);
                 }

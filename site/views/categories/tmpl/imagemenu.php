@@ -17,6 +17,7 @@ defined('_JEXEC') or die;
 <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
 <?php } ?>
 
+<?php if(!empty($this->items)){?>
 <div id="itp-vp-image-menu">
     <ul>
     <?php foreach ( $this->items as $item ) {?>
@@ -29,5 +30,5 @@ defined('_JEXEC') or die;
     </ul>
 </div>
 <div class="clr">&nbsp;</div>
-    
+<?php }?>
 <?php echo $this->version->backlink;?>

@@ -74,6 +74,7 @@ class VipPortfolioViewCategories extends JView {
         $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $layout . '/style.css', 'text/css', null );
                 
         // Only loads projects from the published categories
+        $categories = array();
         foreach ($this->items as $item){
             $categories[] = $item->id;
         }
@@ -132,7 +133,6 @@ class VipPortfolioViewCategories extends JView {
         
         $modal          = "";
         $layout         = $this->getLayout();
-        $hasModal       = false;
         
         switch($layout) {
             case "tabbed":

@@ -17,6 +17,8 @@ defined('_JEXEC') or die;
 <?php if ($this->params->get('show_page_heading', 1)) { ?>
 <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
 <?php } ?>
+
+<?php if(!empty($this->items)){?>
 <div id="itp-vp-box">
     <?php foreach ( $this->items as $item ) {?>
         <a href="<?php echo JRoute::_('index.php?option=com_vipportfolio&view=projects&layout=' . $this->projectLayout .'&catid=' . $item->id);?>">
@@ -42,4 +44,5 @@ defined('_JEXEC') or die;
 
     <?php echo $this->pagination->getPagesLinks(); ?>
 </div>
+<?php }?>
 <?php echo $this->version->backlink;?>

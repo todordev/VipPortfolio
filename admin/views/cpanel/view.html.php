@@ -18,7 +18,7 @@ jimport('joomla.application.component.view');
 
 class VipPortfolioViewCpanel extends JView {
     
-protected $option;
+    protected $option;
     
     public function __construct($config){
         parent::__construct($config);
@@ -26,8 +26,6 @@ protected $option;
     }
     
     public function display($tpl = null){
-        
-        JHtml::_('behavior.modal', 'a.modal');
         
         $this->version = new VipPortfolioVersion();
         
@@ -52,6 +50,8 @@ protected $option;
 	 * @return void
 	 */
 	protected function setDocument() {
+	    
+	    JHtml::_('behavior.modal', 'a.modal');
 	    
 		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_CPANEL_ADMINISTRATION'));
 		

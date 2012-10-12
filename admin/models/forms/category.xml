@@ -10,8 +10,11 @@
 			description="COM_VIPPORTFOLIO_FIELD_NAME_CATEGORY_DESC" required="true" />
 
 		<field name="alias" type="text" class="inputbox"
-			size="60" label="JFIELD_ALIAS_LABEL"
-			description="JFIELD_ALIAS_DESC" />
+			size="60" 
+			label="JFIELD_ALIAS_LABEL"
+			description="JFIELD_ALIAS_DESC"
+			filter="trim" 
+			/>
 
 		<field
 			name="published"
@@ -43,13 +46,21 @@
             label="JGLOBAL_DESCRIPTION" description="COM_VIPPORTFOLIO_FIELD_DESCRIPTION_DESC" />
 
         <field name="meta_title" type="text" class="inputbox"
-            size="60" label="COM_VIPPORTFOLIO_META_TITLE" />
-       <field name="meta_keywords" type="text" class="inputbox"
-            size="60" label="COM_VIPPORTFOLIO_META_KEYWORDS" />
-       <field name="meta_desc" type="textarea" class="inputbox"
-            rows="5" cols="30" label="COM_VIPPORTFOLIO_META_DESC" />
-       <field name="meta_canonical" type="text" class="inputbox"
-            size="60" label="COM_VIPPORTFOLIO_META_CANONICAL" />
+            size="60" 
+            label="COM_VIPPORTFOLIO_META_TITLE" 
+            description="COM_VIPPORTFOLIO_META_TITLE_DESC" />
+        <field name="meta_keywords" type="text" class="inputbox"
+            size="60" 
+            label="COM_VIPPORTFOLIO_META_KEYWORDS" 
+            description="COM_VIPPORTFOLIO_META_KEYWORDS_DESC" />
+        <field name="meta_desc" type="textarea" class="inputbox"
+            rows="5" cols="30" 
+            label="COM_VIPPORTFOLIO_META_DESC"
+            description="COM_VIPPORTFOLIO_META_DESC_DESC" />
+        <field name="meta_canonical" type="text" class="inputbox"
+            size="60" 
+            label="COM_VIPPORTFOLIO_META_CANONICAL"
+            description="COM_VIPPORTFOLIO_META_CANONICAL_DESC" />
             
 	</fieldset>
 </form>

@@ -18,7 +18,7 @@ defined('_JEXEC') or die;?>
     <div class="itp-vp-box" style="width: <?php echo $this->params->get('thumb_width', 200); ?>; height: <?php echo $this->params->get('thumb_height', 200); ?>;">
         <?php if( !empty( $item->thumb ) ) { ?>
         <div class="itp-vp-image-box">
-           <?php if ($this->params->get("image_linkable") OR ($this->hasModal) ) {?>
+           <?php if ($this->params->get("image_linkable") OR !empty($this->modal) ) {?>
                <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>" rel="lightbox-item<?php echo $item->id;?>"  >
            <?php }?>
         
@@ -30,7 +30,7 @@ defined('_JEXEC') or die;?>
             title="<?php echo $this->escape($item->title);?>" 
             />  
             
-            <?php if ($this->params->get("image_linkable") OR ($this->hasModal) ) {?></a><?php } ?>
+            <?php if ($this->params->get("image_linkable") OR !empty($this->modal) ) {?></a><?php } ?>
             
             <?php if(isset($this->extraImages)){?>
             <div class="itp-vp-extra-image">

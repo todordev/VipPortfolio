@@ -25,9 +25,8 @@ defined('_JEXEC') or die;
         <div class="filter-select fltrt">
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
+                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array("archived" => false, "trash"=>false)), 'value', 'text', $this->state->get('filter.published'), true);?>
             </select>
-           
         </div>
     </fieldset>
     <div class="clr"> </div>
@@ -36,9 +35,6 @@ defined('_JEXEC') or die;
        <thead><?php echo $this->loadTemplate('head');?></thead>
 	   <tfoot><?php echo $this->loadTemplate('foot');?></tfoot>
 	   <tbody><?php echo $this->loadTemplate('body');?></tbody>
-	<tbody>
-	
-	</tbody>
 	</table>
 
 <input type="hidden" name="boxchecked" value="0" />

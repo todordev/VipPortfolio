@@ -89,8 +89,8 @@ class VipPortfolioViewProject extends JView {
 	protected function setDocument() {
 	    
 	    // Add behaviors
-        JHtml::_('behavior.tooltip');
         JHtml::_('behavior.formvalidation');
+        JHtml::_('behavior.tooltip');
         
 		$this->document->setTitle($this->documentTitle);
         
@@ -105,7 +105,7 @@ class VipPortfolioViewProject extends JView {
         
 		// Add scripts
 		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
-        
+		
 	}
 
 }
