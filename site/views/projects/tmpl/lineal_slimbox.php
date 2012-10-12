@@ -58,7 +58,7 @@ defined('_JEXEC') or die;?>
 <?php if ($this->params->get("lDisplayTitle")) {?>
  <h3 class="itp-vp-ltitle" >
  <?php if($this->params->get("lTitleLinkable") AND $this->item->url ) { ?>
- <a href="<?php echo $this->item->url;?>"><?php echo $this->item->title;?></a>
+ <a href="<?php echo $this->item->url;?>" <?php echo $this->openLink;?>><?php echo $this->item->title;?></a>
  <?php } else { ?>
  <?php echo $this->item->title;?>
  <?php }?>
@@ -66,7 +66,7 @@ defined('_JEXEC') or die;?>
 <?php }?>
 <p><?php echo $this->item->description;?></p>
 <?php if ($this->params->get("lDisplayUrl")) {?>
-<a href="<?php echo $this->item->url;?>" title="<?php echo $this->item->title;?>" ><?php echo $this->item->url;?></a>
+<a href="<?php echo $this->item->url;?>" title="<?php echo $this->item->title;?>" <?php echo $this->openLink;?>><?php echo $this->item->url;?></a>
 <?php }?>
     
     </div>

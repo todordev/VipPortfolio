@@ -59,13 +59,15 @@ defined('_JEXEC') or die;?>
         </div>
         <?php } ?>
         <div class="itp-vp-text-box">
+        <?php if ($this->params->get("list_display_title")) {?>
          <h3 class="itp-vp-title" >
          <?php if($this->params->get("title_linkable") AND $item->url) { ?>
-         	<a href="<?php echo $item->url;?>"><?php echo $item->title;?></a>
+         	<a href="<?php echo $item->url;?>" <?php echo $this->openLink;?>><?php echo $item->title;?></a>
          <?php }else{?>
              <?php echo $item->title;?>
          <?php }?>
          </h3>
+         <?php }?>
         <p><?php echo $item->description;?></p>
         </div>
     </div>

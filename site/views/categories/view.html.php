@@ -88,6 +88,8 @@ class VipPortfolioViewCategories extends JView {
         
         $this->projects = $projects;
         
+        // Open link target
+        $this->openLink = 'target="'.$this->params->get("tabbed_open_link", "_self").'"';
     }
     
     protected function imagemenuLayout($layout) {

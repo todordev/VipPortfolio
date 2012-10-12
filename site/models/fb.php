@@ -118,6 +118,8 @@ class VipPortfolioModelFb extends JModelList {
         
         // Create a new query object.
         $db     = $this->getDbo();
+        /** @var $db JDatabaseMySQLi **/
+        
         $query  = $db->getQuery(true);
         
         // Select the required fields from the table.

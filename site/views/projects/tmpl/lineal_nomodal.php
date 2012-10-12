@@ -16,8 +16,9 @@ defined('_JEXEC') or die;?>
 <div class="itp-vp-lbox" style="width: <?php echo $this->params->get('lineal_thumb_width', 300); ?>; height: <?php echo $this->params->get('lineal_thumb_height', 300); ?>;">
     <?php if( !empty( $this->item->thumb ) ) { ?>
     <div class="itp-vp-limage-box">
+    
        <?php if ($this->params->get("lLinkable")) {?>
-       <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->image;?>" > 
+       <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$this->item->image;?>" <?php echo $this->openLink;?>> 
        <?php }?>
     	<img
     	width="<?php echo $this->params->get('lineal_thumb_width', 300); ?>" 
@@ -33,7 +34,7 @@ defined('_JEXEC') or die;?>
          if (isset($this->extraImages[$this->item->id]) AND !empty($this->extraImages[$this->item->id])){
               $i = 0;
              foreach($this->extraImages[$this->item->id] as $eImage){?>
-                <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>">
+                <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>" <?php echo $this->openLink;?>>
                     <img
                     width="<?php echo $this->params->get('lineal_extra_thumb_width', 50); ?>" 
                     height="<?php echo $this->params->get('lineal_extra_thumb_height', 50); ?>" 
@@ -52,10 +53,12 @@ defined('_JEXEC') or die;?>
     </div>
     <?php } ?>
     <div class="itp-vp-ltext-box">
+    
+    
     <?php if ($this->params->get("lDisplayTitle")) {?>
      <h3 class="itp-vp-ltitle" >
      <?php if($this->params->get("lTitleLinkable") AND $this->item->url ) { ?>
-     	<a href="<?php echo $this->item->url;?>"><?php echo $this->item->title;?></a>
+     	<a href="<?php echo $this->item->url;?>" <?php echo $this->openLink;?>><?php echo $this->item->title;?></a>
      <?php } else { ?>
          <?php echo $this->item->title;?>
      <?php }?>
@@ -63,7 +66,7 @@ defined('_JEXEC') or die;?>
     <?php }?>
     <p><?php echo $this->item->description;?></p>
     <?php if ($this->params->get("lDisplayUrl")) {?>
-    <a href="<?php echo $this->item->url;?>" title="<?php echo $this->item->title;?>" ><?php echo $this->item->url;?></a>
+    <a href="<?php echo $this->item->url;?>" title="<?php echo $this->item->title;?>" <?php echo $this->openLink;?>><?php echo $this->item->url;?></a>
     <?php }?>
     
     </div>

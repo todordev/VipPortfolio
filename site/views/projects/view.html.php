@@ -62,7 +62,7 @@ class VipPortfolioViewProjects extends JView {
         switch($layout){
             
             case "lineal":
-                $this->assignRef('item', JArrayHelper::getValue($this->items, 0));
+                $this->item = JArrayHelper::getValue($this->items, 0);
                 $this->linealLayout($layout);
                 break;
             
@@ -138,6 +138,9 @@ class VipPortfolioViewProjects extends JView {
             $this->extraImages = $extraImages;
             $this->extraMax    = $this->params->get("extra_max");
         }
+        
+        // Open link target
+        $this->openLink = 'target="'.$this->params->get("list_open_link", "_self").'"';
     
     }
     
@@ -155,6 +158,8 @@ class VipPortfolioViewProjects extends JView {
         
         }
     
+        // Open link target
+        $this->openLink = 'target="'.$this->params->get("lineal_open_link", "_self").'"';
     }
     
     protected function scrollgalleryLayout($layout){

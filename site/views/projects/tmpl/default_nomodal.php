@@ -18,7 +18,7 @@ defined('_JEXEC') or die;?>
         <?php if( !empty( $item->thumb ) ) { ?>
         <div class="itp-vp-image-box">
            <?php if ($this->params->get("image_linkable")) {?>
-            <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>" >   
+            <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>" <?php echo $this->openLink;?>>   
            <?php }?>
         
             <img
@@ -38,7 +38,7 @@ defined('_JEXEC') or die;?>
              if (isset($this->extraImages[$item->id]) AND !empty($this->extraImages[$item->id])){
                  $i = 0;
                  foreach($this->extraImages[$item->id] as $eImage){?>
-                    <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>" >
+                    <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>" <?php echo $this->openLink;?> >
                         <img
                         width="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
                         height="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
@@ -58,13 +58,16 @@ defined('_JEXEC') or die;?>
         </div>
         <?php } ?>
         <div class="itp-vp-text-box">
+        <?php if ($this->params->get("list_display_title")) {?>
          <h3 class="itp-vp-title" >
          <?php if($this->params->get("title_linkable") AND $item->url) { ?>
-         	<a href="<?php echo $item->url;?>"><?php echo $item->title;?></a>
+         	<a href="<?php echo $item->url;?>" <?php echo $this->openLink;?>><?php echo $item->title;?></a>
          <?php }else{?>
              <?php echo $item->title;?>
          <?php }?>
          </h3>
+         <?php }?>
+         
         <p><?php echo $item->description;?></p>
         </div>
     </div>

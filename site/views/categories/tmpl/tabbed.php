@@ -46,7 +46,7 @@ echo $pane->startPane('optionsPane');
             <?php 
             // Initialize modal dialog
             if(!$this->modal) { ?>
-            	<a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'];?>" >
+            	<a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$project['image'];?>" <?php echo $this->openLink;?>>
             <?php }else{
                 
                 if("slimbox" == $this->modal ) { // Slimbox
@@ -69,7 +69,7 @@ echo $pane->startPane('optionsPane');
             <?php if($this->params->get("ctabsDisplayTitle")) {?>
             <h3>
              <?php if( $this->params->get("ctabsTitleLinkable") AND $project['url'] ) { ?>
-		         <a href="<?php echo $project['url'];?>"><?php echo $this->escape($project['title']);?></a>
+		         <a href="<?php echo $project['url'];?>" <?php echo $this->openLink;?>><?php echo $this->escape($project['title']);?></a>
 		     <?php }else{?>
 		         <?php echo $this->escape($project['title']);?>
 		     <?php }?>
@@ -81,7 +81,7 @@ echo $pane->startPane('optionsPane');
             <?php if($this->params->get("ctabsDisplayInnerTitle")){?>
             <h3>
 	            <?php if($this->params->get("ctabsInnerURL")){?>
-	            <a href="<?php echo $project['url'];?>" >
+	            <a href="<?php echo $project['url'];?>" <?php echo $this->openLink;?>>
 	            <?php }?>
     	            <?php  
     	            $length = $this->params->get("ctabsInnerTitleMaxChars");
