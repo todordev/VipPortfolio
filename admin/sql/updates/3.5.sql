@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS `#__vp_tabs` (
   KEY `idx_itpvp_page_id` (`page_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-ALTER TABLE `#__vp_tabs` DROP FOREIGN KEY `FK_itpvp_tab_page`;
 ALTER TABLE `#__vp_tabs` ADD CONSTRAINT `FK_itpvp_tab_page` FOREIGN KEY (`page_id`) REFERENCES `#__vp_pages` (`page_id`) ON DELETE CASCADE;
   
 SET FOREIGN_KEY_CHECKS=1;

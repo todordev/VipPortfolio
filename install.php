@@ -80,36 +80,67 @@ class pkg_vipPortfolioInstallerScript {
         $style = '<style>'.file_get_contents($this->bootstrap).'</style>';
         echo $style;
         
-        // Start table with the information
-        VipPortfolioInstallHelper::startTable();
-        
         // Create images folder
         if(!is_dir($this->imagesPath)){
             VipPortfolioInstallHelper::createImagesFolder($this->imagesPath);
         }
         
+        // Start table with the information
+        VipPortfolioInstallHelper::startTable();
+        
+        // Requirements
+        VipPortfolioInstallHelper::addRowHeading(JText::_("COM_VIPPORTFOLIO_MINIMUM_REQUIREMENTS"));
+        
         // Display result about verification for existing folder 
         $title  = JText::_("COM_VIPPORTFOLIO_IMAGE_FOLDER");
         $info   = $this->imagesFolder;
-        $result = (!is_dir($this->imagesPath)) ? "no" : "yes";
+        if(!is_dir($this->imagesPath)) {
+            $result = array("type" => "important", "text" => JText::_("JON"));
+        } else {
+            $result = array("type" => "success"  , "text" => JText::_("JYES"));
+        }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
         // Display result about verification for writeable folder 
         $title  = JText::_("COM_VIPPORTFOLIO_WRITABLE_FOLDER");
         $info   = $this->imagesFolder;
-        $result = (!is_writable($this->imagesPath)) ? "no" : "yes";
+        if(!is_writable($this->imagesPath)) {
+            $result = array("type" => "important", "text" => JText::_("JON"));
+        } else {
+            $result = array("type" => "success"  , "text" => JText::_("JYES"));
+        }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
         // Display result about verification for GD library
         $title  = JText::_("COM_VIPPORTFOLIO_GD_LIBRARY");
         $info   = "";
-        $result = ( (extension_loaded('gd') && function_exists('gd_info')) ) ? "yes" : "no";
+        if(!extension_loaded('gd') AND function_exists('gd_info')) {
+            $result = array("type" => "important", "text" => JText::_("COM_VIPPORTFOLIO_WARNING"));
+        } else {
+            $result = array("type" => "success"  , "text" => JText::_("JYES"));
+        }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
         // Display result about verification for cURL library
         $title  = JText::_("COM_VIPPORTFOLIO_CURL_LIBRARY");
         $info   = "";
-        $result = ( !extension_loaded('curl') ) ? "warning" : "yes";
+        if( !extension_loaded('curl') ) {
+            $info   = JText::_("COM_VIPPORTFOLIO_CURL_INFO");
+            $result = array("type" => "important", "text" => JText::_("COM_VIPPORTFOLIO_WARNING"));
+        } else {
+            $result = array("type" => "success"  , "text" => JText::_("JYES"));
+        }
+        VipPortfolioInstallHelper::addRow($title, $result, $info);
+        
+        // Display result about verification Magic Quotes
+        $title  = JText::_("COM_VIPPORTFOLIO_MAGIC_QUOTES");
+        $info   = "";
+        if( get_magic_quotes_gpc() ) {
+            $info   = JText::_("COM_VIPPORTFOLIO_MAGIC_QUOTES_INFO");
+            $result = array("type" => "important", "text" => JText::_("JON"));
+        } else {
+            $result = array("type" => "success"  , "text" => JText::_("JOFF"));
+        }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
         // End table with the information
@@ -118,7 +149,7 @@ class pkg_vipPortfolioInstallerScript {
         // Do upgrade 
         $this->upgradeExtension();
         
-        echo JText::_("COM_VIPPORTFOLIO_MESSAGE_REVIEW_SAVE_SETTINGS");
+        echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_REVIEW_SAVE_SETTINGS", JRoute::_("index.php?option=com_vipquotes"));
         
     }
     
