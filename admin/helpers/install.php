@@ -21,37 +21,46 @@ class VipPortfolioInstallHelper {
     public static function startTable() {
         echo '
         <div style="width: 600px;">
-        <table class="table table-bordered">';
+        <table class="table table-bordered table-striped">';
     }
     
 	/**
 	 * Display an HTML code for a row
-	 *
+	 * 
+	 * @param string $title
+	 * @param array $result 
+	 * array(
+	 * 	type => success, important, warning,
+	 * 	text => yes, no, off, on, warning,...
+	 * )
 	 */
 	public static function addRow($title, $result, $info) {
 	    
-	    switch($result) {
-	        case "yes":
-	            $result = '<span class="label label-success">'.JText::_("JYES").'</span>';
-	            break;
-	        case "no":
-	            $result = '<span class="label label-important">'.JText::_("JNO").'</span>';
-	            break;
-	        case "warning":
-	            $result = '<span class="label label-warning">'.JText::_("COM_VIPPORTFOLIO_WARNING").'</span>';
-	            break;
+	    $outputType = JArrayHelper::getValue($result, "type", "");
+	    $outputText = JArrayHelper::getValue($result, "text", "");
+	    
+	    $output     = "";
+	    if(!empty($outputType) AND !empty($outputText)) {
+            $output = '<span class="label label-'.$outputType.'">'.$outputText.'</span>';	        
 	    }
 	        
 	    echo '
 	    <tr>
             <td>'.$title.'</td>
-            <td>'.$result.'</td>
+            <td>'.$output.'</td>
             <td>'.$info.'</td>
         </tr>';
 	}
 	
+	public static function addRowHeading($heading) {
+	    echo '
+	    <tr class="info">
+            <td colspan="3">'.$heading.'</td>
+        </tr>';
+	}
+	
     public static function endTable() {
-        echo "</div></table>";
+        echo "</table></div>";
     }
     
     public static function createImagesFolder($imagesPath) {

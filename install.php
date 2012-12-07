@@ -149,7 +149,7 @@ class pkg_vipPortfolioInstallerScript {
         // Do upgrade 
         $this->upgradeExtension();
         
-        echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_REVIEW_SAVE_SETTINGS", JRoute::_("index.php?option=com_vipquotes"));
+        echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_REVIEW_SAVE_SETTINGS", JRoute::_("index.php?option=com_vipportfolio"));
         
     }
     
