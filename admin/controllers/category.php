@@ -119,7 +119,18 @@ class VipPortfolioControllerCategory extends JControllerForm {
 
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
-            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
+            
+            // Problem with uploading, so set a message and redirect to pages
+            if($e->getCode() == 1001) {
+                $this->setMessage($e->getMessage(), "notice");
+                $link = $this->prepareRedirectLink($itemId);
+                $this->setRedirect(JRoute::_($link, false));
+                return;
+                
+            } else { // System error
+                throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'), 500);
+            }
+            
         }
         
         $msg  = JText::_('COM_VIPPORTFOLIO_CATEGORY_SAVED');

@@ -122,8 +122,8 @@ defined('_JEXEC') or die;
                     <?php if(!empty($this->extraImages)){?>
                        <?php foreach($this->extraImages as $image) {?>
                        <div class="ai_box" id="ai_box<?php echo $image['id'];?>">
-                           <a href="<?php echo JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['image']; ?>">
-                               <img src="<?php echo JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['thumb']; ?>" />
+                           <a href="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['image']; ?>">
+                               <img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['thumb']; ?>" />
                            </a>
                            
                            <img class="ai_ri" data-image-id="<?php echo $image['id'];?>" src="../media/com_vipportfolio/images/icon_remove_16.png" />

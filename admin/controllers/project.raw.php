@@ -113,12 +113,25 @@ class VipPortfolioControllerProject extends JController {
         try {
            
             // Get the model
-            $model = $this->getModel();
+            $model  = $this->getModel();
             $images = $model->uploadExtraImages($files);
             $images = $model->storeExtraImages($images, $itemId);
             
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
+            
+            // Problem with file uploading
+            if($e->getCode() == 1001) {
+                $response = array(
+                	"success" => false,
+                    "title"=> JText::_( 'COM_VIPPORTFOLIO_FAIL' ),
+                    "text" => $e->getMessage(),
+                );
+                    
+                echo json_encode($response);
+                return;
+            }
+            
             throw new Exception($e->getMessage());
         }
         

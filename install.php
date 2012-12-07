@@ -117,7 +117,7 @@ class pkg_vipPortfolioInstallerScript {
         if(!extension_loaded('gd') AND function_exists('gd_info')) {
             $result = array("type" => "important", "text" => JText::_("COM_VIPPORTFOLIO_WARNING"));
         } else {
-            $result = array("type" => "success"  , "text" => JText::_("JYES"));
+            $result = array("type" => "success"  , "text" => JText::_("JON"));
         }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
@@ -128,7 +128,7 @@ class pkg_vipPortfolioInstallerScript {
             $info   = JText::_("COM_VIPPORTFOLIO_CURL_INFO");
             $result = array("type" => "important", "text" => JText::_("COM_VIPPORTFOLIO_WARNING"));
         } else {
-            $result = array("type" => "success"  , "text" => JText::_("JYES"));
+            $result = array("type" => "success"  , "text" => JText::_("JON"));
         }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         

@@ -113,29 +113,40 @@ class VipPortfolioControllerProject extends JControllerForm {
             throw new Exception($model->getError());
         }
         
+        // Test for valid data.
+        $validData = $model->validate($form, $data);
+        
+        // Check for validation errors.
+        if($validData === false){
+            $this->defaultLink .= "&view=".$this->view_item."&layout=edit";
+        
+            if($itemId) {
+                $this->defaultLink .= "&id=" . $itemId;
+            } 
+            
+            $this->setMessage($model->getError(), "notice");
+            $this->setRedirect(JRoute::_($this->defaultLink, false));
+            return;
+        }
+        
         try{
-            
-            // Test for valid data.
-            $validData = $model->validate($form, $data);
-            
-            // Check for validation errors.
-            if($validData === false){
-                $this->defaultLink .= "&view=".$this->view_item."&layout=edit";
-            
-                if($itemId) {
-                    $this->defaultLink .= "&id=" . $itemId;
-                } 
-                
-                $this->setMessage($model->getError(), "notice");
-                $this->setRedirect(JRoute::_($this->defaultLink, false));
-                return;
-            }
             
             $itemId = $model->save($validData);
         
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
-            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
+            
+            // Problem with uploading. So set a message and redirect to pages.
+            if($e->getCode() == 1001) {
+                
+                $this->setMessage($e->getMessage(), "notice");
+                $link = $this->prepareRedirectLink($itemId);
+                $this->setRedirect(JRoute::_($link, false));
+                return;
+                
+            } else { // System error
+                throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'), 500);
+            }
         }
         
         $msg  = JText::_('COM_VIPPORTFOLIO_PROJECT_SAVED');
