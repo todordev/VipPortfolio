@@ -2,11 +2,11 @@
 <extension type="component" version="2.5" method="upgrade">
 	<name>com_vipportfolio</name>
 	<author>Todor Iliev</author>
+	<creationDate>August, 2010</creationDate>
 	<authorEmail>todor@itprism.com</authorEmail>
 	<authorUrl>http://itprism.com</authorUrl>
 	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html</license>
-	<creationDate>14 October, 2012</creationDate>
     <version>3.4</version>
 	<description>COM_VIPPORTFOLIO_DESCRIPTION</description>
 
