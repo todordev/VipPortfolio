@@ -1,15 +1,17 @@
 SET FOREIGN_KEY_CHECKS=0;
 
-ALTER TABLE `#__vp_projects` CHANGE `url` `url` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__vp_projects` CHANGE `thumb` `thumb` VARCHAR( 24 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__vp_projects` CHANGE `image` `image` VARCHAR( 24 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_projects` ADD `alias` VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER `title`;
 
-ALTER TABLE `#__vp_categories` CHANGE `desc` `desc` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__vp_categories` CHANGE `image` `image` VARCHAR( 24 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__vp_categories` CHANGE `meta_title` `meta_title` VARCHAR( 80 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__vp_categories` CHANGE `meta_keywords` `meta_keywords` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__vp_categories` CHANGE `meta_desc` `meta_desc` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
-ALTER TABLE `#__vp_categories` CHANGE `meta_canonical` `meta_canonical` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_projects` CHANGE `url` `url` VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_projects` CHANGE `thumb` `thumb` VARCHAR( 24 ) NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_projects` CHANGE `image` `image` VARCHAR( 24 ) NOT NULL DEFAULT '';
+
+ALTER TABLE `#__vp_categories` CHANGE `desc` `desc` TEXT NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_categories` CHANGE `image` `image` VARCHAR( 24 ) NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_categories` CHANGE `meta_title` `meta_title` VARCHAR( 80 ) NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_categories` CHANGE `meta_keywords` `meta_keywords` VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_categories` CHANGE `meta_desc` `meta_desc` VARCHAR( 255 ) NOT NULL DEFAULT '';
+ALTER TABLE `#__vp_categories` CHANGE `meta_canonical` `meta_canonical` VARCHAR( 255 ) NOT NULL DEFAULT '';
 
 CREATE TABLE IF NOT EXISTS `#__vp_pages` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
