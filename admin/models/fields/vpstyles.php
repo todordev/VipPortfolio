@@ -42,9 +42,10 @@ class JFormFieldVpStyles extends JFormFieldList {
     protected function getOptions(){
 
         $options = array(
-            array("value"=>'default', "text"=>'List Layout'),
-            array("value"=>'lineal', "text"=>'Line Layout'),
-            array("value"=>'scrollgallery', "text"=>'ScrollGallery Layout')
+            array("value"=>'list', "text"=>'List View'),
+            array("value"=>'lineal', "text"=>'Lineal View'),
+            array("value"=>'scrollgallery', "text"=>'ScrollGallery View'),
+            array("value"=>'slidegallery', "text"=>'SlideGallery View')
         );
         
         // Merge any additional options in the XML definition.

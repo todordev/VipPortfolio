@@ -1,12 +1,21 @@
 @CHARSET "UTF-8";
 .icon-48-vip-categories 	{ background-image: url(../images/folder_48.png); }
 .icon-48-vip-categories-new { background-image: url(../images/folder_add_48.png); }
+.icon-48-vip-categories-edit  { background-image: url(../images/folder_edit_48.png); }
 .icon-48-vip-projects-new 	{ background-image: url(../images/image_add_48.png); }
+.icon-48-vip-projects-edit 	{ background-image: url(../images/image_edit_48.png); }
 .icon-48-vip-projects 	    { background-image: url(../images/image_48.png); }
 .icon-48-vip-settings 	    { background-image: url(../images/settings_48.png); }
 .icon-48-vip-properties 	{ background-image: url(../images/properties_48.png); }
+.icon-48-vip-css-editor 	{ background-image: url(../images/css_editor_48.png); }
+.icon-48-vip-facebook-pages 	{ background-image: url(../images/facebook_48.png); }
+.icon-48-vip-facebook-tabs 	{ background-image: url(../images/facebook_tabs_48.png); }
+.icon-48-vip-facebook-add-tab 	{ background-image: url(../images/facebook_add_tab_48.png); }
+.icon-48-vip-facebook-edit-tab 	{ background-image: url(../images/facebook_edit_tab_48.png); }
 
 .icon-32-vip-properties-back { background-image: url(../images/properties_back_32.png); }
+.icon-32-vip-update { background-image: url(../images/update_32.png); }
+.icon-32-vip-connect { background-image: url(../images/connect_32.png); }
 
 #itp-cpanel {
       width: 400px;
@@ -174,4 +183,10 @@ a.delInputRow {
 	position: relative;
    margin: 10px 10px 10px 0;
    float: left;
+}
+
+/* CSS Editor */
+.vp_css_code {
+	width: 670px !important;
+	height: 700px !important;
 }

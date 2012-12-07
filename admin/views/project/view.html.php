@@ -67,7 +67,11 @@ class VipPortfolioViewProject extends JView {
         $this->documentTitle= $isNew ? JText::_('COM_VIPPORTFOLIO_PROJECT_ADD')
                                       : JText::_('COM_VIPPORTFOLIO_PROJECT_EDIT');
                                       
-        JToolBarHelper::title($this->documentTitle, 'vip-projects-new');
+        if(!$isNew) {
+            JToolBarHelper::title($this->documentTitle, 'vip-projects-edit');
+        } else {
+            JToolBarHelper::title($this->documentTitle, 'vip-projects-new');
+        }
 		                             
         JToolBarHelper::apply('project.apply');
         JToolBarHelper::save2new('project.save2new');
@@ -105,6 +109,7 @@ class VipPortfolioViewProject extends JView {
         
 		// Add scripts
 		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
+		$this->document->addScript('../media/'.$this->option.'/js/admin/helper.js');
 		
 	}
 

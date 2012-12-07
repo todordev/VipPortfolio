@@ -28,8 +28,7 @@ class VipPortfolioViewProjects extends JView {
         $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         
-        $categories       = VipPortfolioHelper::getCategories();
-        $this->categories = $categories;
+        $this->categories = VipPortfolioHelper::getCategoriesOption();
         
         // Prepare filters
         $listOrder  = $this->escape($this->state->get('list.ordering'));
@@ -39,6 +38,9 @@ class VipPortfolioViewProjects extends JView {
         $this->listOrder  =  $listOrder;
         $this->listDirn   =  $listDirn;
         $this->saveOrder  =  $saveOrder;
+        
+        // Add submenu
+        VipPortfolioHelper::addSubmenu($this->getName());
         
         // Prepare actions
         $this->addToolbar();

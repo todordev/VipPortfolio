@@ -29,6 +29,9 @@ class VipPortfolioViewCpanel extends JView {
         
         $this->version = new VipPortfolioVersion();
         
+        // Add submenu
+        VipPortfolioHelper::addSubmenu($this->getName());
+        
         $this->addToolbar();
         $this->setDocument();
         

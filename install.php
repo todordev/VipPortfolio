@@ -61,49 +61,65 @@ class pkg_vipPortfolioInstallerScript {
      */
     public function postflight($type, $parent) {
     
+        if(!defined("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR")) {
+            define("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR", JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . "components" . DIRECTORY_SEPARATOR ."com_vipportfolio");
+        }
+        
         jimport('joomla.filesystem.path');
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
         
-        $params     = JComponentHelper::getParams("com_vipportfolio");
+        // Register Install Helper
+        JLoader::register("VipPortfolioInstallHelper", VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "helpers" . DIRECTORY_SEPARATOR ."install.php");
+
+        $params             = JComponentHelper::getParams("com_vipportfolio");
         $this->imagesFolder = JFolder::makeSafe($params->get("images_directory", "images/vipportfolio"));
         $this->imagesPath   = JPath::clean( JPATH_SITE.DIRECTORY_SEPARATOR.$this->imagesFolder );
+        $this->bootstrap    = JPath::clean( JPATH_SITE.DIRECTORY_SEPARATOR."media".DIRECTORY_SEPARATOR."com_vipportfolio".DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."bootstrap.min.css" );
         
-        // create folder
+        $style = '<style>'.file_get_contents($this->bootstrap).'</style>';
+        echo $style;
+        
+        // Start table with the information
+        VipPortfolioInstallHelper::startTable();
+        
+        // Create images folder
         if(!is_dir($this->imagesPath)){
-        
-            // Create user folder
-            if(true !== JFolder::create($this->imagesPath)) {
-                $message = JText::sprintf("ITP_ERROR_CANNOT_CREATE_FOLDER", $this->imagesPath);
-                JLog::add($message);
-                echo $message;
-                return false;
-            }
-            
-            jimport('joomla.filesystem.file');
-            
-            // Copy index.html
-            $indexFile = $this->imagesPath . DIRECTORY_SEPARATOR ."index.html";
-            $html = '<html><body bgcolor="#FFFFFF"></body></html>';
-            if(true !== JFile::write($indexFile,$html)) {
-                $message = JText::sprintf("ITP_ERROR_CANNOT_SAVE_FILE", $indexFile);
-                JLog::add($message);
-            }
-            
-            echo JText::sprintf("ITP_MESSAGE_FOLDER_CREATED_SUCCESSFULLY", $this->imagesFolder); 
+            VipPortfolioInstallHelper::createImagesFolder($this->imagesPath);
         }
         
-        // Check for writeable folder
-        if(!is_writable($this->imagesPath)) {
-            echo JText::sprintf("ITP_MESSAGE_FOLDER_NOT_WRITABLE", $this->imagesFolder); 
-        } else {
-            echo JText::sprintf("ITP_MESSAGE_FOLDER_WRITABLE", $this->imagesFolder); 
-        }
+        // Display result about verification for existing folder 
+        $title  = JText::_("COM_VIPPORTFOLIO_IMAGE_FOLDER");
+        $info   = $this->imagesFolder;
+        $result = (!is_dir($this->imagesPath)) ? "no" : "yes";
+        VipPortfolioInstallHelper::addRow($title, $result, $info);
+        
+        // Display result about verification for writeable folder 
+        $title  = JText::_("COM_VIPPORTFOLIO_WRITABLE_FOLDER");
+        $info   = $this->imagesFolder;
+        $result = (!is_writable($this->imagesPath)) ? "no" : "yes";
+        VipPortfolioInstallHelper::addRow($title, $result, $info);
+        
+        // Display result about verification for GD library
+        $title  = JText::_("COM_VIPPORTFOLIO_GD_LIBRARY");
+        $info   = "";
+        $result = ( (extension_loaded('gd') && function_exists('gd_info')) ) ? "yes" : "no";
+        VipPortfolioInstallHelper::addRow($title, $result, $info);
+        
+        // Display result about verification for cURL library
+        $title  = JText::_("COM_VIPPORTFOLIO_CURL_LIBRARY");
+        $info   = "";
+        $result = ( !extension_loaded('curl') ) ? "warning" : "yes";
+        VipPortfolioInstallHelper::addRow($title, $result, $info);
+        
+        // End table with the information
+        VipPortfolioInstallHelper::endTable();
         
         // Do upgrade 
         $this->upgradeExtension();
         
-        echo JText::_("ITP_MESSAGE_REVIEW_SAVE_SETTINGS");
+        echo JText::_("COM_VIPPORTFOLIO_MESSAGE_REVIEW_SAVE_SETTINGS");
+        
     }
     
     /**
@@ -112,9 +128,6 @@ class pkg_vipPortfolioInstallerScript {
      */
     private function upgradeExtension() {
         
-        if(!defined("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR")) {
-            define("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR", JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . "components" . DIRECTORY_SEPARATOR ."com_vipportfolio");
-        }
         JLoader::register("VipPortfolioVersion", VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "libraries" . DIRECTORY_SEPARATOR ."version.php");
 
         $version         = new VipPortfolioVersion();
@@ -140,10 +153,10 @@ class pkg_vipPortfolioInstallerScript {
         
         if(is_dir($sourcePath)) {
             if(!JFolder::copy($sourcePath, $this->imagesPath, "", true)) {
-                echo JText::sprintf("ITP_MESSAGE_FOLDER_NOT_COPIED",$sourceFolder, $this->imagesFolder);
+                echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_FOLDER_NOT_COPIED",$sourceFolder, $this->imagesFolder);
             } else {
                 JFolder::move($sourcePath, $newSourcePath);
-                echo JText::sprintf("ITP_MESSAGE_FOLDER_COPIED", $sourceFolder, $this->imagesFolder);
+                echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_FOLDER_COPIED", $sourceFolder, $this->imagesFolder);
                 
                 // Make thumbnail
                 $db = JFactory::getDbo();

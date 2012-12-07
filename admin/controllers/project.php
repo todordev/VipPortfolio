@@ -135,7 +135,7 @@ class VipPortfolioControllerProject extends JControllerForm {
         
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
-            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
         }
         
         $msg  = JText::_('COM_VIPPORTFOLIO_PROJECT_SAVED');
@@ -192,7 +192,7 @@ class VipPortfolioControllerProject extends JControllerForm {
         $id   = $app->input->get->getInt('id', 0);
         $type = $app->input->get->get('type', "string");
         if(!$id){
-            throw new Exception(JText::_('ITP_ERROR_IMAGE_DOES_NOT_EXIST'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_IMAGE_DOES_NOT_EXIST'));
         }
         
         try{
@@ -205,7 +205,7 @@ class VipPortfolioControllerProject extends JControllerForm {
             
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
-            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
         }
         
         $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');

@@ -1,10 +1,19 @@
 Vip Portfolio for Joomla! 
 ==========================
-( Version 3.4 )
+( Version 3.5 )
 --------------------------
 
 Changelog
 ---------
+
+v3.5
+----------
+* Added Scroll Gallery View
+* Added filters - category,...
+* Added multiple select in the a category view option. Now you are able to select categories that you want to display.
+* The layouts have been moved to views. ( Now the extension use views to display categories and projects ).
+* Improved the multilanguage
+* Improved
 
 v3.4
 ----------

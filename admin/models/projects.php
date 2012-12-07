@@ -36,13 +36,10 @@ class VipPortfolioModelProjects extends JModelList {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'id', 'a.id',
-                'name', 'a.title',
-                'description', 'a.description',
-                'url', 'a.url',
-                'thumb', 'a.thumb',
-                'image', 'a.image',
+                'title', 'a.title',
                 'published', 'a.published',
-                'ordering', 'a.ordering'
+                'ordering', 'a.ordering',
+                'name', 'b.name',
             );
         }
 
@@ -60,12 +57,15 @@ class VipPortfolioModelProjects extends JModelList {
     protected function populateState($ordering = null, $direction = null) {
         
         // Load the filter state.
-        $search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
+        $value  = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
+        $this->setState('filter.search', $value);
 
-        $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
-        $this->setState('filter.published', $published);
+        $value  = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
+        $this->setState('filter.published', $value);
 
+        $value  = $this->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', 0, 'integer');
+        $this->setState('filter.category_id', $value);
+        
         // Load the component parameters.
         $params = JComponentHelper::getParams($this->option);
         $this->setState('params', $params);
@@ -111,13 +111,20 @@ class VipPortfolioModelProjects extends JModelList {
         $query->select(
             $this->getState(
                 'list.select',
-                'a.id, a.title, a.url,' .
-                'a.published, a.ordering,' . 
-                'a.catid'
+                'a.id, a.title, a.url, ' .
+                'a.published, a.ordering, a.catid, '.
+                'b.name as category_name' 
             )
         );
         $query->from('`#__vp_projects` AS a');
+        $query->innerJoin('`#__vp_categories` AS b ON a.catid = b.id');
 
+        // Filter by category
+        $categoryId = $this->getState('filter.category_id');
+        if (!empty($categoryId)) {
+            $query->where('a.catid =' . (int)$categoryId);
+        }
+        
         // Filter by published state
         $published = $this->getState('filter.published');
         if (is_numeric($published)) {

@@ -14,8 +14,7 @@
 // no direct access
 defined('_JEXEC') or die;
 ?>
-<form enctype="multipart/form-data"  action="<?php echo JRoute::_('index.php?option=com_vipportfolio&layout=edit&id='.(int) $this->item->id); ?>" 
-method="post" name="adminForm" id="category-form" class="form-validate">
+<form enctype="multipart/form-data"  action="<?php echo JRoute::_('index.php?option=com_vipportfolio&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="category-form" class="form-validate">
     <div class="width-40 fltlft">
         <fieldset class="adminform">
             <legend><?php echo JText::_("COM_VIPPORTFOLIO_CATEGORY_INFORMATION"); ?></legend>
@@ -91,9 +90,9 @@ method="post" name="adminForm" id="category-form" class="form-validate">
     <?php echo JHtml::_('form.token'); ?>
 </form>
 <?php if (!empty($this->item->image)) {?>
-<img src="<?php echo (JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image); ?>" alt="<?php echo $this->item->name;?>" />
+<img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image; ?>"/>
 <div>
-    <img src="<?php echo (JURI::root() . "media/com_vipportfolio/images/remove_image.gif"); ?>" alt="<?php echo $this->item->name;?>" />
-    <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&amp;task=category.removeImage&amp;id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
+    <img src="../media/com_vipportfolio/images/remove_image.png" />
+    <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&task=category.removeImage&id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
 </div>
 <?php }?>

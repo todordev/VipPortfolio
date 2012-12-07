@@ -34,7 +34,7 @@ class VipPortfolioController extends JController {
         // Set the default view name and format from the Request.
         // Note we are using catid to avoid collisions with the router and the return page.
         // Frontend is a bit messier than the backend.
-        $viewName  = JFactory::getApplication()->input->getCmd('view', 'projects');
+        $viewName  = JFactory::getApplication()->input->getCmd('view', 'categorylist');
         JFactory::getApplication()->input->set('view', $viewName);
 
         $safeurlparams = array(

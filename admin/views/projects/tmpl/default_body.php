@@ -25,10 +25,10 @@ defined('_JEXEC') or die;
 			<a href="index.php?option=com_vipportfolio&amp;view=project&amp;layout=edit&amp;id=<?php echo $item->id;?>" ><?php echo $item->title; ?></a>
 		</td>
 		<td width="150" align="center">
-		   <?php $category = JArrayHelper::getValue($this->categories, $item->catid); 
-		   if(!empty($category)) {
+		   <?php 
+		   if(!empty($item->category_name)) {
 		   ?>
-           <a href="index.php?option=com_vipportfolio&amp;view=category&amp;layout=edit&amp;id=<?php echo $item->catid;?>" ><?php echo JArrayHelper::getValue($category, "name"); ?></a>
+           <a href="index.php?option=com_vipportfolio&amp;view=category&amp;layout=edit&amp;id=<?php echo $item->catid;?>" ><?php echo $item->category_name; ?></a>
            <?php } else {
                echo JText::_("COM_VIPPORTFOLIO_UNCATEGORISED");
 		   }?>

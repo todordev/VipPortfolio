@@ -40,6 +40,9 @@ class VipPortfolioViewCategories extends JView {
         $this->listDirn  = $listDirn;
         $this->saveOrder = $saveOrder;
         
+        // Add submenu
+        VipPortfolioHelper::addSubmenu($this->getName());
+        
         // Prepare actions
         $this->addToolbar();
         $this->setDocument();

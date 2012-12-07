@@ -103,7 +103,7 @@ class VipPortfolioControllerProject extends JController {
             $response = array(
             	"success" => false,
                 "title"=> JText::_( 'COM_VIPPORTFOLIO_FAIL' ),
-                "text" => JText::_( 'ITP_ERROR_FILE_UPLOAD' ),
+                "text" => JText::_( 'COM_VIPPORTFOLIO_ERROR_FILE_UPLOAD' ),
             );
                 
             echo json_encode($response);

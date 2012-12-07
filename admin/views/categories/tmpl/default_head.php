@@ -15,7 +15,7 @@
 defined('_JEXEC') or die;
 ?>
 <tr>
-	<th width="15">
+	<th width="3%">
 		<input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)" />
 	</th>
 	<th class="title">
@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
         <?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $this->listDirn, $this->listOrder); ?>
         <?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'categories.saveorder'); ?>
     </th>
-    <th width="30"><?php echo JHtml::_('grid.sort',  'JPUBLISHED', 'a.published', $this->listDirn, $this->listOrder); ?></th>
-    <th width="15"><?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ID', 'a.id', $this->listDirn, $this->listOrder); ?></th>
+    <th width="5%"><?php echo JHtml::_('grid.sort',  'JPUBLISHED', 'a.published', $this->listDirn, $this->listOrder); ?></th>
+    <th width="3%"><?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ID', 'a.id', $this->listDirn, $this->listOrder); ?></th>
 </tr>
 	  

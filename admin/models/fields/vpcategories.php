@@ -47,15 +47,15 @@ class JFormFieldVpCategories extends JFormFieldList {
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         
-        $query->select('a.id AS value, a.name AS text');
-        $query->from('#__vp_categories AS a');
+        $query
+            ->select('a.id AS value, a.name AS text')
+            ->from('#__vp_categories AS a')
+            ->order("a.name ASC");
         
         // Get the options.
         $db->setQuery($query);
         
         $options = $db->loadAssocList();
-        
-        array_unshift($options, JHTML::_('select.option', '0', '- '.JText::_('Select a category').' -', 'value', 'text'));
         
         // Merge any additional options in the XML definition.
         $options = array_merge(parent::getOptions(), $options);

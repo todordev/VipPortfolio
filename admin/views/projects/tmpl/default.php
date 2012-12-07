@@ -23,6 +23,12 @@ defined('_JEXEC') or die;
             <button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
         <div class="filter-select fltrt">
+        
+        	<select name="filter_category_id" class="inputbox" onchange="this.form.submit()">
+    			<option value="0"><?php echo JText::_('JOPTION_SELECT_CATEGORY');?></option>
+    			<?php echo JHtml::_('select.options', $this->categories, 'value', 'text', $this->state->get('filter.category_id'));?>
+    		</select>
+    		
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
                 <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array("archived" => false, "trash"=>false)), 'value', 'text', $this->state->get('filter.published'), true);?>

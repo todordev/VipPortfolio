@@ -99,35 +99,27 @@ class VipPortfolioControllerCategory extends JControllerForm {
             throw new Exception($model->getError());
         }
         
-        try {
-             
-            // Test if the data is valid.
-            $validData = $model->validate($form, $data);
+        // Validate data
+        $validData = $model->validate($form, $data);
 
-            // Check for validation errors.
-            if ($validData === false) {
-                
-                $this->defaultLink .= "&view=".$this->view_item."&layout=edit";
-            
-                if($itemId) {
-                    $this->defaultLink .= "&id=" . $itemId;
-                } 
-                
-                $this->setMessage($model->getError(), "notice");
-                $this->setRedirect(JRoute::_($this->defaultLink, false));
-                return;
-            }
-            
-            // If does not exist alias, I will generate the new one from the title
-            if(!$validData["alias"]) {
-                $validData["alias"] = JFilterOutput::stringURLSafe($validData['name']);    
-            }
-            
+        // Check for validation errors.
+        if ($validData === false) {
+            $this->defaultLink .= "&view=".$this->view_item."&layout=edit";
+            if($itemId) {
+                $this->defaultLink .= "&id=" . $itemId;
+            } 
+            $this->setMessage($model->getError(), "notice");
+            $this->setRedirect(JRoute::_($this->defaultLink, false));
+            return;
+        }
+        
+        try {
+           
             $itemId = $model->save($validData);
 
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
-            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
         }
         
         $msg  = JText::_('COM_VIPPORTFOLIO_CATEGORY_SAVED');
@@ -183,7 +175,7 @@ class VipPortfolioControllerCategory extends JControllerForm {
         
         $id = $app->input->get->getInt('id', 0);
         if(!$id){
-            throw new Exception(JText::_('ITP_ERROR_IMAGE_DOES_NOT_EXIST'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_IMAGE_DOES_NOT_EXIST'));
         }
         
         try {
@@ -193,7 +185,7 @@ class VipPortfolioControllerCategory extends JControllerForm {
             
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
-            throw new Exception(JText::_('ITP_ERROR_SYSTEM'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
         }
         
         $this->defaultLink .= "&view=".$this->view_item."&layout=edit&id=" . (int)$id;

@@ -14,7 +14,6 @@
 // no direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.log.log');
 jimport('joomla.utilities.arrayhelper');
 
 if(!defined("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR")) {
@@ -26,12 +25,3 @@ JLoader::register("VipPortfolioVersion", VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . 
 
 // Register Component helpers
 JLoader::register("VipPortfolioHelper", VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "helpers" . DIRECTORY_SEPARATOR . "vipportfoliohelper.php");
-
-// Add logger
-JLog::addLogger(
-     // Pass an array of configuration options
-    array(
-        // Set the name of the log file
-        'text_file' => 'error.php',
-     )
-);

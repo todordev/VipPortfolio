@@ -11,7 +11,7 @@
  * other free or open source software licenses.
  */
 
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 /**
  * Method to build Route
@@ -22,8 +22,8 @@ function VipPortfolioBuildRoute(&$query){
     $segments = array();
     
     // get a menu item based on Itemid or currently active
-    $app  = JFactory::getApplication();
-    $menu = $app->getMenu();
+    $app      = JFactory::getApplication();
+    $menu     = $app->getMenu();
     
     // we need a menu item.  Either the one specified in the query, or the current active one if none specified
     if(empty($query['Itemid'])){
@@ -31,16 +31,16 @@ function VipPortfolioBuildRoute(&$query){
     }else{
         $menuItem = $menu->getItem($query['Itemid']);
     }
-    $mView = (empty($menuItem->query['view'])) ? null : $menuItem->query['view'];
+    $mView  = (empty($menuItem->query['view']))  ? null : $menuItem->query['view'];
     $mCatid = (empty($menuItem->query['catid'])) ? null : $menuItem->query['catid'];
-    //    $mProjectLayout    = (empty($menuItem->query['project_layout'])) ? null : $menuItem->query['project_layout'];
 
     if(isset($query['view'])){
         $view = $query['view'];
-        if(empty($query['Itemid'])){
-            $segments[] = $query['view'];
-        }
         unset($query['view']);
+        
+        if(empty($query['Itemid'])){
+            $segments[] = $view;
+        }
     }
     
     if(isset($query['catid'])){
@@ -71,19 +71,7 @@ function VipPortfolioBuildRoute(&$query){
     
     // Check for existing layout
     if(isset($query['layout'])){
-        
-        // Does the menu layout match with the query layout 
-        if(!empty($query['Itemid']) && isset($menuItem->query['layout'])){
-            if($query['layout'] == $menuItem->query['layout']){
-                unset($query['layout']);
-            }
-        }else{
-            // Check for menu item 'categories' and project_layout different from 'default'
-            if(isset($menuItem->query['project_layout']) AND ($menuItem->query['project_layout'] == 'default')){
-                unset($query['layout']);
-            }
-        }
-        
+        unset($query['layout']);
     }
     
     if(isset($query['format'])){
@@ -99,60 +87,59 @@ function VipPortfolioBuildRoute(&$query){
  */
 function VipPortfolioParseRoute($segments){
     
-    /*
-    jimport('joomla.log.loggers.formattedtext');
-    $loggerOptions = array();
-    $entry     = new JLogEntry(var_export($segments, 1));
-    $logger    = new JLoggerFormattedText($loggerOptions);
-    $logger->addEntry($entry, JLog::DEBUG);
-    */
-    
+    // Debug
+//    JLog::addLogger(array('text_file' => 'router_log.php'));
+//    JLog::add(var_export($segments, true));
+
     $query = array();
     
-    //Get the active menu item.
-    $app        = JFactory::getApplication();
-    $menu       = $app->getMenu();
-    $menuItem   = $menu->getActive();
+    // Get the active menu item.
+    $app            = JFactory::getApplication();
+    $menu           = $app->getMenu();
+    $menuItem       = $menu->getActive();
     
-    $count      = count($segments);
-    $categoryAlias = null;
+    $count          = count($segments);
+    $categoryAlias  = null;
     
-    if(!isset($menuItem)) {
+    if(is_null($menuItem)) {
         $query['view']   = $segments[0];
         return $query;
     } else {
         
-//        $query['view'] = "projects";
+        // Get the category id from the menu item
+        if(isset($menuItem->query['projects_view'])) {
+            $query['view']  = $menuItem->query['projects_view'];
+        }
         
         // Get the category id from the menu item
-        if( isset($menuItem->query['catid'])) {
+        if(isset($menuItem->query['catid'])) {
             $query['catid']  = intval($menuItem->query['catid']);
         }
         
+        // Get the alias from the URI 
+        // because missing the parameter "catid" in the object $menuItem.
         if(!isset($query['catid']) AND isset($segments[$count-1])) {
             $categoryAlias = $segments[$count-1];
         }
         
     }
     
-    
-    /**** Categories ****/
+    // Get catid using category alias
     if(!isset($query['catid']) AND !empty($categoryAlias) ){
         
         static $categories = array();
         
         if(!$categories){
             
-            $db = & JFactory::getDBO();
+            $db     = JFactory::getDBO();
+            /** @var $db JDatabaseMySQLi **/ 
             
-            $sqlQuery = "
-	              SELECT 
-	                  `id`,
-	                  `alias`
-	              FROM
-	                 `#__vp_categories`";
+            $sql  = $db->getQuery(true);
+            $sql
+                ->select("`id`, `alias`")
+                ->from("`#__vp_categories`");
             
-            $db->setQuery($sqlQuery);
+            $db->setQuery($sql);
             $categories_ = $db->loadAssocList();
             
             foreach($categories_ as $category){
@@ -161,9 +148,9 @@ function VipPortfolioParseRoute($segments){
         
         }
         
-        $alias = array_pop($segments);
-        $alias = str_replace(":", "-", $alias);
-        
+        $alias      = array_pop($segments);
+        $alias      = str_replace(":", "-", $alias);
+
         $categoryId = array_search($alias, $categories);
         
         if(false === $categoryId){

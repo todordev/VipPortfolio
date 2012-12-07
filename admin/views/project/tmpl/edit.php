@@ -22,6 +22,9 @@ defined('_JEXEC') or die;
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('title'); ?>
                 <?php echo $this->form->getInput('title'); ?></li>
+                
+                <li><?php echo $this->form->getLabel('alias'); ?>
+                <?php echo $this->form->getInput('alias'); ?></li>
     
                 <li><?php echo $this->form->getLabel('catid'); ?>
                 <?php echo $this->form->getInput('catid'); ?></li>
@@ -140,18 +143,18 @@ defined('_JEXEC') or die;
 <div class="clr"></div>
 <?php if (!empty($this->item->thumb)) {?>
 <h4><?php echo JText::_("COM_VIPPORTFOLIO_THUMBNAIL");?></h4>
-<img src="<?php echo (JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->thumb); ?>"  />
+<img src="<?php echo "../". $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->thumb; ?>"  />
 <div>
-    <img src="<?php echo (JURI::root() . "media/com_vipportfolio/images/remove_image.gif"); ?>" />
-    <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&amp;task=project.removeImage&amp;type=thumb&amp;id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
+    <img src="../media/com_vipportfolio/images/remove_image.png" />
+    <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&task=project.removeImage&type=thumb&id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
 </div>
 <?php }?>
 <div>&nbsp;</div>
 <?php if (!empty($this->item->image)) {?>
 <h4><?php echo JText::_("COM_VIPPORTFOLIO_LARGE_IMAGE");?></h4>
-<img src="<?php echo (JURI::root() . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image); ?>" />
+<img src="<?php echo "../".$this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image; ?>" />
 <div>
-    <img src="<?php echo (JURI::root() . "media/com_vipportfolio/images/remove_image.gif"); ?>" />
-    <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&amp;task=project.removeImage&amp;type=image&amp;id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
+    <img src="../media/com_vipportfolio/images/remove_image.png" />
+    <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&task=project.removeImage&type=image&id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
 </div>
 <?php }?>

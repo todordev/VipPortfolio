@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<fieldset name="global" label="COM_VIPPORTFOLIO_GLOBAL_TITLE" description="COM_VIPPORTFOLIO_GLOBAL_PARAMS">
+	<fieldset name="global" label="COM_VIPPORTFOLIO_GENERAL_TITLE" description="COM_VIPPORTFOLIO_GENERAL_PARAMS">
         <field name="cat_breadcrumbs" type="radio" default="0"  label="COM_VIPPORTFOLIO_CAT_BREADCRUMBS" description="COM_VIPPORTFOLIO_CAT_BREADCRUMBS_DESC" >
            <option value="0">JHIDE</option>
            <option value="1">JSHOW</option>
@@ -100,7 +100,6 @@
         <field name="lineal_extra_thumb_width" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
         <field name="lineal_extra_thumb_height" type="text" default="50" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
         <field name="lineal_extra_max" type="text" default="3" size="50" label="COM_VIPPORTFOLIO_EI_NUM" description="COM_VIPPORTFOLIO_EI_NUM_DESC" />
-        
     </fieldset>
     
     <fieldset name="scrollgallery" label="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_TITLE" description="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_PARAMS">
@@ -113,6 +112,26 @@
         <field name="sg_image_height" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_HEIGHT_DESC" />
         <field name="sg_thumb_width" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
         <field name="sg_thumb_height" type="text" default="300" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+    </fieldset>
+    
+    <fieldset name="slidegallery" label="COM_VIPPORTFOLIO_CONFIG_SLIDEGALLERY_TITLE" description="COM_VIPPORTFOLIO_CONFIG_SLIDEGALLERY_PARAMS">
+        <field name="slidegallery_transition" type="list" default="fade"  label="COM_VIPPORTFOLIO_SLIDEGALLERY_TRANSITION" description="COM_VIPPORTFOLIO_SLIDEGALLERY_TRANSITION_DESC" >
+            <option value="fade">COM_VIPPORTFOLIO_FADE</option>
+            <option value="slide-left">COM_VIPPORTFOLIO_SLIDE_LEFT</option>
+            <option value="slide-right">COM_VIPPORTFOLIO_SLIDE_RIGHT</option>
+            <option value="slide-top">COM_VIPPORTFOLIO_SLIDE_TOP</option>
+            <option value="slide-bottom">COM_VIPPORTFOLIO_SLIDE_BOTTOM</option>
+        </field>
+        <field name="slidegallery_auto" type="radio" default="false"  label="COM_VIPPORTFOLIO_SLIDEGALLERY_AUTO" description="COM_VIPPORTFOLIO_SLIDEGALLERY_AUTO_DESC" >
+            <option value="false">JNO</option>
+            <option value="true">JYES</option>
+        </field>
+        <field name="slidegallery_autostart" type="radio" default="false"  label="COM_VIPPORTFOLIO_SLIDEGALLERY_AUTOSTART" description="COM_VIPPORTFOLIO_SLIDEGALLERY_AUTOSTART_DESC" >
+            <option value="false">JNO</option>
+            <option value="true">JYES</option>
+        </field>
+        <field name="slidegallery_autointerval" type="text" default="2000" size="50" label="COM_VIPPORTFOLIO_SLIDEGALLERY_AUTOINTERVAL" description="COM_VIPPORTFOLIO_SLIDEGALLERY_AUTOINTERVAL_DESC" />
+        <field name="slidegallery_tween" type="text" default="700" size="50" label="COM_VIPPORTFOLIO_SLIDEGALLERY_TWEEN" description="COM_VIPPORTFOLIO_SLIDEGALLERY_TWEEN_DESC" />
     </fieldset>
     
     <fieldset name="catslist" label="COM_VIPPORTFOLIO_CATEGORY_LIST_TITLE" description="COM_VIPPORTFOLIO_CATEGORY_LIST_PARAMS">

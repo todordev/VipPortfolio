@@ -33,15 +33,8 @@ class VipPortfolioModelCategories extends JModelList {
             $config['filter_fields'] = array(
                 'id', 'a.id',
                 'name', 'a.name',
-                'alias', 'a.alias',
-                'desc', 'a.desc',
-                'image', 'a.image',
                 'published', 'a.published',
-                'ordering', 'a.ordering',
-                'meta_title', 'a.meta_title',
-                'meta_keywords', 'a.meta_keywords',
-                'meta_desc', 'a.meta_desc',
-                'meta_canonical', 'a.meta_canonical'
+                'ordering', 'a.ordering'
             );
         }
         
@@ -129,7 +122,7 @@ class VipPortfolioModelCategories extends JModelList {
             if (stripos($search, 'id:') === 0) {
                 $query->where('a.id = '.(int) substr($search, 3));
             } else {
-                $search = $db->Quote('%'.$db->escape($search, true).'%');
+                $search = $db->quote('%'.$db->escape($search, true).'%');
                 $query->where('(a.name LIKE '.$search.' OR a.alias LIKE '.$search.')');
             }
         }

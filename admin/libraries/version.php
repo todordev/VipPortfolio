@@ -40,7 +40,7 @@ class VipPortfolioVersion {
      * 
      * @var integer
      */
-    public $devLevel  = '4';
+    public $devLevel  = '5';
     
     /**
      * Release Type
@@ -61,7 +61,7 @@ class VipPortfolioVersion {
      * 
      * @var string
      */
-    public $releaseDate= '14-October-2012';
+    public $releaseDate= '7-December-2012';
     
     /**
      * License

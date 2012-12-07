@@ -92,6 +92,30 @@ class VipPortfolioModelCategory extends JModelAdmin {
         return JTable::getInstance($type, $prefix, $config);
     }
     
+	/**
+	 * Stock method to auto-populate the model state.
+	 *
+	 * @return  void
+	 *
+	 * @since   11.1
+	 */
+	protected function populateState() {
+		
+	    parent::populateState();
+	    
+	    $app = JFactory::getApplication();
+        /** @var $app JAdministrator **/
+		
+		$resizeImage = $app->getUserStateFromRequest($this->option.'.category.resize_image', 'resize_image', 0, 'uint');
+		$this->setState('resize_image', $resizeImage);
+		
+		$imageWidth = $app->getUserStateFromRequest($this->option.'.category.image_width', 'image_width');
+		$this->setState('image_width', $imageWidth);
+		
+		$imageHeight = $app->getUserStateFromRequest($this->option.'.category.image_height', 'image_height');
+		$this->setState('image_height', $imageHeight);
+	}
+	
     /**
      * Method to get the record form.
      *
@@ -146,44 +170,71 @@ class VipPortfolioModelCategory extends JModelAdmin {
         $row = $this->getTable();
         $row->load($id);
         
-        // Save image
-        $newImage = $this->saveImages();
-
-        $row->set("name", $name);
-        $alias = JString::strtolower(JArrayHelper::getValue($data, "alias", ""));
-        
-        $row->set("alias",          JApplication::stringURLSafe($alias));
+        $row->set("name",           $name);
+        $row->set("alias",          JArrayHelper::getValue($data, "alias", ""));
         $row->set("desc",           JArrayHelper::getValue($data, "desc", ""));
         
         $row->set("meta_title",     JArrayHelper::getValue($data, "meta_title", ""));
         $row->set("meta_keywords",  JArrayHelper::getValue($data, "meta_keywords", ""));
         $row->set("meta_desc",      JArrayHelper::getValue($data, "meta_desc", ""));
         $row->set("meta_canonical", JArrayHelper::getValue($data, "meta_canonical", ""));
+        $row->set("published",      JArrayHelper::getValue($data, "published", 0) );
         
-        $published = JArrayHelper::getValue($data, "published", 0);
+        // Prepare the row for saving
+		$this->prepareTable($row);
+        
+        $row->store();
+        
+        return $row->id;
+    
+    }
+    
+	/**
+	 * Prepare and sanitise the table prior to saving.
+	 *
+	 * @since	1.6
+	 */
+	protected function prepareTable($table) {
+	    
+	    // Save image
+        $newImage = $this->saveImages();
         
         if(!empty($newImage)){
             
             // Delete old image if I upload the new one
-            if(!empty($row->image)){
+            if(!empty($table->image)){
                 jimport('joomla.filesystem.file');
                 // Remove an image from the filesystem
-                $file = $this->imagesFolder .DIRECTORY_SEPARATOR. $row->image;
+                $file = $this->imagesFolder .DIRECTORY_SEPARATOR. $table->image;
                 
                 if(is_file($file)) {
                     JFile::delete($file);
                 }
             
             }
-            $row->set("image", $newImage);
+            $table->set("image", $newImage);
         }
         
-        $row->set("published", $published);
-        $row->store();
+        // Get maximum order number
+		if (empty($table->id)) {
+
+			// Set ordering to the last item if not set
+			if (empty($table->ordering)) {
+				$db = JFactory::getDbo();
+				$db->setQuery('SELECT MAX(ordering) FROM #__vp_categories');
+				$max = $db->loadResult();
+
+				$table->ordering = $max+1;
+			}
+		}
+		
+	    // If does not exist alias, I will generate the new one from the title
+        if(!$table->alias) {
+            $table->alias = $table->name;
+        }
+        $table->alias = JApplication::stringURLSafe($table->alias);
         
-        return $row->id;
-    
-    }
+	}
     
     /**
      * Delete records from the DB
@@ -331,29 +382,29 @@ class VipPortfolioModelCategory extends JModelAdmin {
 			$serverContentLength > (int)(ini_get('post_max_size'))* 1024 * 1024 OR
 			$serverContentLength > (int)(ini_get('memory_limit'))* 1024 * 1024
 		) {
-		    throw new Exception(JText::_("ITP_ERROR_WARNFILETOOLARGE"));
+		    throw new Exception(JText::_("COM_VIPPORTFOLIO_ERROR_WARNFILETOOLARGE"));
 		}
 		
         if(!empty($uploadedFile['error'])){
                 
             switch($uploadedFile['error']){
                 case UPLOAD_ERR_INI_SIZE:
-                     throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_INI_SIZE'), 500);
+                     throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_INI_SIZE'), 500);
                 case UPLOAD_ERR_FORM_SIZE:
-                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_FORM_SIZE'), 500);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_FORM_SIZE'), 500);
                 case UPLOAD_ERR_PARTIAL:
-                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_PARTIAL'), 500);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_PARTIAL'), 500);
                 case UPLOAD_ERR_NO_FILE:
-//                    throw new Exception( JText::_( 'ITP_ERROR_UPLOAD_ERR_NO_FILE' ), 500 );
+//                    throw new Exception( JText::_( 'COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_NO_FILE' ), 500 );
                     break;
                 case UPLOAD_ERR_NO_TMP_DIR:
-                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_NO_TMP_DIR'), 500);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_NO_TMP_DIR'), 500);
                 case UPLOAD_ERR_CANT_WRITE:
-                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_CANT_WRITE'), 500);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_CANT_WRITE'), 500);
                 case UPLOAD_ERR_EXTENSION:
-                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_EXTENSION'), 500);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_EXTENSION'), 500);
                 default:
-                    throw new Exception(JText::_('ITP_ERROR_UPLOAD_ERR_UNKNOWN'), 500);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_UNKNOWN'), 500);
             }
         
         }
@@ -377,7 +428,7 @@ class VipPortfolioModelCategory extends JModelAdmin {
         
         // Check mime type of the file
         if(false === array_search($imageProperties->mime, $this->uploadMime)){
-            throw new Exception(JText::_('ITP_ERROR_IMAGE_TYPE'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_IMAGE_TYPE'));
         }
         
         // Check file extension
@@ -385,7 +436,7 @@ class VipPortfolioModelCategory extends JModelAdmin {
         $ext     = JFile::makeSafe($ext);
         
         if(false === array_search($ext, $this->imageExtensions)){
-            throw new Exception(JText::sprintf('ITP_ERROR_IMAGE_EXTENSIONS', $ext));
+            throw new Exception(JText::sprintf('COM_VIPPORTFOLIO_ERROR_IMAGE_EXTENSIONS', $ext));
         }
         
         // Generate the name
@@ -393,11 +444,11 @@ class VipPortfolioModelCategory extends JModelAdmin {
         $newFile = $destFolder . DIRECTORY_SEPARATOR. $name;
         
         if(!JFile::upload($uploadedFile, $newFile)){
-            throw new Exception(JText::_('ITP_ERROR_FILE_CANT_BE_UPLOADED'));
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_FILE_CANT_BE_UPLOADED'));
         }
         
         if(!is_file($newFile)){
-            throw new Exception('ITP_ERROR_FILE_CANT_BE_UPLOADED');
+            throw new Exception('COM_VIPPORTFOLIO_ERROR_FILE_CANT_BE_UPLOADED');
         }
         
         // Resize image
@@ -406,7 +457,7 @@ class VipPortfolioModelCategory extends JModelAdmin {
             $image = new JImage();
             $image->loadFile($newFile);
             if (!$image->isLoaded()) {
-                throw new Exception(JText::sprintf('ITP_ERROR_FILE_NOT_FOUND', $newFile));
+                throw new Exception(JText::sprintf('COM_VIPPORTFOLIO_ERROR_FILE_NOT_FOUND', $newFile));
             }
             
             $width   = JArrayHelper::getValue($options, "width", $this->imageWidth);
@@ -420,30 +471,5 @@ class VipPortfolioModelCategory extends JModelAdmin {
         
         return $name;
     }
-    
-	/**
-	 * Stock method to auto-populate the model state.
-	 *
-	 * @return  void
-	 *
-	 * @since   11.1
-	 */
-	protected function populateState() {
-		
-	    parent::populateState();
-	    
-	    $app = JFactory::getApplication();
-        /** @var $app JAdministrator **/
-		
-		$resizeImage = $app->getUserStateFromRequest($this->option.'.category.resize_image', 'resize_image', 0, 'uint');
-		$this->setState('resize_image', $resizeImage);
-		
-		$imageWidth = $app->getUserStateFromRequest($this->option.'.category.image_width', 'image_width');
-		$this->setState('image_width', $imageWidth);
-		
-		$imageHeight = $app->getUserStateFromRequest($this->option.'.category.image_height', 'image_height');
-		$this->setState('image_height', $imageHeight);
-	}
-    
     
 }

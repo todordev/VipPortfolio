@@ -18,6 +18,34 @@
 class VipPortfolioHelper {
 	
 	/**
+	 * Configure the Linkbar.
+	 *
+	 * @param	string	The name of the active view.
+	 * @since	1.6
+	 */
+	public static function addSubmenu($vName = 'cpanel') {
+	    
+	    JSubMenuHelper::addEntry(
+			JText::_('COM_VIPPORTFOLIO_CP'),
+			'index.php?option=com_vipportfolio&view=cpanel',
+			$vName == 'cpanel'
+		);
+		
+		JSubMenuHelper::addEntry(
+			JText::_('COM_VIPPORTFOLIO_CATEGORIES'),
+			'index.php?option=com_vipportfolio&view=categories',
+			$vName == 'categories'
+		);
+		
+		JSubMenuHelper::addEntry(
+			JText::_('COM_VIPPORTFOLIO_PROJECTS'),
+			'index.php?option=com_vipportfolio&view=projects',
+			$vName == 'projects'
+		);
+		
+	}
+	
+	/**
 	 * Get all categories
 	 * 
 	 * @return array Associative array
@@ -30,13 +58,35 @@ class VipPortfolioHelper {
     	$query = $db->getQuery(true);
     	$query
     	    ->select("*")
-    	    ->from("#__vp_categories");
+    	    ->from("#__vp_categories")
+    	    ->order("name");
     	
     	$db->setQuery($query);
     	
     	return $db->loadAssocList($index);
     }
     
+    /**
+	 * Get all categories for using in options
+	 * 
+	 * @return array 
+	 */
+    public static function getCategoriesOption() {
+    	
+    	$db              = JFactory::getDBO();
+    	/** @var $db JDatabaseMySQLi **/
+    	
+    	$query = $db->getQuery(true);
+    	$query
+    	    ->select("id AS value, name AS text")
+    	    ->from("#__vp_categories")
+    	    ->order("name");
+    	
+    	$db->setQuery($query);
+    	
+    	return $db->loadAssocList();
+    }
+    	
     /**
      * Gets a category
      * 
