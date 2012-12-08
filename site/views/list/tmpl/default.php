@@ -49,3 +49,4 @@ if($this->modal) {
 
     <?php echo $this->pagination->getPagesLinks(); ?>
 </div>
+<?php echo $this->version->backlink; ?>

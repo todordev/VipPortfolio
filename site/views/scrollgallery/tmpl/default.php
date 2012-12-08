@@ -87,3 +87,4 @@ defined('_JEXEC') or die;
     </div>
 </div>
 <?php } ?>
+<?php echo $this->version->backlink; ?>

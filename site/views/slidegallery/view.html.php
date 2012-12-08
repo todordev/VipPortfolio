@@ -33,7 +33,7 @@ class VipPortfolioViewSlideGallery extends JView {
     /**
      * Display the view
      */
-    function display($tpl = null){
+    public function display($tpl = null){
         
         $app = JFactory::getApplication();
         /** @var $app JSite **/
@@ -55,6 +55,8 @@ class VipPortfolioViewSlideGallery extends JView {
         $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->params     = $this->state->params;
+        
+        $this->version    = new VipPortfolioVersion();
         
         $this->prepareDocument();
         

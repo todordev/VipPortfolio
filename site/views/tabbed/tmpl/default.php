@@ -115,3 +115,4 @@ echo $pane->startPane('optionsPane');
 echo $pane->endPane();?>
 </div>
 <?php }?>
+<?php echo $this->version->backlink; ?>

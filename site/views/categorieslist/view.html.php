@@ -46,8 +46,10 @@ class VipPortfolioViewCategoriesList extends JView {
         // Set tmpl parameter if the the page is loaded from Faceboo
         $tmpl = $app->input->get("tmpl");
         if(!empty($tmpl)) {
-            $this->tmpl           = "&tmpl=component";
+            $this->tmpl       = "&tmpl=component";
         }
+        
+        $this->version        = new VipPortfolioVersion();
         
         $this->prepareDocument();
                 

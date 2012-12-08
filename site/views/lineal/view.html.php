@@ -35,7 +35,7 @@ class VipPortfolioViewLineal extends JView {
      *
      * @return  mixed   False on error, null otherwise.
      */
-    function display($tpl = null){
+    public function display($tpl = null){
         
         $app = JFactory::getApplication();
         /** @var $app JSite **/
@@ -105,6 +105,8 @@ class VipPortfolioViewLineal extends JView {
             
             $this->prepareLightBox();
         }
+        
+        $this->version        = new VipPortfolioVersion();
         
         $this->prepareDocument();
         

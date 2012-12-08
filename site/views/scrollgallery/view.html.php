@@ -34,7 +34,7 @@ class VipPortfolioViewScrollGallery extends JView {
      *
      * @return  mixed   False on error, null otherwise.
      */
-    function display($tpl = null){
+    public function display($tpl = null){
         
         $app = JFactory::getApplication();
         /** @var $app JSite **/
@@ -58,6 +58,8 @@ class VipPortfolioViewScrollGallery extends JView {
         
         // Open link target
         $this->openLink = 'target="'.$this->params->get("sg_open_link", "_self").'"';
+        
+        $this->version  = new VipPortfolioVersion();
         
         $this->prepareDocument();
         

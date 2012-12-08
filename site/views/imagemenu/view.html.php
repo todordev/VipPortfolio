@@ -47,6 +47,8 @@ class VipPortfolioViewImageMenu extends JView {
             $this->tmpl           = "&tmpl=component";
         }
         
+        $this->version        = new VipPortfolioVersion();
+        
         $this->prepareDocument();
                 
         parent::display($tpl);

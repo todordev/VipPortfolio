@@ -56,6 +56,8 @@ class VipPortfolioViewTabbed extends JView {
         
         $this->projects = $projects;
         
+        $this->version  = new VipPortfolioVersion();
+        
         $this->prepareLightBox();
         $this->prepareDocument();
                 

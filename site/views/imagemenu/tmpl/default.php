@@ -30,3 +30,4 @@ defined('_JEXEC') or die;
 </div>
 <div class="clr">&nbsp;</div>
 <?php }?>
+<?php echo $this->version->backlink; ?>

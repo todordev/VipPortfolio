@@ -54,3 +54,4 @@ if($this->modal) {
 <?php echo (!empty($this->event->afterDisplayContent) ) ? $this->event->afterDisplayContent : ""; ?>
     
 <?php } // if ( isset($this->item) ) {?>
+<?php echo $this->version->backlink; ?>
