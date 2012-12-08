@@ -8,7 +8,8 @@ Changelog
 
 v3.5
 ----------
-* Added Scroll Gallery View
+* Added Slide Gallery View
+* Added more option to Scroll Gallery View - auto scroll, linkable, animation start and speed,...
 * Added filters - category,...
 * Added multiple select in the a category view option. Now you are able to select categories that you want to display.
 * The layouts have been moved to views. ( Now the extension use views to display categories and projects ).

@@ -73,7 +73,6 @@ class VipPortfolioViewList extends JView {
         // Open link target
         $this->openLink = 'target="'.$this->params->get("list_open_link", "_self").'"';
         
-        
         $this->prepareLightBox();
         $this->prepareDocument();
         

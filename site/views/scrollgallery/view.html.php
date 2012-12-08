@@ -56,6 +56,9 @@ class VipPortfolioViewScrollGallery extends JView {
         $this->items      = $this->get('Items');
         $this->params     = $this->state->params;
         
+        // Open link target
+        $this->openLink = 'target="'.$this->params->get("sg_open_link", "_self").'"';
+        
         $this->prepareDocument();
         
         parent::display($tpl);
@@ -162,7 +165,17 @@ class VipPortfolioViewScrollGallery extends JView {
 
 		// Add scripts
 		$this->document->addScript('media/'.$this->option.'/js/'.$view.'/scrollGallery.js');
-		$this->document->addScript('media/'.$this->option.'/js/site/scrollgallery.js');
+		
+		$js = 'window.addEvent("domready", function(){ 
+        	var myscrollGallery = new scrollGallery({
+        		start:'.$this->params->get("sg_start", 0).',
+        		speed:'.$this->params->get("sg_speed", 0.5).',
+        		autoScroll:'.$this->params->get("sg_auto_scroll", 0).',
+        		clickable:'.$this->params->get("sg_clickable", 0).'
+        	});
+        });';
+		
+		$this->document->addScriptDeclaration($js);
 		
         // If tmpl is set that mean the user loads the page from Facebook
         // So we should Auto Grow the tab.

@@ -103,9 +103,27 @@
     </fieldset>
     
     <fieldset name="scrollgallery" label="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_TITLE" description="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_PARAMS">
-        <field name="sgDisplayCaption" type="radio" default="0"  label="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_CAPTION" description="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_CAPTION_DESC" >
+        <field name="sg_start" type="text" default="0" size="50" label="COM_VIPPORTFOLIO_SCROLLGALLERY_START" description="COM_VIPPORTFOLIO_SCROLLGALLERY_START_DESC" />
+        <field name="sg_speed" type="text" default="0.5" size="50" label="COM_VIPPORTFOLIO_SCROLLGALLERY_SPEED" description="COM_VIPPORTFOLIO_SCROLLGALLERY_SPEED_DESC" />
+        <field name="sg_display_caption" type="radio" default="0"  label="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_CAPTION" description="COM_VIPPORTFOLIO_CONFIG_SCROLLGALLERY_CAPTION_DESC" >
             <option value="0">JNO</option>
             <option value="1">JYES</option>
+        </field>
+        <field name="sg_auto_scroll" type="radio" default="0"  label="COM_VIPPORTFOLIO_SCROLLGALLERY_AUTO_SCROLL" description="COM_VIPPORTFOLIO_SCROLLGALLERY_AUTO_SCROLL_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="sg_clickable" type="radio" default="0"  label="COM_VIPPORTFOLIO_SCROLLGALLERY_CLICKABLE" description="COM_VIPPORTFOLIO_SCROLLGALLERY_CLICKABLE_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="sg_title_linkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_SCROLLGALLERY_LINKABLE" description="COM_VIPPORTFOLIO_SCROLLGALLERY_LINKABLE_DESC" >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="sg_open_link" type="list" default="_self"  label="COM_VIPPORTFOLIO_OPEN_LINK" description="COM_VIPPORTFOLIO_OPEN_LINK_DESC" >
+            <option value="_self">COM_VIPPORTFOLIO_SAME_TAB</option>
+            <option value="_blank">COM_VIPPORTFOLIO_NEW_TAB</option>
         </field>
         <field name="spacer5" type="spacer" hr="true" />
         <field name="sg_image_width" type="text" default="" size="50" label="COM_VIPPORTFOLIO_IMAGE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_WIDTH_DESC" />

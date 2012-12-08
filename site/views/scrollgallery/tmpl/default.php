@@ -40,7 +40,7 @@ defined('_JEXEC') or die;
     <div id="scrollGalleryFoot">
         <div id="imagearea">
         
-        <?php if(!$this->params->get('sgDisplayCaption')) { ?>
+        <?php if(!$this->params->get('sg_display_caption')) { ?>
         	<div id="imageareaContent">
         	    <?php foreach ( $this->items as $item ) {?>
             		<img 
@@ -61,7 +61,11 @@ defined('_JEXEC') or die;
             <?php foreach ( $this->items as $item ) {?>
                 <div class="caption_container">
                 	<div>
+                		<?php if($this->params->get("sg_title_linkable", 0) AND !empty($item->url)) {?>
+                    	<h4><a href="<?php echo $item->url;?>" <?php echo $this->openLink;?>><?php echo $this->escape( strip_tags($item->title) );?></a></h4>
+                    	<?php } else {?>
                     	<h4><?php echo $this->escape( strip_tags($item->title) );?></h4>
+                    	<?php }?>
                     	<p><?php echo $this->escape( strip_tags($item->description) );?></p>
                 	</div>
                 	<img 
