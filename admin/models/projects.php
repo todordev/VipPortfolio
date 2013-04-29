@@ -60,12 +60,12 @@ class VipPortfolioModelProjects extends JModelList {
         $value  = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
         $this->setState('filter.search', $value);
 
-        $value  = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
-        $this->setState('filter.published', $value);
+        $value  = $this->getUserStateFromRequest($this->context.'.filter.state', 'filter_state', '', 'string');
+        $this->setState('filter.state', $value);
 
         $value  = $this->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id', 0, 'integer');
         $this->setState('filter.category_id', $value);
-        
+
         // Load the component parameters.
         $params = JComponentHelper::getParams($this->option);
         $this->setState('params', $params);
@@ -111,13 +111,14 @@ class VipPortfolioModelProjects extends JModelList {
         $query->select(
             $this->getState(
                 'list.select',
-                'a.id, a.title, a.url, ' .
-                'a.published, a.ordering, a.catid, '.
+                'a.id, a.title, a.url,' .
+                'a.published, a.ordering, a.catid, ' . 
                 'b.name as category_name' 
             )
         );
-        $query->from('`#__vp_projects` AS a');
-        $query->innerJoin('`#__vp_categories` AS b ON a.catid = b.id');
+        
+        $query->from($db->quoteName('#__vp_projects') .' AS a');
+        $query->innerJoin($db->quoteName('#__vp_categories') .' AS b ON a.catid = b.id');
 
         // Filter by category
         $categoryId = $this->getState('filter.category_id');
@@ -126,10 +127,10 @@ class VipPortfolioModelProjects extends JModelList {
         }
         
         // Filter by published state
-        $published = $this->getState('filter.published');
-        if (is_numeric($published)) {
-            $query->where('a.published = '.(int) $published);
-        } else if ($published === '') {
+        $state = $this->getState('filter.state');
+        if (is_numeric($state)) {
+            $query->where('a.published = '.(int) $state);
+        } else if ($state === '') {
             $query->where('(a.published IN (0, 1))');
         }
 
@@ -145,15 +146,20 @@ class VipPortfolioModelProjects extends JModelList {
         }
 
         // Add the list ordering clause.
-        $orderCol   = $this->getState('list.ordering');
-        $orderDirn  = $this->getState('list.direction');
-        if ($orderCol == 'a.ordering') {
-            $orderCol = 'a.catid '.$orderDirn.', a.ordering';
-        }
-        
-        $query->order($db->escape($orderCol.' '.$orderDirn));
+        $orderString = $this->getOrderString();
+        $query->order($db->escape($orderString));
 
         return $query;
     }
     
+    protected function getOrderString() {
+        
+        $orderCol   = $this->getState('list.ordering',  'a.id');
+        $orderDirn  = $this->getState('list.direction', 'asc');
+        if ($orderCol == 'a.ordering') {
+            $orderCol = 'a.catid '.$orderDirn.', a.ordering';
+        }
+        
+        return $orderCol.' '.$orderDirn;
+    }
 }

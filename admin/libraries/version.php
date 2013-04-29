@@ -40,7 +40,7 @@ class VipPortfolioVersion {
      * 
      * @var integer
      */
-    public $devLevel  = '5';
+    public $devLevel  = '6';
     
     /**
      * Release Type
@@ -61,7 +61,7 @@ class VipPortfolioVersion {
      * 
      * @var string
      */
-    public $releaseDate= '8-December-2012';
+    public $releaseDate= '21-April-2013';
     
     /**
      * License
@@ -82,7 +82,7 @@ class VipPortfolioVersion {
      * 
      * @var string
      */
-    public $url        = '<a href="#" target="_blank">Vip Portfolio</a>';
+    public $url        = '<a href="http://itprism.com/free-joomla-extensions/others/portfolio-presentation-gallery" target="_blank">Vip Portfolio</a>';
 
     /**
      * Backlink

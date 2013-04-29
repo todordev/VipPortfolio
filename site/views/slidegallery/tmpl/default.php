@@ -23,20 +23,13 @@ defined('_JEXEC') or die;
 <?php }?>
 
 <?php if(!empty($this->items)) {?>
-<div id="slideshow">    
-      <span id="loading"><?php echo JText::_("COM_VIPPORTFOLIO_LOADING");?></span>
+<div id="vp-slide-gallery">
+	<?php foreach ( $this->items as $item ) {?>
+    <img src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>">
+    <?php }?>
     
-      <ul id="pictures">
-        <?php foreach ( $this->items as $item ) {?>
-        <li><img src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>" alt="<?php echo $item->title;?>" title="<?php echo $item->title;?>" /></li>
-        <?php }?> 
-      </ul>
+    <a href="#" class="slidesjs-previous slidesjs-navigation"><i class="icon-chevron-left icon-large"></i></a>
+    <a href="#" class="slidesjs-next slidesjs-navigation"><i class="icon-chevron-right icon-large"></i></a>
       
-      <ul id="menu">
-      	<?php foreach ( $this->items as $item ) {?>
-        <li><a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>"><?php echo $item->title;?></a></li>
-        <?php }?>
-      </ul>
 </div>
 <?php }?>
-<?php echo $this->version->backlink; ?>

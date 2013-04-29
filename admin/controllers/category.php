@@ -89,6 +89,7 @@ class VipPortfolioControllerCategory extends JControllerForm {
         $data    = $app->input->post->get('jform', array(), 'array');
         $itemId  = JArrayHelper::getValue($data, "id", 0, "int");
         $model   = $this->getModel();
+        /** @var $model JModelAdmin **/
         
         // Validate the posted data.
         // Sometimes the form needs some posted data, such as for plugins and modules.
@@ -113,10 +114,9 @@ class VipPortfolioControllerCategory extends JControllerForm {
             return;
         }
         
+        
         try {
-           
             $itemId = $model->save($validData);
-
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
             
@@ -130,7 +130,6 @@ class VipPortfolioControllerCategory extends JControllerForm {
             } else { // System error
                 throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'), 500);
             }
-            
         }
         
         $msg  = JText::_('COM_VIPPORTFOLIO_CATEGORY_SAVED');

@@ -31,13 +31,9 @@ class VipPortfolioViewProjects extends JView {
         $this->categories = VipPortfolioHelper::getCategoriesOption();
         
         // Prepare filters
-        $listOrder  = $this->escape($this->state->get('list.ordering'));
-        $listDirn   = $this->escape($this->state->get('list.direction'));
-        $saveOrder  = (strcmp($listOrder, 'a.ordering') != 0 ) ? false : true;
-        
-        $this->listOrder  =  $listOrder;
-        $this->listDirn   =  $listDirn;
-        $this->saveOrder  =  $saveOrder;
+        $this->listOrder  =  $this->escape($this->state->get('list.ordering'));
+        $this->listDirn   =  $this->escape($this->state->get('list.direction'));
+        $this->saveOrder  =  (strcmp($this->listOrder, 'a.ordering') != 0 ) ? false : true;
         
         // Add submenu
         VipPortfolioHelper::addSubmenu($this->getName());
@@ -66,7 +62,7 @@ class VipPortfolioViewProjects extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::deleteList(JText::_("COM_VIPPORTFOLIO_DELETE_ITEMS_QUESTION"), "projects.delete");
         JToolBarHelper::divider();
-        JToolBarHelper::custom('projects.backToControlPanel', "vip-properties-back", "", JText::_("COM_VIPPORTFOLIO_CPANEL_TITLE"), false);
+        JToolBarHelper::custom('projects.backToDashboard', "vip-properties-back", "", JText::_("COM_VIPPORTFOLIO_DASHBOARD"), false);
         
     }
     
@@ -76,7 +72,7 @@ class VipPortfolioViewProjects extends JView {
 	 * @return void
 	 */
 	protected function setDocument() {
-		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_PROJECTS_ADMINISTRATION'));
+		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_PROJECTS'));
 	}
     
 }

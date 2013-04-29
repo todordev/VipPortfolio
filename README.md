@@ -1,10 +1,20 @@
-Vip Portfolio for Joomla! 
+Vip Portfolio Lite for Joomla! 
 ==========================
-( Version 3.5 )
+( Version 3.6 )
 --------------------------
 
 Changelog
 ---------
+
+v3.6
+----------
+* Replaced SlideGallery with other script (SlidesJS).
+* Many options were moved from component config to menu items options.
+* Added ability to upload a thumbnail.
+* Improved the functionality of additional images uploading.
+* Improved resizing functionality
+* Improved usability.
+
 
 v3.5
 ----------

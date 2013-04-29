@@ -47,8 +47,6 @@ class VipPortfolioViewImageMenu extends JView {
             $this->tmpl           = "&tmpl=component";
         }
         
-        $this->version        = new VipPortfolioVersion();
-        
         $this->prepareDocument();
                 
         parent::display($tpl);
@@ -96,9 +94,9 @@ class VipPortfolioViewImageMenu extends JView {
         
         // JavaScript and Styles
         
-        JHTML::_('behavior.framework');
+        JHTML::_('behavior.framework', true);
         
-        $view = $this->getName();
+       $view = JString::strtolower($this->getName());
         
         // Add template style
         $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $view . '/style.css', 'text/css', null );

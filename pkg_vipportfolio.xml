@@ -3,15 +3,15 @@
 	<name>Vip Portfolio Package</name>
 	<packagename>vipportfolio</packagename>
 	<author>Todor Iliev</author>
-	<creationDate>August, 2010</creationDate>
 	<authorEmail>todor@itprism.com</authorEmail>
 	<authorUrl>http://itprism.com</authorUrl>
 	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html</license>
-	<url>http://www.itprism.com</url>
+	<version>3.6</version>
+	<creationDate>21 April, 2013</creationDate>
+	<url>http://itprism.com</url>
 	<packager>Todor Iliev</packager>
 	<packagerurl>http://www.itprism.com</packagerurl>
-	<version>3.5</version>
 	<description><![CDATA[
 	<p><a href="http://itprism.com/free-joomla-extensions/vip-portfolio-component" target="_blank">Vip Portfolio</a> helps you to create your portfolio easily. It is a good way to show your work, and excellent way to sell your skills.</p>
 	<p>Invest in the extension and help for its improvement. You can <a href="http://itprism.com/sponsorship" title="Sponsoring" target="_blank">sponsor the extension via SMS, PayPal or Bitcoin</a>.</p>
@@ -20,6 +20,7 @@
 	</description>
 	<files folder="packages">
 		<file type="component" 	id="com_vipportfolio" >com_vipportfolio.zip</file>
+		<file type="library"    id="lib_itprism" >lib_itprism.zip</file>
 	</files>
 	
 	<scriptfile>install.php</scriptfile>

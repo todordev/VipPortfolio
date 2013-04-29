@@ -66,7 +66,7 @@ class VipPortfolioViewProject extends JView {
         $isNew = ($this->item->id == 0);
         $this->documentTitle= $isNew ? JText::_('COM_VIPPORTFOLIO_PROJECT_ADD')
                                       : JText::_('COM_VIPPORTFOLIO_PROJECT_EDIT');
-                                      
+
         if(!$isNew) {
             JToolBarHelper::title($this->documentTitle, 'vip-projects-edit');
         } else {
@@ -92,25 +92,30 @@ class VipPortfolioViewProject extends JView {
 	 */
 	protected function setDocument() {
 	    
+	    JText::script('COM_VIPPORTFOLIO_REMOVE');
+	    $this->document->setTitle($this->documentTitle);
+	    
 	    // Add behaviors
+	    JHtml::_('behavior.keepalive');
         JHtml::_('behavior.formvalidation');
         JHtml::_('behavior.tooltip');
         
-		$this->document->setTitle($this->documentTitle);
-        
         // Add styles
-        $this->document->addStyleSheet('../media/'.$this->option.'/js/messageclass/message.css');
+        $this->document->addStyleSheet('../media/'.$this->option.'/css/bootstrap.min.css');
+        $this->document->addStyleSheet('../media/'.$this->option.'/css/jquery.pnotify.default.css');
+        $this->document->addStyleSheet('../media/'.$this->option.'/css/jquery.fileupload-ui.css');
         
         // Add JS libraries
-        $this->document->addScript('../media/'.$this->option.'/js/messageclass/message.js');
-        $this->document->addScript('../media/'.$this->option.'/js/formupload/Request.File.js');
-        $this->document->addScript('../media/'.$this->option.'/js/formupload/Form.MultipleFileInput.js');
-        $this->document->addScript('../media/'.$this->option.'/js/formupload/Form.Upload.js');
+        $this->document->addScript('../media/'.$this->option.'/js/jquery/jquery.min.js');
+        $this->document->addScript('../media/'.$this->option.'/js/jquery/noconflict.js');
+        $this->document->addScript('../media/'.$this->option.'/js/jquery/bootstrap-filestyle.min.js');
+        $this->document->addScript('../media/'.$this->option.'/js/jquery/vendor/jquery.ui.widget.js');
+        $this->document->addScript('../media/'.$this->option.'/js/jquery/jquery.fileupload.js');
+        $this->document->addScript('../media/'.$this->option.'/js/jquery/jquery.iframe-transport.js');
         
 		// Add scripts
 		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
 		$this->document->addScript('../media/'.$this->option.'/js/admin/helper.js');
-		
 	}
 
 }

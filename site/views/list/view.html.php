@@ -20,6 +20,8 @@ class VipPortfolioViewList extends JView {
 
     protected $state = null;
     protected $items = null;
+    protected $params = null;
+    
     protected $pagination = null;
     
     protected $event = null;
@@ -35,7 +37,7 @@ class VipPortfolioViewList extends JView {
      *
      * @return  mixed   False on error, null otherwise.
      */
-    public function display($tpl = null){
+    function display($tpl = null){
         
         $app = JFactory::getApplication();
         /** @var $app JSite **/
@@ -56,6 +58,7 @@ class VipPortfolioViewList extends JView {
         $this->state      = $this->get('State');
         $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
+        
         $this->params     = $this->state->params;
         
         // Extra images
@@ -73,7 +76,6 @@ class VipPortfolioViewList extends JView {
         // Open link target
         $this->openLink = 'target="'.$this->params->get("list_open_link", "_self").'"';
         
-        $this->version  = new VipPortfolioVersion();
         
         $this->prepareLightBox();
         $this->prepareDocument();
@@ -136,7 +138,7 @@ class VipPortfolioViewList extends JView {
                 if($menu) {
                     $this->params->def('page_heading', $menu->title);
                 } else {
-                    $this->params->def('page_heading', JText::_('COM_VIPORTFOLIO_DEFAULT_PAGE_TITLE'));
+                    $this->params->def('page_heading', JText::_('COM_VIPPORTFOLIO_DEFAULT_PAGE_TITLE'));
                 }
             }
         }
@@ -202,7 +204,7 @@ class VipPortfolioViewList extends JView {
         
         // JavaScript and Styles
         
-        $view = $this->getName();
+        $view = JString::strtolower($this->getName());
         
         // Add template style
         $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $view . '/style.css', 'text/css');

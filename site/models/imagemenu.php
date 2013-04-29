@@ -56,11 +56,8 @@ class VipPortfolioModelImageMenu extends JModelList {
         $params    = $app->getParams();
         $this->setState('params', $params);
         
-        $orderCol  = 'a.ordering';
-        $this->setState('list.ordering', $orderCol);
-        
-        $listOrder = 'ASC';
-        $this->setState('list.direction', $listOrder);
+        $this->setState('list.ordering', 'a.ordering');
+        $this->setState('list.direction', 'ASC');
         
         $categoriesIds = $app->input->get("categories_ids", array(), "array");
         $this->setState('categories_ids', $categoriesIds);
@@ -107,24 +104,30 @@ class VipPortfolioModelImageMenu extends JModelList {
             )
         );
         
-        $query->from('#__vp_categories AS a');
-        
-        // Use article state if badcats.id is null, otherwise, force 0 for unpublished
-        $query->where('a.published = 1');
+        $query->from($db->quoteName('#__vp_categories') .' AS a');
         
         // Get categories
         $categoriesIds = $this->getState("categories_ids");
         if(!empty($categoriesIds)) {
-            $query->where("id IN (".implode(",",$categoriesIds) .")");
+            $query->where("a.id IN (".implode(",", $categoriesIds) .")");
         }
         
-        // Add the list ordering clause.
-        $orderCol   = $this->getState('list.ordering', 'a.ordering');
-        $orderDirn  = $this->getState('list.direction', 'ASC');
+        // Filter by state
+        $query->where('a.published = 1');
         
-        $query->order($db->escape($orderCol.' '.$orderDirn));
+        // Add the list ordering clause.
+        $orderString = $this->getOrderString();
+        $query->order($db->escape($orderString));
         
         return $query;
+    }
+    
+    protected function getOrderString() {
+        
+        $orderCol   = $this->getState('list.ordering',  'a.ordering');
+        $orderDirn  = $this->getState('list.direction', 'ASC');
+        
+        return $orderCol.' '.$orderDirn;
     }
     
 }

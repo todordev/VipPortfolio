@@ -7,18 +7,18 @@
 
 		<field name="name" type="text" class="inputbox"
 			size="60" label="COM_VIPPORTFOLIO_NAME"
-			description="COM_VIPPORTFOLIO_FIELD_NAME_CATEGORY_DESC" required="true" />
+			required="true" />
 
-		<field name="alias" type="text" class="inputbox"
-			size="60" 
+		<field name="alias" type="text" class="inputbox" 
+		    size="60" 
 			label="JFIELD_ALIAS_LABEL"
-			description="JFIELD_ALIAS_DESC"
-			filter="trim" 
-			/>
+			description="JFIELD_ALIAS_DESC" 
+			filter="trim"
+		/>
 
 		<field
 			name="published"
-			type="radio"
+			type="list"
 			label="JSTATUS"
 			description="JFIELD_PUBLISHED_DESC"
 			class="inputbox"
@@ -33,8 +33,7 @@
 		<field
             name="image"
             type="file"
-            label="COM_VIPPORTFOLIO_FIELD_IMAGE_CATEGORY"
-            description="COM_VIPPORTFOLIO_FIELD_IMAGE_CATEGORY_DESC"
+            label="COM_VIPPORTFOLIO_IMAGE"
             class="inputbox"
             size="60"
             />
@@ -43,7 +42,7 @@
             class="inputbox"
             filter="safehtml"
             width="500"
-            label="JGLOBAL_DESCRIPTION" description="COM_VIPPORTFOLIO_FIELD_DESCRIPTION_DESC" />
+            label="JGLOBAL_DESCRIPTION" />
 
         <field name="meta_title" type="text" class="inputbox"
             size="60" 

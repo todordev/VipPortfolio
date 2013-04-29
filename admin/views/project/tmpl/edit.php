@@ -1,11 +1,11 @@
 <?php
 /**
  * @package      ITPrism Components
- * @subpackage   VipPorfolio
+ * @subpackage   Vip Portfolio
  * @author       Todor Iliev
  * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * VipPorfolio is free software. This version may have been modified pursuant
+ * Vip Portfolio is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
@@ -22,10 +22,10 @@ defined('_JEXEC') or die;
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('title'); ?>
                 <?php echo $this->form->getInput('title'); ?></li>
-                
-                <li><?php echo $this->form->getLabel('alias'); ?>
-                <?php echo $this->form->getInput('alias'); ?></li>
     
+    			<li><?php echo $this->form->getLabel('alias'); ?>
+                <?php echo $this->form->getInput('alias'); ?></li>
+                
                 <li><?php echo $this->form->getLabel('catid'); ?>
                 <?php echo $this->form->getInput('catid'); ?></li>
                 
@@ -40,6 +40,9 @@ defined('_JEXEC') or die;
                 
                 <li><?php echo $this->form->getLabel('image'); ?>
                     <?php echo $this->form->getInput('image'); ?></li> 
+                    
+                <li><?php echo $this->form->getLabel('thumb'); ?>
+                    <?php echo $this->form->getInput('thumb'); ?></li> 
             </ul>
             
             <div class="clr"></div>
@@ -51,46 +54,7 @@ defined('_JEXEC') or die;
                 
         </fieldset>
         
-        <fieldset class="adminform">
-            <legend><?php echo JText::_("COM_VIPPORTFOLIO_RESIZE_OPTIONS"); ?></legend>
-            <ul class="adminformlist">
-            
-            	<li>
-            		<label class="hasTip" for="thumb_width" title="<?php echo JText::_("COM_VIPPORTFOLIO_THUMB_RESIZE_WIDTH_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_THUMB_WIDTH");?></label>  
-            		<input type="text" name="thumb_width" value="<?php echo $this->state->get("thumb_width", 300);?>" class="inputbox" id="thumb_width" />
-        		</li>
-        		
-        		<li>
-            		<label class="hasTip" for="thumb_height" title="<?php echo JText::_("COM_VIPPORTFOLIO_THUMB_RESIZE_HEIGHT_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_THUMB_HEIGHT");?></label>  
-            		<input type="text" name="thumb_height" value="<?php echo $this->state->get("thumb_height", 200);?>" class="inputbox" id="thumb_height" />
-        		</li>
-        		
-        		<li>
-        			<span class="spacer">
-        				<span class="before"></span>
-        					<span class="">
-        						<hr/>
-        					</span>
-        					<span class="after">
-    						</span>
-					</span>        			
-            	<li>
-            		<label class="hasTip" for="resize_image" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE");?></label>  
-            		<input type="checkbox" name="resize_image" value="1" class="inputbox" id="resize_image" <?php echo (!$this->state->get("resize_image", 0)) ? "" : 'checked="checked"'; ?> />
-        		</li>
-        		
-        		<li>
-            		<label class="hasTip" for="image_width" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_WIDTH");?></label>  
-            		<input type="text" name="image_width" value="<?php echo $this->state->get("image_width", "");?>" class="inputbox" id="image_width" />
-        		</li>
-        		
-        		<li>
-            		<label class="hasTip" for="image_height" title="<?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT_DESC");?>"><?php echo JText::_("COM_VIPPORTFOLIO_IMAGE_HEIGHT");?></label>  
-            		<input type="text" name="image_height" value="<?php echo $this->state->get("image_height", "");?>" class="inputbox" id="image_height" />
-        		</li>
-        		
-            </ul>
-        </fieldset>
+        <?php echo $this->loadTemplate("resize");?>
         
     </div>
     
@@ -101,40 +65,63 @@ defined('_JEXEC') or die;
     <?php if(!empty($this->item->id)){?>
     <div class="width-40 itp-prjextra">
        
-            <fieldset class="adminform">
-                <legend><?php echo JText::_("COM_VIPPORTFOLIO_EXTRA_IMAGES"); ?></legend>
-                <form method="post" action="<?php echo JRoute::_('index.php?option=com_vipportfolio&format=raw&task=project.addExtraImage&id='.$this->item->id); ?>" enctype="multipart/form-data" id="uploadForm">
-                    <div>
-                      <div class="formRow">
-                        <label for="file" class="floated"><?php echo JText::_("COM_VIPPORTFOLIO_FILE"); ?>:</label>
-                        <input type="file" id="file" name="file[]" multiple /><br />
-                      </div>
-                    
-                      <div class="formRow">
-                        <input type="submit" name="upload" value="<?php echo JText::_("COM_VIPPORTFOLIO_UPLOAD"); ?>" class="btn_eupload">
-                   		<img src="../media/com_vipportfolio/images/ajax-loader.gif" style="display: none;" id="ajax_loader" />
-                      </div>
-                      
-                    </div>
-                </form>
-                <div class="clr"></div>
-                <div class="width-100 itp-extra-images" id="itp-extra-images">
-                    <?php if(!empty($this->extraImages)){?>
-                       <?php foreach($this->extraImages as $image) {?>
-                       <div class="ai_box" id="ai_box<?php echo $image['id'];?>">
-                           <a href="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['image']; ?>">
-                               <img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['thumb']; ?>" />
-                           </a>
-                           
-                           <img class="ai_ri" data-image-id="<?php echo $image['id'];?>" src="../media/com_vipportfolio/images/icon_remove_16.png" />
-                           
-                       </div>
-                       <?php }?>
-                   <?php }?>
+        <form id="fileupload" action="<?php echo JRoute::_('index.php?option=com_vipportfolio&format=raw&task=project.addExtraImage&id='.$this->item->id); ?>" method="POST" enctype="multipart/form-data">
+    	
+    	<fieldset>
+            <legend><?php echo JText::_("COM_VIPPORTFOLIO_EXTRA_IMAGES"); ?></legend>
+            
+        	<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+            <div class="fileupload-buttonbar">
+                <div >
+                    <!-- The fileinput-button span is used to style the file input field as button -->
+                    <span class="btn btn-success fileinput-button">
+                        <i class="icon-upload icon-white"></i>
+                        <span><?php echo JText::_("COM_VIPPORTFOLIO_UPLOAD");?></span>
+                        <input type="file" name="files[]" multiple />
+                    </span>
                 </div>
-                <div class="clr"></div>
-                
-            </fieldset>
+            </div>
+           	<img src="../media/com_vipportfolio/images/ajax-loader.gif" id="ajax_loader" style="display: none;" />
+           	<div class="clearfix"></div>
+           	
+           	<div class="control-group">
+				<div class="control-label">
+    				<label for="extra_thumb_width" id="extra_thumb_width-lbl"><?php echo JText::_("COM_VIPPORTFOLIO_EXTRA_THUMB_WIDTH");?></label>			
+				</div>
+				<div class="clearfix"></div>
+				<div class="controls">
+    				<input type="text" class="inputbox" value="50" id="extra_thumb_width" name="extra_thumb_width">		
+    			</div>
+        	</div>
+        	<div class="control-group">
+				<div class="control-label">
+    				<label for="extra_thumb_height" id="extra_thumb_height-lbl"><?php echo JText::_("COM_VIPPORTFOLIO_EXTRA_THUMB_HEIGHT");?></label>			
+				</div>
+				<div class="clearfix"></div>
+				<div class="controls">
+    				<input type="text" class="inputbox" value="50" id="extra_thumb_height" name="extra_thumb_height">		
+    			</div>
+        	</div>
+        	<div class="clearfix"></div>
+        	
+           	<table class="table table-bordered" id="itp-extra-images">
+           		<?php if(!empty($this->extraImages)){?>
+                   <?php foreach($this->extraImages as $image) {?>
+                   <tr id="ai_box<?php echo $image['id'];?>">
+                       <td class="span10">
+                           <img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['thumb']; ?>" data-image-url="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['image']; ?>" class="ai-imglink"/>
+                       </td>
+                       <td class="span2">
+                       		<button class="btn ai_ri" data-image-id="<?php echo $image['id'];?>" ><?php echo JText::_("COM_VIPPORTFOLIO_REMOVE");?></button>
+                       </td>
+                   </tr>
+                   <?php }?>
+               <?php }?>
+               
+           	</table>
+            <div class="clearfix"></div>
+    	</fieldset>
+     </form>
     </div>
     <?php }?>
     
@@ -143,7 +130,7 @@ defined('_JEXEC') or die;
 <div class="clr"></div>
 <?php if (!empty($this->item->thumb)) {?>
 <h4><?php echo JText::_("COM_VIPPORTFOLIO_THUMBNAIL");?></h4>
-<img src="<?php echo "../". $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->thumb; ?>"  />
+<img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->thumb; ?>"  />
 <div>
     <img src="../media/com_vipportfolio/images/remove_image.png" />
     <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&task=project.removeImage&type=thumb&id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>
@@ -152,7 +139,7 @@ defined('_JEXEC') or die;
 <div>&nbsp;</div>
 <?php if (!empty($this->item->image)) {?>
 <h4><?php echo JText::_("COM_VIPPORTFOLIO_LARGE_IMAGE");?></h4>
-<img src="<?php echo "../".$this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image; ?>" />
+<img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image; ?>" />
 <div>
     <img src="../media/com_vipportfolio/images/remove_image.png" />
     <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&task=project.removeImage&type=image&id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>

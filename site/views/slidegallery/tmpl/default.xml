@@ -19,4 +19,19 @@
         </fieldset>
     </fields>
 
+    <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="slidegallery_effect" type="list" default="fade"  label="COM_VIPPORTFOLIO_SLIDEGALLERY_EFFECT" description="COM_VIPPORTFOLIO_SLIDEGALLERY_EFFECT_DESC" >
+                <option value="none">COM_VIPPORTFOLIO_NONE</option>
+                <option value="slide">COM_VIPPORTFOLIO_SLIDE</option>
+                <option value="fade">COM_VIPPORTFOLIO_FADE</option>
+                <option value="fade-crossfade">COM_VIPPORTFOLIO_FADE_CROSSFADE</option>
+            </field>
+            <field name="slidegallery_speed" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_SPEED" description="COM_VIPPORTFOLIO_SPEED_DESC" />
+            
+            <field name="slidegallery_width" type="text" default="600" size="50" label="COM_VIPPORTFOLIO_WIDTH" description="COM_VIPPORTFOLIO_SLIDEGALLERY_WIDTH_DESC" />
+            <field name="slidegallery_height" type="text" default="400" size="50" label="COM_VIPPORTFOLIO_HEIGHT" description="COM_VIPPORTFOLIO_SLIDEGALLERY_HEIGHT_DESC" />
+        </fieldset>
+    </fields>
 </metadata>

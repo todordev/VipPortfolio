@@ -63,5 +63,5 @@ CREATE TABLE IF NOT EXISTS `#__vp_tabs` (
   PRIMARY KEY (`id`),
   KEY `idx_itpvp_page_id` (`page_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-
+  
 SET FOREIGN_KEY_CHECKS=1;

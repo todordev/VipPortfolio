@@ -67,7 +67,7 @@ class VipPortfolioViewCategories extends JView {
         JToolBarHelper::divider();
         JToolBarHelper::deleteList(JText::_("COM_VIPPORTFOLIO_DELETE_ITEMS_QUESTION"), "categories.delete");
         JToolBarHelper::divider();
-        JToolBarHelper::custom('categories.backToControlPanel', "vip-properties-back", "", JText::_("COM_VIPPORTFOLIO_CPANEL_TITLE"), false);
+        JToolBarHelper::custom('categories.backToControlPanel', "vip-properties-back", "", JText::_("COM_VIPPORTFOLIO_DASHBOARD"), false);
     }
     
 	/**

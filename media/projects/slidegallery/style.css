@@ -1,101 +1,46 @@
-#slideshow * {
-	margin: 0;
-	padding: 0;
+#vp-slide-gallery {
+      display:none;
 }
 
-#slideshow {
-	background: url('images/bg_shadow.gif') no-repeat top;
-	position: relative;
-	padding: 4px 0 15px;
-	width: 603px;
-	height: 306px;
+#vp-slide-gallery a:link, #vp-slide-gallery a:visited {
+    color: #333333;
+}
+#vp-slide-gallery .slidesjs-previous {
+    float: left;
+    margin-right: 5px;
+}
+#vp-slide-gallery .slidesjs-navigation {
+    margin-top: 3px;
+    text-decoration: none !important;
 }
 
-#slideshow #menu, #slideshow #pictures, #slideshow #loading {
-	position: absolute;
+#vp-slide-gallery .slidesjs-next {
+    float: left;
+    margin-right: 5px;
 }
 
-#slideshow #loading {
-	background: url('images/spinner.gif');
-	display: block;
-	top: 158px;
-	left: 205px;
-	text-indent: -5000px;
-	width: 24px;
-	height: 24px;
-	visibility: hidden;
-	z-index: 5;
+.slidesjs-pagination {
+    float: right;
+    list-style: none outside none !important;
+    margin: 6px 0 0;
 }
 
-#slideshow #pictures {
-	background: url('images/bg.jpg');
-	width: 437px;
-	height: 277px;
-	left: 0;
-	overflow: hidden;
+
+.slidesjs-pagination li {
+    float: left;
+    margin: 0 1px;
 }
 
-#slideshow #pictures li {
-	display: block;
-	position: absolute;
-	top: 0;
-	width: 437px;
+.slidesjs-pagination li a.active, .slidesjs-pagination li a.active:hover {
+    background-position: 0 -13px;
 }
-
-#slideshow #pictures li img {
-	display: block;
-	position: relative;
-	bottom: 0;
-}
-
-#slideshow #menu {
-	background: url('images/bg_side.jpg');
-	list-style-type: none;
-	width: 166px;
-	height: 257px;
-	right: 0;
-	padding-top: 20px;
-}
-
-#slideshow #menu li {
-	display: block;
-	z-index: 1000;
-	position: relative;
-	zoom: 1;
-}
-
-#slideshow #menu li a {
-	display: block;
-	font: 11px "Lucida Grande", "Verdana";
-	text-decoration: none;
-	padding: 7px 0 7px 28px;
-	z-index: 1000;
-	color: #ccc;
-	line-height: 14px;
-	vertical-align: middle;
-	zoom: 1;
-}
-
-#slideshow #menu li a:focus {
-	outline: 0;
-}
-
-#slideshow #menu li a:hover {
-	color: #fff;
-}
-
-#slideshow #menu li.current a {
-	font: 15px "Georgia";
-	color: #fff;
-	padding: 5px 0 5px 28px;
-	line-height: 18px;
-}
-
-#slideshow #menu li.background {
-	background: url('images/arrow.gif') no-repeat left center;
-	position: absolute;
-	font-size: 1px;
-	height: 7px;
-	width: 4px;
-	z-index: 5;
+.slidesjs-pagination li a {
+    background-image: url("images/pagination.png");
+    background-position: 0 0;
+    display: block;
+    float: left;
+    height: 0;
+    overflow: hidden;
+    padding-top: 13px;
+    width: 13px;
 }

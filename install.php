@@ -61,17 +61,17 @@ class pkg_vipPortfolioInstallerScript {
      */
     public function postflight($type, $parent) {
     
-        if(!defined("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR")) {
-            define("VIPPORTFOLIO_COMPONENT_ADMINISTRATOR", JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . "components" . DIRECTORY_SEPARATOR ."com_vipportfolio");
+        if(!defined("VIPPORTFOLIO_PATH_COMPONENT_ADMINISTRATOR")) {
+            define("VIPPORTFOLIO_PATH_COMPONENT_ADMINISTRATOR", JPATH_ADMINISTRATOR . DIRECTORY_SEPARATOR . "components" . DIRECTORY_SEPARATOR ."com_vipportfolio");
         }
+        
+        // Register Install Helper
+        JLoader::register("VipPortfolioInstallHelper", VIPPORTFOLIO_PATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "helpers" . DIRECTORY_SEPARATOR ."install.php");
         
         jimport('joomla.filesystem.path');
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
         
-        // Register Install Helper
-        JLoader::register("VipPortfolioInstallHelper", VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "helpers" . DIRECTORY_SEPARATOR ."install.php");
-
         $params             = JComponentHelper::getParams("com_vipportfolio");
         $this->imagesFolder = JFolder::makeSafe($params->get("images_directory", "images/vipportfolio"));
         $this->imagesPath   = JPath::clean( JPATH_SITE.DIRECTORY_SEPARATOR.$this->imagesFolder );
@@ -159,7 +159,7 @@ class pkg_vipPortfolioInstallerScript {
      */
     private function upgradeExtension() {
         
-        JLoader::register("VipPortfolioVersion", VIPPORTFOLIO_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "libraries" . DIRECTORY_SEPARATOR ."version.php");
+        JLoader::register("VipPortfolioVersion", VIPPORTFOLIO_PATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "libraries" . DIRECTORY_SEPARATOR ."version.php");
 
         $version         = new VipPortfolioVersion();
         $currentVersion  = $version->getShortVersion();

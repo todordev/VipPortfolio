@@ -59,14 +59,14 @@ class VipPortfolioViewCategory extends JView {
         $isNew = ($this->item->id == 0);
         $this->documentTitle= $isNew ? JText::_('COM_VIPPORTFOLIO_CATEGORY_ADD')
                                       : JText::_('COM_VIPPORTFOLIO_CATEGORY_EDIT');
-        
+                                      
         // Set toolbar items for this page
         if(!$isNew) {
             JToolBarHelper::title($this->documentTitle, 'vip-categories-edit');
         } else {
             JToolBarHelper::title($this->documentTitle, 'vip-categories-new');
         }
-                                      
+		                             
         JToolBarHelper::apply('category.apply');
         JToolBarHelper::save2new('category.save2new');
         JToolBarHelper::save('category.save');
@@ -87,6 +87,7 @@ class VipPortfolioViewCategory extends JView {
 	protected function setDocument() {
 	    
 	    // Add behaviors
+	    JHtml::_('behavior.keepalive');
         JHtml::_('behavior.tooltip');
         JHtml::_('behavior.formvalidation');
         

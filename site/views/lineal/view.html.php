@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -35,7 +35,7 @@ class VipPortfolioViewLineal extends JView {
      *
      * @return  mixed   False on error, null otherwise.
      */
-    public function display($tpl = null){
+    function display($tpl = null){
         
         $app = JFactory::getApplication();
         /** @var $app JSite **/
@@ -106,8 +106,6 @@ class VipPortfolioViewLineal extends JView {
             $this->prepareLightBox();
         }
         
-        $this->version        = new VipPortfolioVersion();
-        
         $this->prepareDocument();
         
         parent::display($tpl);
@@ -168,7 +166,7 @@ class VipPortfolioViewLineal extends JView {
                 if($menu) {
                     $this->params->def('page_heading', $menu->title);
                 } else {
-                    $this->params->def('page_heading', JText::_('COM_VIPORTFOLIO_DEFAULT_PAGE_TITLE'));
+                    $this->params->def('page_heading', JText::_('COM_VIPPORTFOLIO_DEFAULT_PAGE_TITLE'));
                 }
             }
         }
@@ -233,7 +231,7 @@ class VipPortfolioViewLineal extends JView {
         
         // JavaScript and Styles
         
-        $view = $this->getName();
+        $view = JString::strtolower($this->getName());
         
         // Add template style
         $this->document->addStyleSheet('media/'. $this->option. '/projects/' . $view . '/style.css');

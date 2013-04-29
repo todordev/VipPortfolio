@@ -25,4 +25,13 @@
         </fieldset>
     </fields>
 
+    <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="clistThumbWidth" type="text" default="350" size="50" label="COM_VIPPORTFOLIO_IMAGE_WIDTH" description="COM_VIPPORTFOLIO_IMAGE_WIDTH_DESC" />
+            <field name="clistThumbHeight" type="text" default="100" size="50" label="COM_VIPPORTFOLIO_IMAGE_HEIGHT" description="COM_VIPPORTFOLIO_IMAGE_HEIGHT_DESC" />
+            <field name="categories_pp" type="text" default="10" size="50" label="COM_VIPPORTFOLIO_CATEGORIES_PP" description="COM_VIPPORTFOLIO_CATEGORIES_PP_DESC" />
+        </fieldset>
+    </fields>
+    
 </metadata>

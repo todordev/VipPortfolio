@@ -14,7 +14,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-require_once (JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "libraries" . DIRECTORY_SEPARATOR."init.php");
+require_once JPATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "libraries" . DIRECTORY_SEPARATOR ."init.php";
 
 // Include dependencies
 jimport('joomla.application.component.controller');

@@ -1,11 +1,11 @@
 <?php
 /**
  * @package      ITPrism Components
- * @subpackage   VipPorfolio
+ * @subpackage   Vip Portfolio
  * @author       Todor Iliev
  * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * VipPorfolio is free software. This version may have been modified pursuant
+ * Vip Portfolio is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
@@ -44,7 +44,7 @@ defined('_JEXEC') or die;
         </fieldset>
         
         <fieldset class="adminform">
-            <legend><?php echo JText::_("COM_VIPPORTFOLIO_FIELD_SEO"); ?></legend>
+            <legend><?php echo JText::_("COM_VIPPORTFOLIO_SEARCH_ENGINE_OPTIMIZATION"); ?></legend>
             
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('spacer'); ?></li>
@@ -90,7 +90,7 @@ defined('_JEXEC') or die;
     <?php echo JHtml::_('form.token'); ?>
 </form>
 <?php if (!empty($this->item->image)) {?>
-<img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image; ?>"/>
+<img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $this->item->image; ?>" />
 <div>
     <img src="../media/com_vipportfolio/images/remove_image.png" />
     <a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&task=category.removeImage&id=" . $this->item->id); ?>" ><?php echo JText::_("COM_VIPPORTFOLIO_DELETE_IMAGE")?></a>

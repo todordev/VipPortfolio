@@ -1,11 +1,11 @@
 <?php
 /**
  * @package      ITPrism Components
- * @subpackage   VipPorfolio
+ * @subpackage   Vip Portfolio
  * @author       Todor Iliev
  * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * VipPorfolio is free software. This version may have been modified pursuant
+ * Vip Portfolio is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
@@ -22,6 +22,7 @@ defined('_JEXEC') or die;
             <button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
             <button type="button" onclick="document.id('filter_search').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
         </div>
+        
         <div class="filter-select fltrt">
         
         	<select name="filter_category_id" class="inputbox" onchange="this.form.submit()">
@@ -29,10 +30,11 @@ defined('_JEXEC') or die;
     			<?php echo JHtml::_('select.options', $this->categories, 'value', 'text', $this->state->get('filter.category_id'));?>
     		</select>
     		
-            <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+            <select name="filter_state" class="inputbox" onchange="this.form.submit()">
                 <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array("archived" => false, "trash"=>false)), 'value', 'text', $this->state->get('filter.published'), true);?>
+                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions', array("archived" => false, "trash"=>false)), 'value', 'text', $this->state->get('filter.state'), true);?>
             </select>
+           
         </div>
     </fieldset>
     <div class="clr"> </div>

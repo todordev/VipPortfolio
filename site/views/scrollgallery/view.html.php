@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -20,6 +20,7 @@ class VipPortfolioViewScrollGallery extends JView {
 
     protected $state = null;
     protected $items = null;
+    protected $params = null;
     
     protected $event = null;
     protected $option;
@@ -31,7 +32,6 @@ class VipPortfolioViewScrollGallery extends JView {
     
     /**
      * Display the view
-     *
      * @return  mixed   False on error, null otherwise.
      */
     public function display($tpl = null){
@@ -54,12 +54,7 @@ class VipPortfolioViewScrollGallery extends JView {
         // Initialise variables
         $this->state      = $this->get('State');
         $this->items      = $this->get('Items');
-        $this->params     = $this->state->params;
-        
-        // Open link target
-        $this->openLink = 'target="'.$this->params->get("sg_open_link", "_self").'"';
-        
-        $this->version  = new VipPortfolioVersion();
+        $this->params     = $this->state->get("params");
         
         $this->prepareDocument();
         
@@ -92,7 +87,7 @@ class VipPortfolioViewScrollGallery extends JView {
                 if($menu) {
                     $this->params->def('page_heading', $menu->title);
                 } else {
-                    $this->params->def('page_heading', JText::_('COM_VIPORTFOLIO_DEFAULT_PAGE_TITLE'));
+                    $this->params->def('page_heading', JText::_('COM_VIPPORTFOLIO_DEFAULT_PAGE_TITLE'));
                 }
             }
         }
@@ -158,26 +153,16 @@ class VipPortfolioViewScrollGallery extends JView {
         
         // JavaScript and Styles
         
-        $view = $this->getName();
-        
-        JHTML::_('behavior.framework');
+        $view = JString::strtolower($this->getName());
         
         // Add template style
         $this->document->addStyleSheet('media/'. $this->option. '/projects/' . $view . '/style.css', 'text/css', null);
 
-		// Add scripts
+		// Scripts
+        JHTML::_('behavior.framework', true);
+        
 		$this->document->addScript('media/'.$this->option.'/js/'.$view.'/scrollGallery.js');
-		
-		$js = 'window.addEvent("domready", function(){ 
-        	var myscrollGallery = new scrollGallery({
-        		start:'.$this->params->get("sg_start", 0).',
-        		speed:'.$this->params->get("sg_speed", 0.5).',
-        		autoScroll:'.$this->params->get("sg_auto_scroll", 0).',
-        		clickable:'.$this->params->get("sg_clickable", 0).'
-        	});
-        });';
-		
-		$this->document->addScriptDeclaration($js);
+		$this->document->addScript('media/'.$this->option.'/js/site/scrollgallery.js');
 		
         // If tmpl is set that mean the user loads the page from Facebook
         // So we should Auto Grow the tab.

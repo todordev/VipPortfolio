@@ -33,8 +33,7 @@
 	        name="catid"
 	        type="vpcategories"
 	        label="JCATEGORY"
-	        description="COM_VIPPORTFOLIO_CATEGORIES_FIELD_DESC"
-	        filter="int" 
+	        filter="int"
 	        />
 
 		<field
@@ -51,6 +50,12 @@
 				value="0">JUNPUBLISHED</option>
 		</field>
 		
+		<field name="thumb" type="file" class="inputbox"
+            label="COM_VIPPORTFOLIO_FIELD_THUMB"
+            description="COM_VIPPORTFOLIO_FIELD_THUMB_DESC"
+            size="60"
+        />
+        
 		<field
             name="image"
             type="file"
@@ -80,4 +85,51 @@
             />
 
 	</fieldset>
+	
+	<fields name="resize">
+    
+       <field name="create_thumb"  type="checkbox" 
+            label="COM_VIPPORTFOLIO_THUMB_CREATE_THUMB"
+            description="COM_VIPPORTFOLIO_THUMB_CREATE_THUMB_DESC" 
+            filter="int" 
+            value="1"
+        />
+        
+       <field name="thumb_width"  type="text" class="inputbox"
+            label="COM_VIPPORTFOLIO_THUMB_WIDTH"
+            description="COM_VIPPORTFOLIO_THUMB_RESIZE_WIDTH_DESC" 
+            filter="int" 
+            default="200"
+        />
+        
+        <field name="thumb_height"  type="text" class="inputbox"
+            label="COM_VIPPORTFOLIO_THUMB_HEIGHT"
+            description="COM_VIPPORTFOLIO_THUMB_RESIZE_HEIGHT_DESC" 
+            filter="int" 
+            default="300"
+        />
+        
+        <field name="resize_image"  type="checkbox" 
+            label="COM_VIPPORTFOLIO_IMAGE_RESIZE"
+            description="COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC" 
+            filter="int" 
+            value="1"
+        />
+        
+        <field name="image_width"  type="text" class="inputbox"
+            label="COM_VIPPORTFOLIO_IMAGE_WIDTH"
+            description="COM_VIPPORTFOLIO_IMAGE_RESIZE_WIDTH_DESC" 
+            filter="int" 
+            default="500"
+        />
+        
+        <field name="image_height"  type="text" class="inputbox"
+            label="COM_VIPPORTFOLIO_IMAGE_HEIGHT"
+            description="COM_VIPPORTFOLIO_IMAGE_RESIZE_HEIGHT_DESC" 
+            filter="int" 
+            default="600"
+        />
+        
+    </fields>
+    
 </form>

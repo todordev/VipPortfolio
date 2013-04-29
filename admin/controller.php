@@ -17,7 +17,7 @@ defined('_JEXEC') or die;
 jimport( 'joomla.application.component.controller' );
 
 /**
- * Control Panel Controller
+ * Dashboard Controller
  *
  * @package		ITPrism Components
  * @subpackage	Vip Portfolio
@@ -39,7 +39,7 @@ class VipPortfolioController extends JController {
 		// Add component style
         $document->addStyleSheet('../media/'.$this->option.'/css/style.css');
         
-        $viewName      = JFactory::getApplication()->input->getCmd('view', 'cpanel');
+        $viewName      = JFactory::getApplication()->input->getCmd('view', 'dashboard');
         JFactory::getApplication()->input->set("view", $viewName);
 
         parent::display();

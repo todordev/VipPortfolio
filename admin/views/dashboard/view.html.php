@@ -16,7 +16,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewCpanel extends JView {
+class VipPortfolioViewDashboard extends JView {
     
     protected $option;
     
@@ -29,11 +29,20 @@ class VipPortfolioViewCpanel extends JView {
         
         $this->version = new VipPortfolioVersion();
         
-        // Add submenu
-        VipPortfolioHelper::addSubmenu($this->getName());
+        // Load ITPrism library version
+        jimport("itprism.version");
+        if(!class_exists("ITPrismVersion")) {
+            $this->itprismVersion = JText::_("COM_VIPPORTFOLIO_ITPRISM_LIBRARY_DOWNLOAD");
+        } else {
+            $itprismVersion = new ITPrismVersion();
+            $this->itprismVersion = $itprismVersion->getShortVersion();
+        }
         
         $this->addToolbar();
         $this->setDocument();
+        
+        // Add submenu
+        VipPortfolioHelper::addSubmenu($this->getName());
         
         parent::display($tpl);
     }
@@ -44,7 +53,7 @@ class VipPortfolioViewCpanel extends JView {
      * @since   1.6
      */
     protected function addToolbar(){
-        JToolBarHelper::title(JText::_("COM_VIPPORTFOLIO_CPANEL_TITLE"), 'vip-properties');
+        JToolBarHelper::title(JText::_("COM_VIPPORTFOLIO_DASHBOARD"), 'vip-properties');
     }
 
 	/**
@@ -56,7 +65,7 @@ class VipPortfolioViewCpanel extends JView {
 	    
 	    JHtml::_('behavior.modal', 'a.modal');
 	    
-		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_CPANEL_ADMINISTRATION'));
+		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_DASHBOARD'));
 		
 		// Header styles
 		$this->document->addStyleSheet('../media/'.$this->option.'/css/bootstrap.min.css');

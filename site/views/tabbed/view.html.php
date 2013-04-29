@@ -56,8 +56,6 @@ class VipPortfolioViewTabbed extends JView {
         
         $this->projects = $projects;
         
-        $this->version  = new VipPortfolioVersion();
-        
         $this->prepareLightBox();
         $this->prepareDocument();
                 
@@ -132,7 +130,7 @@ class VipPortfolioViewTabbed extends JView {
         
         // JavaScript and Styles
         
-        $view = $this->getName();
+        $view = JString::strtolower($this->getName());
         
         // Add template style
         $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $view . '/style.css', 'text/css', null );

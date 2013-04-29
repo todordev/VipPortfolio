@@ -56,21 +56,21 @@ class VipPortfolioModelCategoriesList extends JModelList {
         $this->setState('params', $params);
 
         // List state information        
-        $limit = $app->input->getInt('limit', $app->getCfg('list_limit', 0));
-        $this->setState('list.limit', $limit);
+        $value = $params->get("categories_pp", 0);
+        if(!$value) {
+            $value = $app->input->getInt('limit', $app->getCfg('list_limit', 20));
+        }
+        $this->setState('list.limit', $value);
         
-        $limitStart = $app->input->getInt('limitstart', 0);
-        $this->setState('list.start', $limitStart);
+        $value = $app->input->getInt('limitstart', 0);
+        $this->setState('list.start', $value);
         
-        $orderCol = 'a.ordering';
-        $this->setState('list.ordering', $orderCol);
-        
-        $listOrder = 'ASC';
-        $this->setState('list.direction', $listOrder);
+        $this->setState('list.ordering', 'a.ordering');
+        $this->setState('list.direction', 'ASC');
         
         // Get categories IDs
-        $categoriesIds = $app->input->get("categories_ids", array(), "array");
-        $this->setState('categories_ids', $categoriesIds);
+        $value = $app->input->get("categories_ids", array(), "array");
+        $this->setState('categories_ids', $value);
 
     }
     
@@ -109,25 +109,36 @@ class VipPortfolioModelCategoriesList extends JModelList {
         
         // Select the required fields from the table.
         $query->select(
-            $this->getState('list.select', 
-            'a.id, a.name, a.alias, a.image')
+            $this->getState(
+                'list.select', 
+                'a.id, a.name, a.alias, a.image'
+            )
         );
         
-        $query->from('#__vp_categories AS a');
-        
-        // Use article state if badcats.id is null, otherwise, force 0 for unpublished
-        $query->where('a.published = 1');
+        $query->from($db->quoteName('#__vp_categories') .' AS a');
         
         // Get categories
         $categoriesIds = $this->getState("categories_ids");
         if(!empty($categoriesIds)) {
-            $query->where("id IN (".implode(",",$categoriesIds) .")");
+            $query->where("a.id IN (".implode(",",$categoriesIds) .")");
         }
         
+        // Filter by state
+        $query->where('a.published = 1');
+        
         // Add the list ordering clause.
-        $query->order($this->getState('list.ordering', 'a.ordering') . ' ' . $this->getState('list.direction', 'ASC'));
+        $orderString = $this->getOrderString();
+        $query->order($db->escape($orderString));
         
         return $query;
+    }
+    
+    protected function getOrderString() {
+        
+        $orderCol   = $this->getState('list.ordering',  'a.ordering');
+        $orderDirn  = $this->getState('list.direction', 'ASC');
+        
+        return $orderCol.' '.$orderDirn;
     }
     
 }

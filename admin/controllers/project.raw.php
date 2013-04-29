@@ -42,10 +42,6 @@ class VipPortfolioControllerProject extends JController {
         $model->imagesURI       = $params->get("images_directory", "images/vipportfolio");
         $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
         
-        // Extra image thumbnail size
-        $model->extraThumbWidth     = $params->get("extra_image_thumb_width", 50);
-        $model->extraThumbHeight    = $params->get("extra_image_thumb_height", 50);
-        
         // Joomla! media extension parameters
         $mediaParams = JComponentHelper::getParams("com_media");
         
@@ -96,8 +92,17 @@ class VipPortfolioControllerProject extends JController {
         /** @var $app JAdministrator **/
         
         // Initialize variables
-        $itemId  = $app->input->get->get("id");
-        $files   = $app->input->files->get("file");
+        $itemId      = $app->input->post->get("id");
+        
+        // Prepare the size of additional thumbnails
+        $thumbWidth  = $app->input->post->get("thumb_width", 50);
+        $thumbHeight = $app->input->post->get("thumb_height", 50);
+        if($thumbWidth < 25 OR $thumbHeight < 25 ) {
+            $thumbWidth = 50;
+            $thumbHeight = 50;
+        }
+        
+        $files       = $app->input->files->get("files");
         
         if(!$files) {
             $response = array(
@@ -112,26 +117,19 @@ class VipPortfolioControllerProject extends JController {
         
         try {
            
+            jimport('joomla.filesystem.folder');
+            jimport('joomla.filesystem.file');
+            jimport('joomla.filesystem.path');
+            jimport('joomla.image.image');
+            jimport('itprism.file.upload.image');    
+            
             // Get the model
             $model  = $this->getModel();
-            $images = $model->uploadExtraImages($files);
-            $images = $model->storeExtraImages($images, $itemId);
+            $images = $model->uploadExtraImages($files, $thumbWidth, $thumbHeight);
+            $images = $model->storeExtraImage($images, $itemId);
             
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
-            
-            // Problem with file uploading
-            if($e->getCode() == 1001) {
-                $response = array(
-                	"success" => false,
-                    "title"=> JText::_( 'COM_VIPPORTFOLIO_FAIL' ),
-                    "text" => $e->getMessage(),
-                );
-                    
-                echo json_encode($response);
-                return;
-            }
-            
             throw new Exception($e->getMessage());
         }
         

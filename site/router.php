@@ -52,13 +52,12 @@ function VipPortfolioBuildRoute(&$query){
         
         if(!$categories){
             $db = JFactory::getDbo();
-            $db->setQuery("
-              SELECT 
-                  `id`,
-                  `alias`
-              FROM
-                  `#__vp_categories`");
-            
+            $sql = $db->getQuery(true);
+            $sql
+                ->select("a.id, a.alias")
+                ->from($db->quoteName("#__vp_categories") . " AS a");
+                
+            $db->setQuery($sql);
             $categories = $db->loadAssocList("id");
         
         }
@@ -136,8 +135,8 @@ function VipPortfolioParseRoute($segments){
             
             $sql  = $db->getQuery(true);
             $sql
-                ->select("`id`, `alias`")
-                ->from("`#__vp_categories`");
+                ->select("a.id, a.alias")
+                ->from($db->quoteName("#__vp_categories") . " AS a");
             
             $db->setQuery($sql);
             $categories_ = $db->loadAssocList();

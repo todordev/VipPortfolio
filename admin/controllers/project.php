@@ -14,7 +14,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controllerform');
+jimport('itprism.controller.form.backend');
 
 /**
  * Project controller class.
@@ -23,10 +23,7 @@ jimport('joomla.application.component.controllerform');
  * @subpackage	Vip Portfolio
  * @since		1.6
  */
-class VipPortfolioControllerProject extends JControllerForm {
-    
-    // Check the table in so it can be edited.... we are done with it anyway
-    private $defaultLink = 'index.php?option=com_vipportfolio';
+class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
     
 	/**
      * Proxy for getModel.
@@ -46,33 +43,6 @@ class VipPortfolioControllerProject extends JControllerForm {
         $model->imagesURI       = $params->get("images_directory", "images/vipportfolio");
         $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
         
-        // Get values from the user state
-        $resizeImage = $app->input->getInt('resize_image', 0);
-        $app->setUserState($this->option.'.project.resize_image', $resizeImage);
-       
-        $imageWidth = $app->input->getInt('image_width');
-        $app->setUserState($this->option.'.project.image_width', $imageWidth);
-        
-        $imageHeight = $app->input->getInt('image_height');
-        $app->setUserState($this->option.'.project.image_height', $imageHeight);
-        
-        // Thumbnail size
-        $thumbWidth = $app->input->getInt('thumb_width', 200);
-        $app->setUserState($this->option.'.project.thumb_width', $thumbWidth);
-        
-        $thumbHeight = $app->input->getInt('thumb_height', 300);
-        $app->setUserState($this->option.'.project.thumb_height', $thumbHeight);
-        
-        $model->resizeImage         = $resizeImage;
-        $model->imageWidth          = $imageWidth;
-        $model->imageHeight         = $imageHeight;
-        $model->thumbWidth          = $thumbWidth;
-        $model->thumbHeight         = $thumbHeight;
-        
-        // Extra image thumbnail size
-        $model->extraThumbWidth     = $params->get("extra_image_thumb_width", 50);
-        $model->extraThumbHeight    = $params->get("extra_image_thumb_height", 50);
-        
         // Joomla! media extension parameters
         $mediaParams = JComponentHelper::getParams("com_media");
         
@@ -87,7 +57,6 @@ class VipPortfolioControllerProject extends JControllerForm {
     
     /**
      * Save an item
-     *
      */
     public function save(){
         
@@ -98,12 +67,24 @@ class VipPortfolioControllerProject extends JControllerForm {
         
         // Initialize variables
         $msg     = "";
-        $link    = "";
         
         // Gets the data from the form
         $data    = $app->input->post->get('jform', array(), 'array');
         $itemId  = JArrayHelper::getValue($data, "id", 0, "int");
-        $model   = $this->getModel();
+        
+        $thumb   = $app->input->files->get('jform', array(), 'array');
+        $thumb   = JArrayHelper::getValue($thumb, "thumb");
+        
+        $image   = $app->input->files->get('jform', array(), 'array');
+        $image   = JArrayHelper::getValue($image, "image");
+        
+        // Redirect options
+        $redirectOptions = array (
+            "task"	  => $this->getTask(),
+            "item_id" => $itemId
+        );
+        
+        $model = $this->getModel();
         /** @var $model VipPortfolioModelProject */
         
         $form = $model->getForm($data, false);
@@ -118,93 +99,87 @@ class VipPortfolioControllerProject extends JControllerForm {
         
         // Check for validation errors.
         if($validData === false){
-            $this->defaultLink .= "&view=".$this->view_item."&layout=edit";
-        
-            if($itemId) {
-                $this->defaultLink .= "&id=" . $itemId;
-            } 
-            
-            $this->setMessage($model->getError(), "notice");
-            $this->setRedirect(JRoute::_($this->defaultLink, false));
+            $messages = $form->getErrors();
+            $this->displayWarning($messages, $redirectOptions);
             return;
         }
         
         try{
             
-            $itemId = $model->save($validData);
+            if(!empty($image['name']) OR !empty($thumb['name'])) {
+                jimport('joomla.filesystem.folder');
+                jimport('joomla.filesystem.file');
+                jimport('joomla.filesystem.path');
+                jimport('joomla.image.image');
+                jimport('itprism.file.upload.image');                
+            }
+            
+            // Upload image
+            $imageNames = array();
+            if(!empty($image['name'])) {
+                
+                // Image options
+                $options = JArrayHelper::getValue($validData, "resize");
+                
+                $imageNames    = $model->uploadImage($image, $options);
+                if(!empty($imageNames["image"])) {
+                    $validData["image"] = $imageNames["image"];
+                }
+                
+                if(!empty($imageNames["thumb"])) {
+                    $validData["thumb"] = $imageNames["thumb"];
+                }
+                
+            }
+            
+            // Upload thumbnail
+            if(!empty($thumb['name']) AND empty($validData["thumb"])) {
+                
+                $thumbName    = $model->uploadThumb($thumb);
+                if(!empty($thumbName)) {
+                    $validData["thumb"] = $thumbName;
+                }
+                
+            }
+            
+            $redirectOptions["item_id"] = $model->save($validData);
         
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
             
-            // Problem with uploading. So set a message and redirect to pages.
+            // Problem with uploading, so set a message and redirect to pages
             if($e->getCode() == 1001) {
-                
-                $this->setMessage($e->getMessage(), "notice");
-                $link = $this->prepareRedirectLink($itemId);
-                $this->setRedirect(JRoute::_($link, false));
+                $this->displayWarning($e->getMessage(), $redirectOptions);
                 return;
-                
             } else { // System error
                 throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'), 500);
             }
+            
         }
         
-        $msg  = JText::_('COM_VIPPORTFOLIO_PROJECT_SAVED');
-        $link = $this->prepareRedirectLink($itemId);
-        
-        $this->setRedirect(JRoute::_($link, false), $msg);
+        $this->displayMessage(JText::_('COM_VIPPORTFOLIO_PROJECT_SAVED'), $redirectOptions);
     
-    }
-    
-	/**
-     * 
-     * Prepare redirect link. 
-     * If has clicked apply, will be redirected to edit form and will be loaded the item data
-     * If has clicked save2new, will be redirected to edit form, and you will be able to add a new record
-     * If has clicked save, will be redirected to the list of items
-     *
-     * @param integer $itemId 
-     */
-    protected function prepareRedirectLink($itemId = 0) {
-        
-        $task = $this->getTask();
-        $link = $this->defaultLink;
-        
-        // Prepare redirection
-        switch($task) {
-            case "apply":
-                $link .= "&view=".$this->view_item."&layout=edit";
-                if(!empty($itemId)) {
-                    $link .= "&id=" . (int)$itemId; 
-                }
-                break;
-                
-            case "save2new":
-                $link .= "&view=".$this->view_item."&layout=edit";
-                break;
-                
-            default:
-                $link .= "&view=".$this->view_list;
-                break;
-        }
-        
-        return $link;
     }
     
     /**
      * Delete an image
-     *
      */
     public function removeImage(){
         
         $app = JFactory::getApplication();
         /** @var $app JAdministrator **/
         
-        $id   = $app->input->get->getInt('id', 0);
-        $type = $app->input->get->get('type', "string");
-        if(!$id){
+        $itemId   = $app->input->get->getInt('id', 0);
+        $type     = $app->input->get->getCmd('type');
+        if(!$itemId){
             throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_IMAGE_DOES_NOT_EXIST'));
         }
+        
+        // Redirect options
+        $redirectOptions = array (
+            "view"	  => "project",
+            "item_id" => $itemId
+        );
         
         try{
             
@@ -212,24 +187,22 @@ class VipPortfolioControllerProject extends JControllerForm {
             $model = $this->getModel();
             /** @var $model VipPortfolioModelProject */
             
-            $model->removeImage($id, $type);
+            $model->removeImage($itemId, $type);
             
         } catch ( Exception $e ) {
             JLog::add($e->getMessage());
             throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
         }
         
-        $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');
-        $this->setRedirect(JRoute::_($this->defaultLink."&view=".$this->view_item."&layout=edit&id=" . (int)$id, false), $msg);
+        // Display message
+        if(strcmp("thumb", $type) == 0) {
+            $msg = JText::_('COM_VIPPORTFOLIO_THUMB_DELETED');
+        } else {
+            $msg = JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED');
+        }
+        
+        $this->displayMessage($msg, $redirectOptions);
     
-    }
-    
-    /**
-     * Cancel operations
-     *
-     */
-    public function cancel(){
-        $this->setRedirect(JRoute::_($this->defaultLink . "&view=".$this->view_list, false));
     }
     
 }

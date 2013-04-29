@@ -6,59 +6,55 @@ window.addEvent('domready', function(){
         }
     };
     
-    var extraImagesElement = document.id("itp-extra-images");
-    if(extraImagesElement) {
-    	
-    	// Remove additional images 
-        var myRequest = new Request({
-    	    url: 'index.php?option=com_vipportfolio&task=project.removeExtraImage',
-    	    method: "post",
-    	    format: "raw",
-    	    onRequest: function() {
-    	    	document.id("ajax_loader").show();
-    	    },
-    	    onSuccess: function(responseText){
-    	    	var object = JSON.decode(responseText);
-    	    	document.id("ai_box"+object.data.item_id).destroy();
-    	    	document.id("ajax_loader").hide();
+    var extraImagesElement = jQuery("#itp-extra-images");
+	
+	if(extraImagesElement) {
+		
+		jQuery('#fileupload').fileupload({
+	        dataType: 'text json',
+	        sequentialUploads: true,
+	        submit: function(event, data) {
+	        	
+	        	var formData = {
+        			thumb_width: jQuery("#extra_thumb_width").val(),
+        			thumb_height: jQuery("#extra_thumb_height").val(),
+        			format: "raw",
+        			id: jQuery("#jform_id").val()
+        		};
+        		
+        		data.formData = formData;
+        		
+	        },
+	        done: function (event, data) {
+	        	var image = data.result.data;
+	        	VipPortfolioHelper.addExtraImage(image);
+	        }
+	    });
+		
+		jQuery(extraImagesElement).on("click", ".ai_ri", function(event) {
+			
+			event.preventDefault();
+			
+			var imageId = jQuery(this).data("image-id");
+			
+			jQuery.ajax({
+				url: "index.php?option=com_vipportfolio&task=project.removeExtraImage",
+				type: "POST",
+				data: { format: "raw", id: imageId },
+				dataType: "text json"
+			}).done( function( response ) {
+				
+    	    	jQuery("#ai_box"+response.data.item_id).remove();
+    	    	jQuery("#ajax_loader").hide();
     	    	
-    	    	if(object.success) {
-    	    		VipPortfolioHelper.displayMessageSuccess(object.title, object.text);
-				} else {
-					VipPortfolioHelper.displayMessageFailure(object.title, object.text);
+    	    	if(!response.success) {
+					VipPortfolioHelper.displayMessageFailure(response.title, response.text);
 				}
-    	    }
-    	});
-        
-	    // Add event to the icon for image deleting
-        extraImagesElement.addEvent("click:relay(.ai_ri)", function(event) {
-	    	event.preventDefault();
-	    	var imageId = document.id(this).get("data-image-id");
-	    	var data = "id="+imageId;
-	    	myRequest.send(data);
-	    });
-	    
-	    // Create the file uploader
-	    var upload = new Form.Upload('file', {
-	      dropMsg: Joomla.JText._('COM_VIPPORTFOLIO_DROP_FILE', 'Drop files here'),
-	      onComplete: function(responseText){
-	        
-	    	    var object = JSON.decode(responseText);
-				
-				if(object.success) {
-					
-					Array.each(object.data, function(image, index){
-						VipPortfolioHelper.addExtraImage(image);
-					}); 
-		    		
-					VipPortfolioHelper.displayMessageSuccess(object.title, object.text);
-				} else {
-					VipPortfolioHelper.displayMessageFailure(object.title, object.text);
-				}
-				
-	      }
-	    });
-    }
+    	    	
+			});
+			
+		});
+	}
     
 });
 

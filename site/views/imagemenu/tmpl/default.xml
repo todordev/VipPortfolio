@@ -23,4 +23,13 @@
         </fieldset>
     </fields>
     
+     <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="cimgmenuOpenWidth" type="text" default="310" size="50" label="COM_VIPPORTFOLIO_OPEN_WIDTH" description="COM_VIPPORTFOLIO_OPEN_WIDTH_DESC" />
+            <field name="cimgmenuBorder" type="text" default="2" size="50" label="COM_VIPPORTFOLIO_BORDER" description="COM_VIPPORTFOLIO_BORDER_DESC" />
+            <field name="cimgmenuDuration" type="text" default="400" size="50" label="COM_VIPPORTFOLIO_DURATION" description="COM_VIPPORTFOLIO_DURATION_DESC" />
+        </fieldset>
+    </fields>
+    
 </metadata>

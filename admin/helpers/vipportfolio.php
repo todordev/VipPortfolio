@@ -13,33 +13,34 @@
 
 /**
  * It is Vip Portfolio helper class
- *
  */
 class VipPortfolioHelper {
 	
+    public static $extension         = 'com_vipportfolio';
+    
 	/**
 	 * Configure the Linkbar.
 	 *
 	 * @param	string	The name of the active view.
 	 * @since	1.6
 	 */
-	public static function addSubmenu($vName = 'cpanel') {
+	public static function addSubmenu($vName = 'dashboard') {
 	    
 	    JSubMenuHelper::addEntry(
-			JText::_('COM_VIPPORTFOLIO_CP'),
-			'index.php?option=com_vipportfolio&view=cpanel',
-			$vName == 'cpanel'
+			JText::_('COM_VIPPORTFOLIO_DASHBOARD'),
+			'index.php?option='.self::$extension.'&view=dashboard',
+			$vName == 'dashboard'
 		);
 		
 		JSubMenuHelper::addEntry(
 			JText::_('COM_VIPPORTFOLIO_CATEGORIES'),
-			'index.php?option=com_vipportfolio&view=categories',
+			'index.php?option='.self::$extension.'&view=categories',
 			$vName == 'categories'
 		);
 		
 		JSubMenuHelper::addEntry(
 			JText::_('COM_VIPPORTFOLIO_PROJECTS'),
-			'index.php?option=com_vipportfolio&view=projects',
+			'index.php?option='.self::$extension.'&view=projects',
 			$vName == 'projects'
 		);
 		
@@ -58,15 +59,15 @@ class VipPortfolioHelper {
     	$query = $db->getQuery(true);
     	$query
     	    ->select("*")
-    	    ->from("#__vp_categories")
-    	    ->order("name");
+    	    ->from($db->quoteName("#__vp_categories") . " AS a")
+    	    ->order("a.name");
     	
     	$db->setQuery($query);
     	
     	return $db->loadAssocList($index);
     }
     
-    /**
+	/**
 	 * Get all categories for using in options
 	 * 
 	 * @return array 
@@ -78,15 +79,15 @@ class VipPortfolioHelper {
     	
     	$query = $db->getQuery(true);
     	$query
-    	    ->select("id AS value, name AS text")
-    	    ->from("#__vp_categories")
-    	    ->order("name");
+    	    ->select("a.id AS value, a.name AS text")
+    	    ->from($db->quoteName("#__vp_categories") . " AS a")
+    	    ->order("a.name");
     	
     	$db->setQuery($query);
     	
     	return $db->loadAssocList();
     }
-    	
+    
     /**
      * Gets a category
      * 
@@ -97,21 +98,13 @@ class VipPortfolioHelper {
      */
     public static function getCategory($categoryId) {
         
-        $category = array(); 
-        if (!$categoryId) {
-    		return $category;
-    	}
-        
         $db     = JFactory::getDBO();
         /** @var $db JDatabaseMySQLi **/
         
-        $tableCategories = $db->quoteName("#__vp_categories");
-    	$columnId        = $db->quoteName("id");
-    	
         $query  = $db->getQuery(true);
         $query->select("*")
-              ->from($tableCategories)
-              ->where($columnId." = ". (int)$categoryId);
+              ->from($db->quoteName("#__vp_categories") . " AS a")
+              ->where("a.id = ". (int)$categoryId);
     	
         $db->setQuery($query);
         $category = $db->loadObject();
@@ -136,14 +129,13 @@ class VipPortfolioHelper {
     	
     	$query = $db->getQuery(true);
     	$query
-    	    ->select("id, name")
-    	    ->from("#__vp_categories")
-    	    ->where("id=".(int)$id);
+    	    ->select("a.id, a.name")
+    	    ->from($db->quoteName("#__vp_categories") . " AS a")
+    	    ->where("a.id=".(int)$id);
     	    
-        $db->setQuery($query);
-        $name   =  (string)$db->getOne($query);
+        $db->setQuery($query, 0, 1);
         
-        return $name;
+        return (string)$db->getResult($query);
     }
     
     /**
@@ -156,15 +148,13 @@ class VipPortfolioHelper {
         /** @var $db JDatabaseMySQLi **/
         
         $query  = $db->getQuery(true);
-        $query->select("published")
-              ->from("#__vp_categories")
-              ->where("id = ". (int)$categoryId);
+        $query->select("a.published")
+              ->from($db->quoteName("#__vp_categories") . " AS a")
+              ->where("a.id = ". (int)$categoryId);
         
         $db->setQuery($query,0,1);
         
-        $published   =   $db->loadResult();
-        
-        return (bool)$published;
+        return (bool)$db->loadResult();
     }
     
     /**
@@ -180,21 +170,17 @@ class VipPortfolioHelper {
     	$db     = JFactory::getDBO();
         /** @var $db JDatabaseMySQLi **/
     	
-    	$tableProjects   = $db->quoteName("#__vp_projects");
-    	$columnPublished = $db->quoteName("published");
-    	$columnCatId     = $db->quoteName("catid");
-    	$columnOrdering  = $db->quoteName("ordering");
-    	
         $query  = $db->getQuery(true);
-        $query->select("*")
-              ->from($tableProjects);
+        $query
+            ->select("*")
+            ->from($db->quoteName("#__vp_projects") ." AS a");
         
         // Gets only published or not published
         if (!is_null($published)){
             if ($published) {
-                $query->where($columnPublished."=1");
+                $query->where("a.published = 1");
             } else {
-                $query->where($columnPublished."=0");
+                $query->where("a.published = 0");
             }
         }
         
@@ -203,11 +189,11 @@ class VipPortfolioHelper {
             JArrayHelper::toInteger($categories);
             
             if (!empty($categories)){
-                $query->where($columnCatId." IN (" . implode(",",$categories) . ")");
+                $query->where("a.catid IN (" . implode(",",$categories) . ")");
             }
         }
                
-        $query->order($columnOrdering);
+        $query->order("a.ordering");
         $db->setQuery($query);
 
         $result = $db->loadAssocList();
@@ -218,25 +204,18 @@ class VipPortfolioHelper {
     
     public static function getExtraImages($projectId){
     	
-        $images = array();
-        
-    	settype($projectId, "integer");
-    	if (!$projectId){
-    		return $images;
-    	}
-    	
     	$db     = JFactory::getDBO();
         /** @var $db JDatabaseMySQLi **/
     	
     	$query  = $db->getQuery(true);
-        $query->select("*")
-              ->from("#__vp_images")
-              ->where("project_id =". (int)$projectId);
+        $query
+            ->select("*")
+            ->from($db->quoteName("#__vp_images") . " AS a")
+            ->where("a.project_id =". (int)$projectId);
               
         $db->setQuery($query);
-        $images = $db->loadAssocList();
         
-        return $images;
+        return $db->loadAssocList();
     }
     
 }

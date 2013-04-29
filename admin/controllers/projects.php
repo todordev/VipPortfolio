@@ -14,7 +14,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-jimport( 'joomla.application.component.controlleradmin' );
+jimport('itprism.controller.admin');
 
 /**
  * Vip Portfolio Projects Controller
@@ -22,22 +22,14 @@ jimport( 'joomla.application.component.controlleradmin' );
  * @package     ITPrism Components
  * @subpackage  Vip Portfolio
   */
-class VipPortfolioControllerProjects extends JControllerAdmin {
-    
-    // Check the table in so it can be edited.... we are done with it anyway
-    private    $defaultLink = 'index.php?option=com_vipportfolio';
-    
-    /**
-     * @var     string  The prefix to use with controller messages.
-     * @since   1.6
-     */
-    protected $text_prefix = 'COM_VIPPORTFOLIO';
+class VipPortfolioControllerProjects extends ITPrismControllerAdmin {
     
     /**
      * Proxy for getModel.
      * @since   1.6
      */
     public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
+        
         $model = parent::getModel($name, $prefix, $config);
         
         // Load the component parameters.
@@ -48,10 +40,6 @@ class VipPortfolioControllerProjects extends JControllerAdmin {
         $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
         
         return $model;
-    }
-    
-    public function backToControlPanel() {
-        $this->setRedirect( JRoute::_($this->defaultLink, false) );
     }
     
 }

@@ -46,10 +46,8 @@ class VipPortfolioViewCategoriesList extends JView {
         // Set tmpl parameter if the the page is loaded from Faceboo
         $tmpl = $app->input->get("tmpl");
         if(!empty($tmpl)) {
-            $this->tmpl       = "&tmpl=component";
+            $this->tmpl           = "&tmpl=component";
         }
-        
-        $this->version        = new VipPortfolioVersion();
         
         $this->prepareDocument();
                 
@@ -97,7 +95,7 @@ class VipPortfolioViewCategoriesList extends JView {
 
         // JavaScript and Styles
         
-        $view = $this->getName();
+        $view = JString::strtolower($this->getName());
         
         // Add template style
         $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $view . '/style.css', 'text/css', null );

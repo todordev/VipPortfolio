@@ -1,11 +1,11 @@
 <?php
 /**
  * @package      ITPrism Components
- * @subpackage   VipPorfolio
+ * @subpackage   Vip Portfolio
  * @author       Todor Iliev
  * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * VipPorfolio is free software. This version may have been modified pursuant
+ * Vip Portfolio is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
  * is derivative of works licensed under the GNU General Public License or
  * other free or open source software licenses.
@@ -20,7 +20,7 @@ jimport('joomla.application.component.modeladmin');
  * Category model.
  *
  * @package		ITPrism Components
- * @subpackage	VipPorfolio
+ * @subpackage	Vip Portfolio
  * @since		1.5
  */
 class VipPortfolioModelCategory extends JModelAdmin {
@@ -182,7 +182,7 @@ class VipPortfolioModelCategory extends JModelAdmin {
         
         // Prepare the row for saving
 		$this->prepareTable($row);
-        
+		
         $row->store();
         
         return $row->id;
@@ -263,7 +263,6 @@ class VipPortfolioModelCategory extends JModelAdmin {
             foreach( $images as $image ) {
                 // Remove the images from the filesystem
                 $file = $this->imagesFolder.DIRECTORY_SEPARATOR.$image;
-                
                 if(is_file($file)) {
                     JFile::delete($file);
                 }
@@ -413,22 +412,22 @@ class VipPortfolioModelCategory extends JModelAdmin {
                 
             switch($uploadedFile['error']){
                 case UPLOAD_ERR_INI_SIZE:
-                     throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_INI_SIZE'), 1001);
+                     throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_INI_SIZE'), 500);
                 case UPLOAD_ERR_FORM_SIZE:
-                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_FORM_SIZE'), 1001);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_FORM_SIZE'), 500);
                 case UPLOAD_ERR_PARTIAL:
-                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_PARTIAL'), 1001);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_PARTIAL'), 500);
                 case UPLOAD_ERR_NO_FILE:
-//                    throw new Exception( JText::_( 'COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_NO_FILE' ), 1001);
+//                    throw new Exception( JText::_( 'COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_NO_FILE' ), 500 );
                     break;
                 case UPLOAD_ERR_NO_TMP_DIR:
-                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_NO_TMP_DIR'), 1001);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_NO_TMP_DIR'), 500);
                 case UPLOAD_ERR_CANT_WRITE:
-                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_CANT_WRITE'), 1001);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_CANT_WRITE'), 500);
                 case UPLOAD_ERR_EXTENSION:
-                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_EXTENSION'), 1001);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_EXTENSION'), 500);
                 default:
-                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_UNKNOWN'), 1001);
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_UPLOAD_ERR_UNKNOWN'), 500);
             }
         
         }

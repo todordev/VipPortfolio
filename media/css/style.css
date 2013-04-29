@@ -19,13 +19,13 @@
 
 #itp-cpanel {
       width: 400px;
-      height: 400px;
+      height: 500px;
       float: left;
 }
 
 #itp-itprism {
     width: 400px;
-    height: 450px;
+    height: 500px;
     float: right;
 }
 
@@ -185,6 +185,9 @@ a.delInputRow {
    float: left;
 }
 
+.control-label label {
+	display: block;
+}
 /* CSS Editor */
 .vp_css_code {
 	width: 670px !important;

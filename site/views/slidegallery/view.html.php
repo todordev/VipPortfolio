@@ -12,7 +12,7 @@
  */
 
 // no direct access
-defined('_JEXEC') or die();
+defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
@@ -33,7 +33,7 @@ class VipPortfolioViewSlideGallery extends JView {
     /**
      * Display the view
      */
-    public function display($tpl = null){
+    function display($tpl = null){
         
         $app = JFactory::getApplication();
         /** @var $app JSite **/
@@ -55,8 +55,6 @@ class VipPortfolioViewSlideGallery extends JView {
         $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->params     = $this->state->params;
-        
-        $this->version    = new VipPortfolioVersion();
         
         $this->prepareDocument();
         
@@ -89,7 +87,7 @@ class VipPortfolioViewSlideGallery extends JView {
                 if($menu) {
                     $this->params->def('page_heading', $menu->title);
                 } else {
-                    $this->params->def('page_heading', JText::_('COM_VIPORTFOLIO_DEFAULT_PAGE_TITLE'));
+                    $this->params->def('page_heading', JText::_('COM_VIPPORTFOLIO_DEFAULT_PAGE_TITLE'));
                 }
             }
         }
@@ -154,27 +152,31 @@ class VipPortfolioViewSlideGallery extends JView {
 
         $view = JString::strtolower( $this->getName() );
         
-        JHTML::_('behavior.framework');
-        
-        // Add template style
+    // Add template style
+        $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $view . '/font-awesome.min.css');
         $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $view . '/style.css');
                 
         // Add script
-        $this->document->addScript('media/'.$this->option.'/js/'.$view.'/Fx.MorphList.js');
-        $this->document->addScript('media/'.$this->option.'/js/'.$view.'/slidegallery.js');
+        
+        JHTML::_('behavior.framework');
+        
+        $this->document->addScript('media/'.$this->option.'/js/jquery/jquery.min.js');
+        $this->document->addScript('media/'.$this->option.'/js/jquery/noconflict.js');
+        $this->document->addScript('media/'.$this->option.'/js/'.$view.'/jquery.slides.min.js');
         
         // Open link target
         $this->openLink = 'target="'.$this->params->get("list_open_link", "_self").'"';
         
-        $js = 'window.addEvent("domready", function(){
-          var slideshow = new SlideGallery("menu", "pictures", "loading", { 
-        	  transition: "'.$this->params->get("slidegallery_transition", "fade").'",
-        	  auto: '.$this->params->get("slidegallery_auto", false).',
-        	  autostart: '.$this->params->get("slidegallery_autostart", false).',
-        	  autointerval: '.$this->params->get("slidegallery_autointerval", 2000).',
-        	  tween: '.$this->params->get("slidegallery_tween", 700).'
-          });
-        });';
+        $effect = $this->prepareEffect();
+        
+        $js = '
+jQuery(document).ready(function() {
+	jQuery("#vp-slide-gallery").slidesjs({
+        width: '.$this->params->get("slidegallery_width", 600).',
+        height: '.$this->params->get("slidegallery_height", 400).','.
+        $effect .'
+    });
+});;';
         
         $this->document->addScriptDeclaration($js);
         
@@ -188,4 +190,68 @@ class VipPortfolioViewSlideGallery extends JView {
         }
     }
 
+    private function prepareEffect() {
+        
+        $options = "";
+        $effect = $this->params->get("slidegallery_effect", 0);
+        $speed  = $this->params->get("slidegallery_speed", 200);
+        if(strcmp("slide", $effect) == 0) {
+            
+            $options = '
+            	navigation: {
+            		active: false,
+        			effect: "slide"
+    			},
+    			pagination: {
+            		active: true,
+        			effect: "slide"
+    			},
+            	effect: {
+                  slide: {
+                    speed: '.(int)$speed.'
+                  }
+                }
+            ';
+            
+        } else if(strcmp("fade", $effect) == 0) {
+            
+            $options = '
+            	navigation: {
+            		active: false,
+        			effect: "fade"
+    			},
+    			pagination: {
+            		active: true,
+        			effect: "fade"
+    			},
+            	effect: {
+                  fade: {
+                    speed: '.(int)$speed.',
+                    crossfade: false
+                  }
+                }
+            ';
+            
+        } else if(strcmp("fade-crossfade", $effect) == 0) {
+            $options = '
+            	navigation: {
+            		active: false,
+        			effect: "fade"
+    			},
+    			pagination: {
+            		active: true,
+        			effect: "fade"
+    			},
+            	effect: {
+                  fade: {
+                    speed: '.(int)$speed.',
+                    crossfade: true
+                  }
+                }
+            ';
+        }
+        
+        return $options;
+    }
+    
 }

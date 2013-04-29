@@ -43,7 +43,7 @@ defined('_JEXEC') or die;
 </div>
 <div id="itp-itprism">
     <a href="http://itprism.com/free-joomla-extensions/others/portfolio-presentation-gallery" title="<?php echo JText::_("COM_VIPPORTFOLIO");?>" target="_blank"><img src="../media/com_vipportfolio/images/vip_portfolio.png" alt="<?php echo JText::_("COM_VIPPORTFOLIO");?>" /></a>
-    <a href="http://itprism.com" title="<?php echo JText::_("COM_VIPPORTFOLIO_PRODUCT");?>"><img src="../media/com_vipportfolio/images/product_of_itprism.png" alt="<?php echo JText::_("COM_VIPPORTFOLIO_PRODUCT");?>" /></a>
+    <a href="http://itprism.com" title="<?php echo JText::_("ITP_PRODUCT");?>"><img src="../media/com_vipportfolio/images/product_of_itprism.png" alt="<?php echo JText::_("ITP_PRODUCT");?>" /></a>
     <p><?php echo JText::_("COM_VIPPORTFOLIO_YOUR_VOTE"); ?></p>
     <p><?php echo JText::_("COM_VIPPORTFOLIO_SPONSORSHIP"); ?></p>
     <p><?php echo JText::_("COM_VIPPORTFOLIO_SUBSCRIPTION"); ?></p>
@@ -57,6 +57,10 @@ defined('_JEXEC') or die;
             <tr>
                 <td><?php echo JText::_("COM_VIPPORTFOLIO_RELEASE_DATE");?></td>
                 <td><?php echo $this->version->releaseDate?></td>
+            </tr>
+            <tr>
+                <td><?php echo JText::_("COM_VIPPORTFOLIO_ITPRISM_LIBRARY");?></td>
+                <td><?php echo $this->itprismVersion;?></td>
             </tr>
             <tr>
                 <td><?php echo JText::_("COM_VIPPORTFOLIO_COPYRIGHT");?></td>
