@@ -7,8 +7,8 @@
 	<authorUrl>http://itprism.com</authorUrl>
 	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html</license>
-	<version>3.6</version>
-	<creationDate>21 April, 2013</creationDate>
+	<version>3.7</version>
+	<creationDate>27 June, 2013</creationDate>
 	<url>http://itprism.com</url>
 	<packager>Todor Iliev</packager>
 	<packagerurl>http://www.itprism.com</packagerurl>
@@ -20,7 +20,7 @@
 	</description>
 	<files folder="packages">
 		<file type="component" 	id="com_vipportfolio" >com_vipportfolio.zip</file>
-		<file type="library"    id="lib_itprism" >lib_itprism.zip</file>
+		<file type="library"    id="lib_vipportfolio" >lib_vipportfolio.zip</file>
 	</files>
 	
 	<scriptfile>install.php</scriptfile>

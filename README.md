@@ -1,13 +1,21 @@
 Vip Portfolio Lite for Joomla! 
 ==========================
-( Version 3.6 )
---------------------------
+( Version 3.7 )
+- - -
 
 Changelog
 ---------
 
-v3.6
-----------
+###v3.7
+
+* Added Camera slide gallery
+* Added option for image scaling 
+* Added options to slide gallery view
+* Fixed projects ordering
+* Fixed some issues
+
+###v3.6
+
 * Replaced SlideGallery with other script (SlidesJS).
 * Many options were moved from component config to menu items options.
 * Added ability to upload a thumbnail.
@@ -16,8 +24,8 @@ v3.6
 * Improved usability.
 
 
-v3.5
-----------
+###v3.5
+
 * Added Slide Gallery View
 * Added more option to Scroll Gallery View - auto scroll, linkable, animation start and speed,...
 * Added filters - category,...
@@ -26,15 +34,14 @@ v3.5
 * Improved the multilanguage
 * Improved
 
-v3.4
-----------
+###v3.4
+
 * [[#1]](https://github.com/ITPrism/VipPortfolio/issues/1 "Description html strip when submit") Fixed the bug with text formating.
 * [[#3]](https://github.com/ITPrism/VipPortfolio/issues/3 "bug 'open link' new tab/same tab") Fixed the bug where links do not open in new tab.
 * Removed Facebook Layout
 * Improved
 
-v3.3
-----------
+###v3.3
 
 * New options
   - A directory of images
@@ -52,22 +59,22 @@ v3.3
 * Improved database structure
 * Improved
 
-v3.2
------------
+###v3.2
+
 * Added Image Menu Category layout
 * Fixed bug when delete images
 * Added "auto grow" to Facebook layout
 * Improved
 
-v3.1
------------
+###v3.1
+
 * Added Scroll Gallery layout
 * Upgraded Slimbox JS library to 1.8
 * Fixed some bugs
 * Improved
 
-v3.0
------------
+###v3.0
+
 * Refactored to Joomla! 1.6
 * Added Facebook layout
 * Added category description
@@ -76,8 +83,8 @@ v3.0
 * Removed projects styles - MooViewer, "Smooth Gallery", "Interface Carousel"
 * Improved
 
-v2.3
----------
+###v2.3
+
 * Added JoomFish support
 * Added new options for Tabbed category style
 * Fixed some bugs

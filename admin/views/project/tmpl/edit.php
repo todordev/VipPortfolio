@@ -18,6 +18,7 @@ defined('_JEXEC') or die;
     <form enctype="multipart/form-data"  action="<?php echo JRoute::_('index.php?option=com_vipportfolio'); ?>" method="post" name="adminForm" id="project-form" class="form-validate" >
     <div class="width-40 itp-prjform">
         <fieldset class="adminform">
+        
             <legend><?php echo JText::_("COM_VIPPORTFOLIO_PROJECT_INFORMATION"); ?></legend>
             <ul class="adminformlist">
                 <li><?php echo $this->form->getLabel('title'); ?>
@@ -50,11 +51,13 @@ defined('_JEXEC') or die;
             <div class="clr"></div>
             <?php echo $this->form->getInput('description'); ?>
             <div class="clr"></div>
-            
                 
         </fieldset>
         
+        <fieldset class="adminform">
+            <legend><?php echo JText::_("COM_VIPPORTFOLIO_RESIZE_OPTIONS"); ?></legend>
         <?php echo $this->loadTemplate("resize");?>
+        </fieldset>
         
     </div>
     
@@ -102,6 +105,19 @@ defined('_JEXEC') or die;
     				<input type="text" class="inputbox" value="50" id="extra_thumb_height" name="extra_thumb_height">		
     			</div>
         	</div>
+        	<div class="control-group">
+				<div class="control-label">
+    				<label for="extra_thumb_scale" id="extra_thumb_scale-lbl"><?php echo JText::_("COM_VIPPORTFOLIO_EXTRA_THUMB_SCALE");?></label>			
+				</div>
+				<div class="clearfix"></div>
+				<div class="controls">
+				    <select class="inputbox" name="extra_thumb_scale" id="extra_thumb_scale">
+                    	<option value="1"><?php echo JText::_("COM_VIPPORTFOLIO_FILL");?></option>
+                    	<option value="2" selected="selected"><?php echo JText::_("COM_VIPPORTFOLIO_INSIDE");?></option>
+                    	<option value="3"><?php echo JText::_("COM_VIPPORTFOLIO_OUTSIDE");?></option>
+                    </select>
+    			</div>
+        	</div>
         	<div class="clearfix"></div>
         	
            	<table class="table table-bordered" id="itp-extra-images">
@@ -112,7 +128,7 @@ defined('_JEXEC') or die;
                            <img src="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['thumb']; ?>" data-image-url="<?php echo "../" . $this->params->get("images_directory", "images/vipportfolio") . "/". $image['image']; ?>" class="ai-imglink"/>
                        </td>
                        <td class="span2">
-                       		<button class="btn ai_ri" data-image-id="<?php echo $image['id'];?>" ><?php echo JText::_("COM_VIPPORTFOLIO_REMOVE");?></button>
+                       		<button class="btn btn-danger ai_ri" data-image-id="<?php echo $image['id'];?>" ><?php echo JText::_("COM_VIPPORTFOLIO_REMOVE");?></button>
                        </td>
                    </tr>
                    <?php }?>

@@ -118,7 +118,7 @@ class VipPortfolioModelProjects extends JModelList {
         );
         
         $query->from($db->quoteName('#__vp_projects') .' AS a');
-        $query->innerJoin($db->quoteName('#__vp_categories') .' AS b ON a.catid = b.id');
+        $query->leftJoin($db->quoteName('#__vp_categories') .' AS b ON a.catid = b.id');
 
         // Filter by category
         $categoryId = $this->getState('filter.category_id');

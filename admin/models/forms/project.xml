@@ -109,6 +109,15 @@
             default="300"
         />
         
+        <field name="thumb_scale" type="list" class="inputbox"
+            label="COM_VIPPORTFOLIO_THUMB_SCALE_OPTION"
+            description="COM_VIPPORTFOLIO_SCALE_DESC"
+            default="2" >
+            <option value="1">COM_VIPPORTFOLIO_FILL</option>
+            <option value="2">COM_VIPPORTFOLIO_INSIDE</option>
+            <option value="3">COM_VIPPORTFOLIO_OUTSIDE</option>
+        </field>
+        
         <field name="resize_image"  type="checkbox" 
             label="COM_VIPPORTFOLIO_IMAGE_RESIZE"
             description="COM_VIPPORTFOLIO_IMAGE_RESIZE_DESC" 
@@ -129,6 +138,15 @@
             filter="int" 
             default="600"
         />
+        
+        <field name="image_scale" type="list" class="inputbox"
+            label="COM_VIPPORTFOLIO_IMAGE_SCALE_OPTION"
+            description="COM_VIPPORTFOLIO_SCALE_DESC"
+            default="2" >
+            <option value="1">COM_VIPPORTFOLIO_FILL</option>
+            <option value="2">COM_VIPPORTFOLIO_INSIDE</option>
+            <option value="3">COM_VIPPORTFOLIO_OUTSIDE</option>
+        </field>
         
     </fields>
     

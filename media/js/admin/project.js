@@ -18,6 +18,7 @@ window.addEvent('domready', function(){
 	        	var formData = {
         			thumb_width: jQuery("#extra_thumb_width").val(),
         			thumb_height: jQuery("#extra_thumb_height").val(),
+        			thumb_scale: jQuery("#extra_thumb_scale").val(),
         			format: "raw",
         			id: jQuery("#jform_id").val()
         		};

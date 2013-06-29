@@ -51,22 +51,20 @@ class VipPortfolioModelLineal extends JModelList {
         $app = JFactory::getApplication();
         /** @var $app JSite **/
         
-        $this->setState('filter.catid', $app->input->getInt('catid'));
-        
         $params     = $app->getParams();
         $this->setState('params', $params);
 
-        $limit      = 1;
-        $this->setState('list.limit', $limit);
+        $value      = $app->input->getInt('catid');
+        $this->setState('filter.catid', $value);
         
-        $limitStart = $app->input->getInt('limitstart', 0);
-        $this->setState('list.start', $limitStart);
+        $this->setState('list.limit', 1);
         
-        $orderCol   = 'a.ordering';
-        $this->setState('list.ordering', $orderCol);
+        $value      = $app->input->getInt('limitstart', 0);
+        $this->setState('list.start', $value);
         
-        $listOrder  = 'ASC';
-        $this->setState('list.direction', $listOrder);
+        $this->setState('list.ordering', 'a.ordering');
+        
+        $this->setState('list.direction', 'ASC');
         
     }
     
@@ -106,14 +104,13 @@ class VipPortfolioModelLineal extends JModelList {
         // Select the required fields from the table.
         $query->select(
             $this->getState(
-            'list.select', 
-            'a.id, a.title, a.description, a.url, ' . 
-            'a.catid, a.thumb, a.image, a.published, a.ordering '));
+                'list.select', 
+                'a.id, a.title, a.description, a.url, ' . 
+                'a.catid, a.thumb, a.image, a.published, a.ordering '
+            )
+        );
         
-        $query->from('#__vp_projects AS a');
-        
-        // Use article state if badcats.id is null, otherwise, force 0 for unpublished
-        $query->where('a.published = 1');
+        $query->from($db->quoteName('#__vp_projects') .' AS a');
         
         // Filter by a single or group of categories
         $categoryId = $this->getState('filter.catid');
@@ -121,13 +118,22 @@ class VipPortfolioModelLineal extends JModelList {
             $query->where('a.catid = ' . (int)$categoryId);
         }
         
-        // Add the list ordering clause.
-        $orderCol   = $this->getState('list.ordering',  'a.ordering');
-        $orderDirn  = $this->getState('list.direction', 'ASC');
+        // Filter by state
+        $query->where('a.published = 1');
         
-        $query->order($db->escape($orderCol.' '.$orderDirn));
+        // Add the list ordering clause.
+        $orderString = $this->getOrderString();
+        $query->order($db->escape($orderString));
         
         return $query;
+    }
+    
+    protected function getOrderString() {
+    
+        $orderCol   = $this->getState('list.ordering',  'a.ordering');
+        $orderDirn  = $this->getState('list.direction', 'ASC');
+    
+        return $orderCol.' '.$orderDirn;
     }
     
 }

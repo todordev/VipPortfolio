@@ -22,13 +22,13 @@ defined('_JEXEC') or die;
             <?php echo JHtml::_('grid.id', $i, $item->id); ?>
         </td>
 		<td >
-			<a href="index.php?option=com_vipportfolio&amp;view=project&amp;layout=edit&amp;id=<?php echo $item->id;?>" ><?php echo $item->title; ?></a>
+			<a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&view=project&layout=edit&id=".$item->id);?>" ><?php echo $item->title; ?></a>
 		</td>
 		<td width="150" align="center">
 		   <?php 
 		   if(!empty($item->category_name)) {
 		   ?>
-           <a href="index.php?option=com_vipportfolio&amp;view=category&amp;layout=edit&amp;id=<?php echo $item->catid;?>" ><?php echo $item->category_name; ?></a>
+           <a href="<?php  echo JRoute::_("index.php?option=com_vipportfolio&view=category&layout=edit&id=".$item->catid);?>" ><?php echo $item->category_name; ?></a>
            <?php } else {
                echo JText::_("COM_VIPPORTFOLIO_UNCATEGORISED");
 		   }?>

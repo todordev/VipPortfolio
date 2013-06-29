@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="COM_VIPPORTFOLIO_VIEW_CAMERA_TITLE">
+        <message>
+            <![CDATA[COM_VIPPORTFOLIO_VIEW_CAMERA_DESC]]>
+        </message>
+    </layout>
+
+    <!-- Add fields to the request variables for the layout. -->
+    <fields name="request">
+        <fieldset name="request" addfieldpath="/administrator/components/com_vipportfolio/models/fields" >
+            <field name="id" type="vpcategories"
+                label="COM_VIPPORTFOLIO_CHOOSE_CATEGORY_LABEL"
+                description="COM_VIPPORTFOLIO_CHOOSE_CATEGORY_DESC"
+            />
+        </fieldset>
+    </fields>
+
+    <!-- Add fields to the parameters object for the layout. -->
+    <fields name="params">
+        <fieldset name="basic">
+            <field name="camera_alignment" type="list" default="center" label="COM_VIPPORTFOLIO_ALIGNMENT" description="COM_VIPPORTFOLIO_CAMERA_ALIGNMENT_DESC">
+                <option value="topLeft">topLeft</option>
+                <option value="topCenter">topCenter</option>
+                <option value="topRight">topRight</option>
+                <option value="centerLeft">centerLeft</option>
+                <option value="center">center</option>
+                <option value="centerRight">centerRight</option>
+                <option value="bottomLeft">bottomLeft</option>
+                <option value="bottomCenter">bottomCenter</option>
+                <option value="bottomRight">bottomRight</option>
+            </field>
+            <field name="camera_auto_advance" type="radio" default="1" label="COM_VIPPORTFOLIO_AUTO_ADVANCE" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            
+            <field name="camera_bar_direction" type="list" default="leftToRight" label="COM_VIPPORTFOLIO_BAR_DIRECTION" description="COM_VIPPORTFOLIO_CAMERA_BAR_DIRECTION_DESC">
+                <option value="leftToRight">leftToRight</option>
+                <option value="rightToLeft">rightToLeft</option>
+                <option value="topToBottom">topToBottom</option>
+                <option value="bottomToTop">bottomToTop</option>
+            </field>
+            <field name="camera_bar_position" type="list" default="bottom" label="COM_VIPPORTFOLIO_BAR_POSITION" description="COM_VIPPORTFOLIO_CAMERA_BAR_POSITION_DESC">
+                <option value="left">left</option>
+                <option value="right">right</option>
+                <option value="top">top</option>
+                <option value="bottom">bottom</option>
+            </field>
+            
+            <field name="camera_fx" type="list" default="random" label="COM_VIPPORTFOLIO_EFFECT" description="COM_VIPPORTFOLIO_CAMERA_EFFECT_DESC" >
+	            <option value="random">random</option>
+	            <option value="simpleFade">simpleFade</option>
+	            <option value="curtainTopLeft">curtainTopLeft</option>
+	            <option value="curtainTopRight">curtainTopRight</option>
+	            <option value="curtainBottomLeft">curtainBottomLeft</option>
+	            <option value="curtainBottomRight">curtainBottomRight</option>
+	            <option value="curtainSliceLeft">curtainSliceLeft</option>
+	            <option value="curtainSliceRight">curtainSliceRight</option>
+	            <option value="blindCurtainTopLeft">blindCurtainTopLeft</option>
+	            <option value="blindCurtainTopRight">blindCurtainTopRight</option>
+	            <option value="blindCurtainBottomLeft">blindCurtainBottomLeft</option>
+	            <option value="blindCurtainBottomRight">blindCurtainBottomRight</option>
+	            <option value="blindCurtainSliceBottom">blindCurtainSliceBottom</option>
+	            <option value="blindCurtainSliceTop">blindCurtainSliceTop</option>
+	            <option value="stampede">stampede</option>
+	            <option value="mosaic">mosaic</option>
+	            <option value="mosaicReverse">mosaicReverse</option>
+	            <option value="mosaicRandom">mosaicRandom</option>
+	            <option value="mosaicSpiral">mosaicSpiral</option>
+	            <option value="mosaicSpiralReverse">mosaicSpiralReverse</option>
+	            <option value="topLeftBottomRight">topLeftBottomRight</option>
+	            <option value="bottomRightTopLeft">bottomRightTopLeft</option>
+	            <option value="bottomLeftTopRight">bottomLeftTopRight</option>
+	            <option value="bottomLeftTopRight">bottomLeftTopRight</option>
+	            <option value="scrollLeft">scrollLeft</option>
+	            <option value="scrollRight">scrollRight</option>
+	            <option value="scrollHorz">scrollHorz</option>
+	            <option value="scrollBottom">scrollBottom</option>
+	            <option value="scrollTop">scrollTop</option>
+	        </field>
+	        
+	        <field name="camera_navigation" type="radio" default="1" label="COM_VIPPORTFOLIO_NAVIGATION" description="COM_VIPPORTFOLIO_CAMERA_NAVIGATION_DESC" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+	        <field name="camera_navigation_hover" type="radio" default="1" label="COM_VIPPORTFOLIO_NAVIGATION_HOVER" description="COM_VIPPORTFOLIO_CAMERA_NAVIGATION_HOVER_DESC" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="camera_pagination" type="radio" default="1" label="COM_VIPPORTFOLIO_PAGINATION" description="COM_VIPPORTFOLIO_CAMERA_PAGINATION_DESC" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="camera_play_pause" type="radio" default="1" label="COM_VIPPORTFOLIO_PLAY_PAUSE" description="COM_VIPPORTFOLIO_CAMERA_PLAY_PAUSE_DESC" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field name="camera_pause_click" type="radio" default="1" label="COM_VIPPORTFOLIO_PAUSE_ON_CLICK" description="COM_VIPPORTFOLIO_CAMERA_PAUSE_ON_CLICK_DESC" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            
+            <field name="camera_time" type="text" default="7000" label="COM_VIPPORTFOLIO_TIME" description="COM_VIPPORTFOLIO_CAMERA_TIME_DESC" />
+	        <field name="camera_trans_period" type="text" default="1500" label="COM_VIPPORTFOLIO_TRANS_PERIOD" description="COM_VIPPORTFOLIO_CAMERA_TRANS_PERIOD_DESC" />
+	        
+	        <field name="camera_linkable" type="radio" default="0" label="COM_VIPPORTFOLIO_LINK" description="COM_VIPPORTFOLIO_CAMERA_LINK_DESC" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            
+            <field name="camera_link_target" type="list" default="_blank" label="COM_VIPPORTFOLIO_LINK_TARGET" description="COM_VIPPORTFOLIO_CAMERA_LINK_TARGET_DESC">
+                <option value="_blank">_blank</option>
+                <option value="_new">_new</option>
+                <option value="_parent">_parent</option>
+                <option value="_self">_self</option>
+                <option value="_top">_top</option>
+            </field>
+            
+            <field name="camera_thumbnails" type="radio" default="0" label="COM_VIPPORTFOLIO_THUMBNAILS" description="COM_VIPPORTFOLIO_CAMERA_THUMBNAILS_DESC" class="btn-group">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            
+        </fieldset>
+    </fields>
+</metadata>

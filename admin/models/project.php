@@ -111,8 +111,10 @@ class VipPortfolioModelProject extends JModelAdmin {
             $data->resize = array(
                 "thumb_width"  => $app->getUserState($this->option.".project.thumb_width", 200),
                 "thumb_height" => $app->getUserState($this->option.".project.thumb_height", 300),
+                "thumb_scale"  => $app->getUserState($this->option.".project.thumb_scale", JImage::SCALE_INSIDE),
                 "image_width"  => $app->getUserState($this->option.".project.image_width", 500),
-                "image_height" => $app->getUserState($this->option.".project.image_height", 600)
+                "image_height" => $app->getUserState($this->option.".project.image_height", 600),
+                "image_scale"  => $app->getUserState($this->option.".project.image_scale", JImage::SCALE_INSIDE)
             );
             
             // Prime some default values.
@@ -163,7 +165,6 @@ class VipPortfolioModelProject extends JModelAdmin {
     
 	/**
 	 * Prepare and sanitise the table prior to saving.
-	 *
 	 * @since	1.6
 	 */
 	protected function prepareTable(&$table, $data) {
@@ -209,7 +210,7 @@ class VipPortfolioModelProject extends JModelAdmin {
 				$query  = $db->getQuery(true);
 				$query
 				    ->select("MAX(ordering)")
-				    ->from("#__vq_quotes");
+				    ->from("#__vp_projects");
 				
 			    $db->setQuery($query, 0, 1);
 				$max   = $db->loadResult();
@@ -220,7 +221,7 @@ class VipPortfolioModelProject extends JModelAdmin {
 		
 	    // Fix magic qutoes
 	    if( get_magic_quotes_gpc() ) {
-            $table->alias       = stripcslashes($table->title);
+            $table->title       = stripcslashes($table->title);
             $table->description = stripcslashes($table->description);
             $table->url         = stripcslashes($table->url);
         }
@@ -453,23 +454,27 @@ class VipPortfolioModelProject extends JModelAdmin {
         $resizeImage = JArrayHelper::getValue($options, "resize_image", false);
         $width       = JArrayHelper::getValue($options, "image_width", 500);
         $height      = JArrayHelper::getValue($options, "image_height", 600);
+        $scale       = JArrayHelper::getValue($options, "image_scale", JImage::SCALE_INSIDE);
         
         if(!empty($resizeImage)) {
             $app->setUserState($this->option.".project.image_width", $width);
             $app->setUserState($this->option.".project.image_height", $height);
-            $this->resizeImage($imageName, $width, $height);
+            $app->setUserState($this->option.".project.image_scale", $scale);
+            $this->resizeImage($imageName, $width, $height, $scale);
         }
         
         // Create thumbnail
         $createThumb = JArrayHelper::getValue($options, "create_thumb", false);
         $width       = JArrayHelper::getValue($options, "thumb_width", 200);
         $height      = JArrayHelper::getValue($options, "thumb_height", 300);
+        $scale       = JArrayHelper::getValue($options, "thumb_scale", JImage::SCALE_INSIDE);
         
         $thumbName   = null;
         if(!empty($createThumb)) {
             $app->setUserState($this->option.".project.thumb_width", $width);
             $app->setUserState($this->option.".project.thumb_height", $height);
-            $thumbName = $this->createThumb($imageName, $width, $height, "thumb_");
+            $app->setUserState($this->option.".project.thumb_scale", $scale);
+            $thumbName = $this->createThumb($imageName, $width, $height, "thumb_", $scale);
         }
         
         return $names = array(
@@ -511,7 +516,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         
     }
     
-    protected function resizeImage($fileName, $width, $height) {
+    protected function resizeImage($fileName, $width, $height, $scale = JImage::SCALE_INSIDE) {
         
         // Make thumbnail
         $newFile = $this->imagesFolder.DIRECTORY_SEPARATOR.$fileName;
@@ -526,7 +531,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         }
         
         // Resize the file
-        $image->resize($width, $height, false);
+        $image->resize($width, $height, false, $scale);
         
         switch ($ext) {
 			case "gif":
@@ -546,7 +551,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         
     }
     
-    protected function createThumb($fileName, $width, $heigh, $prefix = "thumb_" ) {
+    protected function createThumb($fileName, $width, $heigh, $prefix = "thumb_", $scale = JImage::SCALE_INSIDE) {
         
         // Make thumbnail
         $newFile = $this->imagesFolder.DIRECTORY_SEPARATOR.$fileName;
@@ -560,7 +565,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         }
         
         // Resize the file as a new object
-        $thumb     = $image->resize($width, $heigh, true);
+        $thumb     = $image->resize($width, $heigh, true, $scale);
         
         $code      = uniqid(rand(0, 10000));
         $thumbName = $prefix . substr(JApplication::getHash($code), 0, 6) . ".".$ext;
@@ -585,7 +590,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         return $thumbName;
     }
     
-    public function uploadExtraImages($files, $thumbWidth = 50, $thumbHeight = 50){
+    public function uploadExtraImages($files, $thumbWidth = 50, $thumbHeight = 50, $scale = JImage::SCALE_INSIDE){
         
         $images = array();
         
@@ -619,7 +624,7 @@ class VipPortfolioModelProject extends JModelAdmin {
                 
                 $names = array("thumb" =>"", "image" =>"");
                 $names['image'] = $imageName;
-                $names["thumb"] = $this->createThumb($imageName, $thumbWidth, $thumbHeight, "extra_thumb_");
+                $names["thumb"] = $this->createThumb($imageName, $thumbWidth, $thumbHeight, "extra_thumb_", $scale);
                 
                 $images[] = $names;
                 

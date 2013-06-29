@@ -82,7 +82,7 @@ class pkg_vipPortfolioInstallerScript {
         
         // Create images folder
         if(!is_dir($this->imagesPath)){
-            VipPortfolioInstallHelper::createImagesFolder($this->imagesPath);
+            VipPortfolioInstallHelper::createFolder($this->imagesPath);
         }
         
         // Start table with the information
@@ -95,7 +95,7 @@ class pkg_vipPortfolioInstallerScript {
         $title  = JText::_("COM_VIPPORTFOLIO_IMAGE_FOLDER");
         $info   = $this->imagesFolder;
         if(!is_dir($this->imagesPath)) {
-            $result = array("type" => "important", "text" => JText::_("JON"));
+            $result = array("type" => "important", "text" => JText::_("JNO"));
         } else {
             $result = array("type" => "success"  , "text" => JText::_("JYES"));
         }
@@ -105,7 +105,7 @@ class pkg_vipPortfolioInstallerScript {
         $title  = JText::_("COM_VIPPORTFOLIO_WRITABLE_FOLDER");
         $info   = $this->imagesFolder;
         if(!is_writable($this->imagesPath)) {
-            $result = array("type" => "important", "text" => JText::_("JON"));
+            $result = array("type" => "important", "text" => JText::_("JNO"));
         } else {
             $result = array("type" => "success"  , "text" => JText::_("JYES"));
         }
@@ -143,6 +143,21 @@ class pkg_vipPortfolioInstallerScript {
         }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
+        // Installed extensions
+        VipPortfolioInstallHelper::addRowHeading(JText::_("COM_VIPPORTFOLIO_INSTALLED_EXTENSIONS"));
+        
+        // Display result about verification of installed ITPrism Library
+        jimport("itprism.version");
+        $title  = JText::_("COM_VIPPORTFOLIO_ITPRISM_LIBRARY");
+        $info   = "";
+        if( !class_exists("ITPrismVersion") ) {
+            $info   = JText::_("COM_VIPPORTFOLIO_ITPRISM_LIBRARY_DOWNLOAD");
+            $result = array("type" => "important", "text" => JText::_("JNO"));
+        } else {
+            $result = array("type" => "success", "text" => JText::_("JYES"));
+        }
+        VipPortfolioInstallHelper::addRow($title, $result, $info);
+        
         // End table with the information
         VipPortfolioInstallHelper::endTable();
         
@@ -158,6 +173,14 @@ class pkg_vipPortfolioInstallerScript {
      * Do some things after upgrading
      */
     private function upgradeExtension() {
+        
+        // Load version class from the library
+        jimport('vipportfolio.version');
+        
+        // If class exists, the version is larger than 3.3
+        if(class_exists("VipPortfolioVersion")) {
+            return;
+        }
         
         JLoader::register("VipPortfolioVersion", VIPPORTFOLIO_PATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "libraries" . DIRECTORY_SEPARATOR ."version.php");
 

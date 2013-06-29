@@ -51,25 +51,24 @@ class VipPortfolioModelList extends JModelList {
         $app = JFactory::getApplication();
         /** @var $app JSite **/
         
-        $this->setState('filter.catid', $app->input->getInt('catid'));
-        
         $params = $app->getParams();
         $this->setState('params', $params);
 
-        $listLimit = $params->get("pp_page", 0);
-        if(!$listLimit) {
-            $listLimit = $app->input->getInt('limit', $app->getCfg('list_limit', 0));
+        $value = $app->input->getInt('catid');
+        $this->setState('filter.catid', $value);
+        
+        $value = $params->get("pp_page", 0);
+        if(!$value) {
+            $value = $app->input->getInt('limit', $app->getCfg('list_limit', 20));
         }
-        $this->setState('list.limit', $listLimit);
+        $this->setState('list.limit', $value);
         
-        $limitStart = $app->input->getInt('limitstart', 0);
-        $this->setState('list.start', $limitStart);
+        $value = $app->input->getInt('limitstart', 0);
+        $this->setState('list.start', $value);
         
-        $orderCol = 'a.ordering';
-        $this->setState('list.ordering', $orderCol);
+        $this->setState('list.ordering', 'a.ordering');
         
-        $listOrder = 'ASC';
-        $this->setState('list.direction', $listOrder);
+        $this->setState('list.direction', 'ASC');
         
     }
     
@@ -100,7 +99,6 @@ class VipPortfolioModelList extends JModelList {
      */
     public function getListQuery(){
         
-        // Create a new query object.
         $db     = $this->getDbo();
         /** @var $db JDatabaseMySQLi **/
         
@@ -111,26 +109,34 @@ class VipPortfolioModelList extends JModelList {
             $this->getState(
             'list.select', 
             'a.id, a.title, a.description, a.url, ' . 
-            'a.catid, a.thumb, a.image, a.published, a.ordering '));
+            'a.catid, a.thumb, a.image, a.published, a.ordering'
+            )
+        );
         
-        $query->from('#__vp_projects AS a');
+        $query->from($db->quoteName('#__vp_projects') .' AS a');
         
-        // Use article state if badcats.id is null, otherwise, force 0 for unpublished
-        $query->where('a.published = 1');
-        
-        // Filter by a single or group of categories
+        // Filter by category
         $categoryId = $this->getState('filter.catid');
         if(is_numeric($categoryId)){
             $query->where('a.catid = ' . (int)$categoryId);
         }
         
-        // Add the list ordering clause.
-        $orderCol   = $this->getState('list.ordering',  'a.ordering');
-        $orderDirn  = $this->getState('list.direction', 'ASC');
+        // Filter by state
+        $query->where('a.published = 1');
         
-        $query->order($db->escape($orderCol.' '.$orderDirn));
+        // Add the list ordering clause.
+        $orderString = $this->getOrderString();
+        $query->order($db->escape($orderString));
         
         return $query;
+    }
+    
+    protected function getOrderString() {
+    
+        $orderCol   = $this->getState('list.ordering',  'a.ordering');
+        $orderDirn  = $this->getState('list.direction', 'ASC');
+    
+        return $orderCol.' '.$orderDirn;
     }
     
 }

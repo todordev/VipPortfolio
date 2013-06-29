@@ -11,6 +11,9 @@
  * other free or open source software licenses.
  */
 
+// no direct access
+defined('_JEXEC') or die;
+
 /**
  * This class contains methods used 
  * in the installation process of the extension.
@@ -63,17 +66,17 @@ class VipPortfolioInstallHelper {
         echo "</table></div>";
     }
     
-    public static function createImagesFolder($imagesPath) {
+    public static function createFolder($path) {
         
         // Create image folder
-        if(true !== JFolder::create($imagesPath)) {
-            JLog::add(JText::sprintf("COM_VIPPORTFOLIO_ERROR_CANNOT_CREATE_FOLDER", $imagesPath));
+        if(true !== JFolder::create($path)) {
+            JLog::add(JText::sprintf("COM_VIPPORTFOLIO_ERROR_CANNOT_CREATE_FOLDER", $path));
         } else {
             
             // Copy index.html
-            $indexFile = $imagesPath . DIRECTORY_SEPARATOR ."index.html";
+            $indexFile = $path . DIRECTORY_SEPARATOR ."index.html";
             $html = '<html><body bgcolor="#FFFFFF"></body></html>';
-            if(true !== JFile::write($indexFile,$html)) {
+            if(true !== JFile::write($indexFile, $html)) {
                 JLog::add(JText::sprintf("COM_VIPPORTFOLIO_ERROR_CANNOT_SAVE_FILE", $indexFile));
             }
             

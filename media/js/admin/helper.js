@@ -48,7 +48,7 @@ var VipPortfolioHelper = {
     	// Icon for image removing
     	var elBtnRemove = jQuery('<button/>', {
 		    "text": Joomla.JText._('COM_VIPPORTFOLIO_REMOVE'),
-		    "class": "btn ai_ri",
+		    "class": "btn btn-danger ai_ri",
 		    "data-image-id": image.id
 		});
 

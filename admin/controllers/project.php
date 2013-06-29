@@ -80,8 +80,8 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
         
         // Redirect options
         $redirectOptions = array (
-            "task"	  => $this->getTask(),
-            "item_id" => $itemId
+            "task"	 => $this->getTask(),
+            "id"     => $itemId
         );
         
         $model = $this->getModel();
@@ -99,8 +99,7 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
         
         // Check for validation errors.
         if($validData === false){
-            $messages = $form->getErrors();
-            $this->displayWarning($messages, $redirectOptions);
+            $this->displayWarning($form->getErrors(), $redirectOptions);
             return;
         }
         
@@ -142,17 +141,27 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
                 
             }
             
-            $redirectOptions["item_id"] = $model->save($validData);
+            $redirectOptions["id"] = $model->save($validData);
         
         } catch ( Exception $e ) {
-            JLog::add($e->getMessage());
             
-            // Problem with uploading, so set a message and redirect to pages
-            if($e->getCode() == 1001) {
-                $this->displayWarning($e->getMessage(), $redirectOptions);
-                return;
-            } else { // System error
-                throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'), 500);
+            $code = $e->getCode();
+            switch($code) {
+            
+                case ITPrismErrors::CODE_WARNING:
+                    $this->displayWarning($e->getMessage(), $redirectOptions);
+                    return;
+                break;
+            
+                case ITPrismErrors::CODE_HIDDEN_WARNING:
+                    $this->displayWarning(JText::_("COM_VIPPORTFOLIO_ERROR_FILE_CANT_BE_UPLOADED"), $redirectOptions);
+                    return;
+                break;
+            
+                default:
+                    JLog::add($e->getMessage());
+                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
+                break;
             }
             
         }
@@ -177,8 +186,8 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
         
         // Redirect options
         $redirectOptions = array (
-            "view"	  => "project",
-            "item_id" => $itemId
+            "view"	 => "project",
+            "id"     => $itemId
         );
         
         try{

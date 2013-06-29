@@ -50,10 +50,11 @@ class VipPortfolioModelSlideGallery extends JModelList {
         $app = JFactory::getApplication();
         /** @var $app JSite **/
         
-        $this->setState('filter.catid', $app->input->getInt('catid'));
-        
         $params = $app->getParams();
         $this->setState('params', $params);
+        
+        $value = $app->input->getInt('id');
+        $this->setState('filter.catid', $value);
 
         $orderCol = $app->input->getCmd('filter_order', 'a.ordering');
         if(!in_array($orderCol, $this->filter_fields)){

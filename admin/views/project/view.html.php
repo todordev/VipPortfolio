@@ -21,6 +21,7 @@ class VipPortfolioViewProject extends JView {
     protected $state;
     protected $item;
     protected $form;
+    protected $params;
     
     protected $documentTitle;
     protected $option;
@@ -47,7 +48,6 @@ class VipPortfolioViewProject extends JView {
         }
         $this->extraImages = $extraImages;
         
-        // Prepare actions, behaviors, scritps and document
         $this->addToolbar();
         $this->setDocument();
         

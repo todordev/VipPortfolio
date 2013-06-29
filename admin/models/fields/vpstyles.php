@@ -45,7 +45,8 @@ class JFormFieldVpStyles extends JFormFieldList {
             array("value"=>'list', "text"=>'List View'),
             array("value"=>'lineal', "text"=>'Lineal View'),
             array("value"=>'scrollgallery', "text"=>'ScrollGallery View'),
-            array("value"=>'slidegallery', "text"=>'SlideGallery View')
+            array("value"=>'slidegallery', "text"=>'SlideGallery View'),
+            array("value"=>'camera', "text"=>'Camera View')
         );
         
         // Merge any additional options in the XML definition.

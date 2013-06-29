@@ -84,6 +84,7 @@ class VipPortfolioControllerProject extends JController {
         );
         
         echo json_encode($response);
+        JFactory::getApplication()->close();
     }
     
     public function addExtraImage() {
@@ -102,6 +103,8 @@ class VipPortfolioControllerProject extends JController {
             $thumbHeight = 50;
         }
         
+        $scale     = $app->input->post->get("thumb_scale", JImage::SCALE_INSIDE);
+        
         $files       = $app->input->files->get("files");
         
         if(!$files) {
@@ -112,7 +115,7 @@ class VipPortfolioControllerProject extends JController {
             );
                 
             echo json_encode($response);
-            return;
+            JFactory::getApplication()->close();
         }
         
         try {
@@ -125,7 +128,7 @@ class VipPortfolioControllerProject extends JController {
             
             // Get the model
             $model  = $this->getModel();
-            $images = $model->uploadExtraImages($files, $thumbWidth, $thumbHeight);
+            $images = $model->uploadExtraImages($files, $thumbWidth, $thumbHeight, $scale);
             $images = $model->storeExtraImage($images, $itemId);
             
         } catch ( Exception $e ) {
@@ -141,6 +144,7 @@ class VipPortfolioControllerProject extends JController {
         );
         
         echo json_encode($response);
+        JFactory::getApplication()->close();
     }
     
 

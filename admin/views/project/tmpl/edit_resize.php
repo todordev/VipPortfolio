@@ -15,7 +15,6 @@
 defined('_JEXEC') or die;
 $resize = $this->form->getGroup('resize');
 ?>
-<h3><?php echo JText::_('COM_VIPPORTFOLIO_RESIZE_OPTIONS');?></h3>
 <?php foreach ($this->form->getGroup('resize') as $field) : ?>
 	<div class="control-group">
 		<?php if (!$field->hidden) : ?>

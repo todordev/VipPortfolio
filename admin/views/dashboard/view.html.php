@@ -27,6 +27,7 @@ class VipPortfolioViewDashboard extends JView {
     
     public function display($tpl = null){
         
+        jimport("vipportfolio.version");
         $this->version = new VipPortfolioVersion();
         
         // Load ITPrism library version
@@ -38,11 +39,11 @@ class VipPortfolioViewDashboard extends JView {
             $this->itprismVersion = $itprismVersion->getShortVersion();
         }
         
-        $this->addToolbar();
-        $this->setDocument();
-        
         // Add submenu
         VipPortfolioHelper::addSubmenu($this->getName());
+        
+        $this->addToolbar();
+        $this->setDocument();
         
         parent::display($tpl);
     }

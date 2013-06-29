@@ -33,7 +33,7 @@ class VipPortfolioViewSlideGallery extends JView {
     /**
      * Display the view
      */
-    function display($tpl = null){
+    public function display($tpl = null){
         
         $app = JFactory::getApplication();
         /** @var $app JSite **/
@@ -160,23 +160,21 @@ class VipPortfolioViewSlideGallery extends JView {
         
         JHTML::_('behavior.framework');
         
-        $this->document->addScript('media/'.$this->option.'/js/jquery/jquery.min.js');
-        $this->document->addScript('media/'.$this->option.'/js/jquery/noconflict.js');
         $this->document->addScript('media/'.$this->option.'/js/'.$view.'/jquery.slides.min.js');
         
-        // Open link target
-        $this->openLink = 'target="'.$this->params->get("list_open_link", "_self").'"';
-        
         $effect = $this->prepareEffect();
+        
+        $play   = $this->preparePlay();
         
         $js = '
 jQuery(document).ready(function() {
 	jQuery("#vp-slide-gallery").slidesjs({
+        start: '.$this->params->get("slidegallery_start", 1).',
         width: '.$this->params->get("slidegallery_width", 600).',
         height: '.$this->params->get("slidegallery_height", 400).','.
-        $effect .'
+        $effect .$play.'
     });
-});;';
+});';
         
         $this->document->addScriptDeclaration($js);
         
@@ -193,17 +191,21 @@ jQuery(document).ready(function() {
     private function prepareEffect() {
         
         $options = "";
-        $effect = $this->params->get("slidegallery_effect", 0);
+        $effect = $this->params->get("slidegallery_effect", "fade");
         $speed  = $this->params->get("slidegallery_speed", 200);
+        
+        $navigation  = $this->params->get("slidegallery_navigation", 0);
+        $pagination  = $this->params->get("slidegallery_pagination", 1);
+        
         if(strcmp("slide", $effect) == 0) {
             
             $options = '
             	navigation: {
-            		active: false,
+            		active: '.$navigation.',
         			effect: "slide"
     			},
     			pagination: {
-            		active: true,
+            		active: '.$pagination.',
         			effect: "slide"
     			},
             	effect: {
@@ -217,11 +219,11 @@ jQuery(document).ready(function() {
             
             $options = '
             	navigation: {
-            		active: false,
+            		active: '.$navigation.',
         			effect: "fade"
     			},
     			pagination: {
-            		active: true,
+            		active: '.$pagination.',
         			effect: "fade"
     			},
             	effect: {
@@ -235,11 +237,11 @@ jQuery(document).ready(function() {
         } else if(strcmp("fade-crossfade", $effect) == 0) {
             $options = '
             	navigation: {
-            		active: false,
+            		active: '.$navigation.',
         			effect: "fade"
     			},
     			pagination: {
-            		active: true,
+            		active: '.$pagination.',
         			effect: "fade"
     			},
             	effect: {
@@ -251,6 +253,37 @@ jQuery(document).ready(function() {
             ';
         }
         
+        return $options;
+    }
+    
+    private function preparePlay() {
+    
+        $options     = "";
+        $play        = $this->params->get("slidegallery_play", 0);
+        $effect      = $this->params->get("slidegallery_effect", "fade");
+        $interval    = $this->params->get("slidegallery_interval", 5000);
+        $autoplay    = $this->params->get("slidegallery_autoplay", 0);
+        $swap        = $this->params->get("slidegallery_swap", 1);
+        $pause       = $this->params->get("slidegallery_pause", 0);
+        $restart     = $this->params->get("slidegallery_restart", 2500);
+    
+        if(!empty($play)) {
+    
+            $options = ',
+            	play: {
+                  active: true,
+                  effect: "'.$effect.'",
+                  interval: '.$interval.',
+                  auto: '.$autoplay.',
+                  swap: '.$swap.',
+                  pauseOnHover: '.$pause.',
+                  restartDelay: '.$restart.'
+                    // [number] restart delay on inactive slideshow
+                }
+            ';
+    
+        }
+    
         return $options;
     }
     
