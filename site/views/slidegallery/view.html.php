@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -16,7 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewSlideGallery extends JView {
+class VipPortfolioViewSlideGallery extends JViewLegacy {
 
     protected $state      = null;
     protected $items      = null;
@@ -39,7 +35,7 @@ class VipPortfolioViewSlideGallery extends JView {
         /** @var $app JSite **/
         
         // Check for valid category
-        $this->categoryId = $app->input->get->getInt("catid");
+        $this->categoryId = $app->input->getInt("id");
         $this->category   = null;
         
         if(!empty($this->categoryId)){
@@ -54,9 +50,38 @@ class VipPortfolioViewSlideGallery extends JView {
         $this->state      = $this->get('State');
         $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
-        $this->params     = $this->state->params;
+        
+        $this->params     = $this->state->get("params");
         
         $this->prepareDocument();
+        
+        // If tmpl is set that mean the user loads the page from Facebook
+        // So we should Auto Grow the tab.
+        $tmpl = $app->input->get("tmpl");
+        if(!empty($tmpl)) {
+            if($this->params->get("fbpp_auto_grow") ){
+                VipPortfolioHelper::facebookAutoGrow($this->document, $this->params);
+            }
+        }
+        
+        $this->version     = new VipPortfolioVersion();
+        
+        // Events
+        JPluginHelper::importPlugin('content');
+        $dispatcher	       = JEventDispatcher::getInstance();
+        $offset            = 0;
+        
+        $item              = new stdClass();
+        $item->title       = $this->document->getTitle();
+        $item->link        = VipPortfolioHelperRoute::getSlideGalleryViewRoute($this->categoryId);
+        $item->image_intro = VipPortfolioHelper::getIntroImage($this->category, $this->items);
+        
+        $this->event       = new stdClass();
+        $results           = $dispatcher->trigger('onContentBeforeDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentBeforeDisplay = trim(implode("\n", $results));
+        
+        $results           = $dispatcher->trigger('onContentAfterDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentAfterDisplay = trim(implode("\n", $results));
         
         parent::display($tpl);
     }
@@ -103,7 +128,7 @@ class VipPortfolioViewSlideGallery extends JView {
             
         } else{
             
-            $title = $this->category->meta_title;
+            $title = $this->category->title;
             
             if(!$title){
                 // Get title from the page title option
@@ -126,14 +151,14 @@ class VipPortfolioViewSlideGallery extends JView {
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_description'));
         } else {
-            $this->document->setDescription($this->category->meta_desc);
+            $this->document->setDescription($this->category->metadesc);
         }
         
         // Meta keywords 
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_keywords'));
         } else {
-            $this->document->setMetadata('keywords', $this->category->meta_keywords);
+            $this->document->setMetadata('keywords', $this->category->metakey);
         }
         
         // Canonical URL 
@@ -150,141 +175,24 @@ class VipPortfolioViewSlideGallery extends JView {
             }
         }
 
-        $view = JString::strtolower( $this->getName() );
+        $view = JString::strtolower($this->getName());
         
-    // Add template style
-        $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $view . '/font-awesome.min.css');
-        $this->document->addStyleSheet('media/'.$this->option.'/projects/' . $view . '/style.css');
-                
         // Add script
         
-        JHTML::_('behavior.framework');
+        JHTML::_('jquery.framework');
         
-        $this->document->addScript('media/'.$this->option.'/js/'.$view.'/jquery.slides.min.js');
-        
-        $effect = $this->prepareEffect();
-        
-        $play   = $this->preparePlay();
-        
-        $js = '
-jQuery(document).ready(function() {
-	jQuery("#vp-slide-gallery").slidesjs({
-        start: '.$this->params->get("slidegallery_start", 1).',
-        width: '.$this->params->get("slidegallery_width", 600).',
-        height: '.$this->params->get("slidegallery_height", 400).','.
-        $effect .$play.'
-    });
-});';
-        
-        $this->document->addScriptDeclaration($js);
-        
-        // If tmpl is set that mean the user loads the page from Facebook
-        // So we should Auto Grow the tab.
-        $tmpl = $app->input->get("tmpl");
-        if(!empty($tmpl)) {
-            if($this->params->get("fbpp_auto_grow") ){
-                VipPortfolioHelper::facebookAutoGrow($this->document, $this->params);
-            }            
-        }
-    }
-
-    private function prepareEffect() {
-        
-        $options = "";
-        $effect = $this->params->get("slidegallery_effect", "fade");
-        $speed  = $this->params->get("slidegallery_speed", 200);
-        
-        $navigation  = $this->params->get("slidegallery_navigation", 0);
-        $pagination  = $this->params->get("slidegallery_pagination", 1);
-        
-        if(strcmp("slide", $effect) == 0) {
+        jimport("vipportfolio.slidegallery");
+        VipPortfolioSlideGallery::load();
+        $this->portfolio = new VipPortfolioSlideGallery($this->items, $this->params);
             
-            $options = '
-            	navigation: {
-            		active: '.$navigation.',
-        			effect: "slide"
-    			},
-    			pagination: {
-            		active: '.$pagination.',
-        			effect: "slide"
-    			},
-            	effect: {
-                  slide: {
-                    speed: '.(int)$speed.'
-                  }
-                }
-            ';
-            
-        } else if(strcmp("fade", $effect) == 0) {
-            
-            $options = '
-            	navigation: {
-            		active: '.$navigation.',
-        			effect: "fade"
-    			},
-    			pagination: {
-            		active: '.$pagination.',
-        			effect: "fade"
-    			},
-            	effect: {
-                  fade: {
-                    speed: '.(int)$speed.',
-                    crossfade: false
-                  }
-                }
-            ';
-            
-        } else if(strcmp("fade-crossfade", $effect) == 0) {
-            $options = '
-            	navigation: {
-            		active: '.$navigation.',
-        			effect: "fade"
-    			},
-    			pagination: {
-            		active: '.$pagination.',
-        			effect: "fade"
-    			},
-            	effect: {
-                  fade: {
-                    speed: '.(int)$speed.',
-                    crossfade: true
-                  }
-                }
-            ';
-        }
+        // Set image path
+        $imagesPath = JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/";
+        $this->portfolio->setImagesPath($imagesPath);
         
-        return $options;
-    }
-    
-    private function preparePlay() {
-    
-        $options     = "";
-        $play        = $this->params->get("slidegallery_play", 0);
-        $effect      = $this->params->get("slidegallery_effect", "fade");
-        $interval    = $this->params->get("slidegallery_interval", 5000);
-        $autoplay    = $this->params->get("slidegallery_autoplay", 0);
-        $swap        = $this->params->get("slidegallery_swap", 1);
-        $pause       = $this->params->get("slidegallery_pause", 0);
-        $restart     = $this->params->get("slidegallery_restart", 2500);
-    
-        if(!empty($play)) {
-    
-            $options = ',
-            	play: {
-                  active: true,
-                  effect: "'.$effect.'",
-                  interval: '.$interval.',
-                  auto: '.$autoplay.',
-                  swap: '.$swap.',
-                  pauseOnHover: '.$pause.',
-                  restartDelay: '.$restart.'
-                    // [number] restart delay on inactive slideshow
-                }
-            ';
-    
-        }
-    
-        return $options;
+        $this->portfolio
+            ->setSelector("vp-com-slidegallery")
+            ->addScriptDeclaration($this->document);
+        
     }
     
 }

@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -39,7 +35,7 @@ class VipPortfolioViewCamera extends JViewLegacy {
         /** @var $app JSite **/
         
         // Check for valid category
-        $this->categoryId = $app->input->get->getInt("catid");
+        $this->categoryId = $app->input->getInt("id");
         $this->category   = null;
         
         if(!empty($this->categoryId)){
@@ -56,6 +52,34 @@ class VipPortfolioViewCamera extends JViewLegacy {
         $this->params     = $this->state->params;
         
         $this->prepareDocument();
+        
+        // If tmpl is set that mean the user loads the page from Facebook
+        // So we should Auto Grow the tab.
+        $tmpl = $app->input->get("tmpl");
+        if(!empty($tmpl)) {
+            if($this->params->get("fbpp_auto_grow") ){
+                VipPortfolioHelper::facebookAutoGrow($this->document, $this->params);
+            }
+        }
+        
+        $this->version     = new VipPortfolioVersion();
+        
+        // Events
+        JPluginHelper::importPlugin('content');
+        $dispatcher	       = JEventDispatcher::getInstance();
+        $this->event       = new stdClass();
+        $offset            = 0;
+        
+        $item              = new stdClass();
+        $item->title       = $this->document->getTitle();
+        $item->link        = VipPortfolioHelperRoute::getCameraViewRoute($this->categoryId);
+        $item->image_intro = VipPortfolioHelper::getIntroImage($this->category, $this->items);
+        
+        $results           = $dispatcher->trigger('onContentBeforeDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentBeforeDisplay = trim(implode("\n", $results));
+        
+        $results           = $dispatcher->trigger('onContentAfterDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentAfterDisplay = trim(implode("\n", $results));
         
         parent::display($tpl);
     }
@@ -102,7 +126,7 @@ class VipPortfolioViewCamera extends JViewLegacy {
             
         } else{
             
-            $title = $this->category->meta_title;
+            $title = $this->category->title;
             
             if(!$title){
                 // Get title from the page title option
@@ -125,20 +149,14 @@ class VipPortfolioViewCamera extends JViewLegacy {
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_description'));
         } else {
-            $this->document->setDescription($this->category->meta_desc);
+            $this->document->setDescription($this->category->metadesc);
         }
         
         // Meta keywords 
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_keywords'));
         } else {
-            $this->document->setMetadata('keywords', $this->category->meta_keywords);
-        }
-        
-        // Canonical URL 
-        if(!empty($this->category) AND !empty($this->category->meta_canonical)) {
-           $cLink = '<link href="' . $this->category->meta_canonical . '" rel="canonical"  />';
-           $this->document->addCustomTag($cLink);
+            $this->document->setMetadata('keywords', $this->category->metakey);
         }
         
         // Add the category name into breadcrumbs
@@ -151,33 +169,23 @@ class VipPortfolioViewCamera extends JViewLegacy {
 
         $view = JString::strtolower( $this->getName() );
         
+        // Scripts
+        JHTML::_('jquery.framework');
+        
         // Load the object that will render content
         jimport("vipportfolio.camera");
-        $this->portfolio = new VipPortfolioCamera($this->items, $this->document, $this->params);
+        VipPortfolioCamera::load();
+        
+        $this->portfolio = new VipPortfolioCamera($this->items, $this->params);
         
         // Set image path
-        $imagePath = JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/";
-        $this->portfolio->setImagePath($imagePath);
-        
-        // Styles
-        $this->portfolio->addStyleSheets();
-                
-        // Scripts
-        JHTML::_('behavior.framework');
+        $imagesPath = JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/";
+        $this->portfolio->setImagesPath($imagesPath);
         
         $this->portfolio
-            ->addScripts()
-            ->setSelector("vp-camera-gallery")
-            ->addScriptDeclaration();
+            ->setSelector("vp-com-camera-gallery")
+            ->addScriptDeclaration($this->document);
         
-        // If tmpl is set that mean the user loads the page from Facebook
-        // So we should Auto Grow the tab.
-        $tmpl = $app->input->get("tmpl");
-        if(!empty($tmpl)) {
-            if($this->params->get("fbpp_auto_grow") ){
-                VipPortfolioHelper::facebookAutoGrow($this->document, $this->params);
-            }            
-        }
     }
 
 }

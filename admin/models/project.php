@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -18,40 +14,12 @@ jimport('joomla.filesystem.file');
 jimport('joomla.application.component.modeladmin');
 
 /**
- * It is a project model
- * 
- * @author Todor Iliev
- * @todo gets the destination dir from parameters
+ * It is a project model.
  */
 class VipPortfolioModelProject extends JModelAdmin {
     
-	/**
-     * 
-     * A folder where the images will be saved
-     * @var string
-     */
-    public $imagesFolder  = "";
-    
-    /**
-     * 
-     * Mime types allowed for uploading
-     * @var string
-     */
-    public $uploadMime = array();
-    
-    /**
-     * 
-     * Maximum allowed file size
-     * @var string
-     */
-    public $uploadMaxSize = 0;
-    
-    /**
-     * 
-     * A list of image extensions allowed for upload
-     * @var string
-     */
-    public $imageExtensions = array();
+    protected $imagesFolder = "";
+    protected $imagesURI    = "";
     
     /**
      * @var		string	The prefix to use with controller messages.
@@ -81,7 +49,7 @@ class VipPortfolioModelProject extends JModelAdmin {
      * @since   1.6
      */
     public function getForm($data = array(), $loadData = true){
-
+        
         $app = JFactory::getApplication();
         
         // Get the form.
@@ -121,7 +89,7 @@ class VipPortfolioModelProject extends JModelAdmin {
 			if ($this->getState($this->getName().'.id') == 0) {
 				$data->set('catid', $app->input->getInt('catid', $app->getUserState($this->option.'.projects.filter.category_id')));
 			}
-			
+            
         }
         
         return $data;
@@ -219,7 +187,7 @@ class VipPortfolioModelProject extends JModelAdmin {
 			}
 		}
 		
-	    // Fix magic qutoes
+		// Fix magic qutoes
 	    if( get_magic_quotes_gpc() ) {
             $table->title       = stripcslashes($table->title);
             $table->description = stripcslashes($table->description);
@@ -340,7 +308,7 @@ class VipPortfolioModelProject extends JModelAdmin {
         $query = $db->getQuery(true);
         $query
             ->select("a.image, a.thumb")
-            ->from($db->quoteName("#__vp_images") . ' AS a')
+            ->from($db->quoteName("#__vp_images") .' AS a')
             ->where("a.project_id IN (" . implode(",", $projectsIds) . ")");
             
         $db->setQuery($query);
@@ -423,32 +391,76 @@ class VipPortfolioModelProject extends JModelAdmin {
     
     }
     
-    public function uploadImage($file, $options = array()) {
+    public function uploadImage($image, $options = array()) {
         
         $app = JFactory::getApplication();
-    	/** @var $app JAdministrator **/
+        /** @var $app JSite **/
         
-        $upload          = new ITPrismFileUploadImage($file);
+        $names           = array("image", "thumb");
         
-        // Media manager parameters
-        $upload->setMimeTypes($this->uploadMime);
+        $uploadedFile    = JArrayHelper::getValue($image, 'tmp_name');
+        $uploadedName    = JArrayHelper::getValue($image, 'name');
         
-        $upload->setImageExtensions($this->imageExtensions);
+        // Joomla! media extension parameters
+        $mediaParams     = JComponentHelper::getParams("com_media");
         
-        $KB              = 1024 * 1024;
-        $upload->setMaxFileSize( round($this->uploadMaxSize * $KB, 0) );
+        jimport("itprism.file");
+        jimport("itprism.file.uploader.local");
+        jimport("itprism.file.validator.size");
+        jimport("itprism.file.validator.image");
         
-        // Validate
-        $upload->validate();
-    
-        $ext = JFile::getExt( JFile::makeSafe($file["name"]) );
+        $file           = new ITPrismFile();
         
-        // Generate name of the image
-        $code      = substr(JApplication::getHash(time()), 0, 6);
-        $imageName = "image_".$code.".".$ext;
-        $dest      = $this->imagesFolder . DIRECTORY_SEPARATOR . $imageName;
+        // Prepare size validator.
+        $KB             = 1024 * 1024;
+        $fileSize       = (int)$app->input->server->get('CONTENT_LENGTH');
+        $uploadMaxSize  = $mediaParams->get("upload_maxsize") * $KB;
         
-        $upload->upload($dest);
+        $sizeValidator  = new ITPrismFileValidatorSize($fileSize, $uploadMaxSize);
+        
+        
+        // Prepare image validator.
+        $imageValidator = new ITPrismFileValidatorImage($uploadedFile, $uploadedName);
+        
+        // Get allowed mime types from media manager options
+        $mimeTypes = explode(",", $mediaParams->get("upload_mime"));
+        $imageValidator->setMimeTypes($mimeTypes);
+        
+        // Get allowed image extensions from media manager options
+        $imageExtensions = explode(",", $mediaParams->get("image_extensions"));
+        $imageValidator->setImageExtensions($imageExtensions);
+        
+        $file
+            ->addValidator($sizeValidator)
+            ->addValidator($imageValidator);
+        
+        // Validate the file
+        $file->validate();
+        
+        // Generate temporary file name
+        $ext   = JString::strtolower(JFile::makeSafe(JFile::getExt($image['name'])));
+        
+        jimport("itprism.string");
+        $generatedName = new ITPrismString();
+        $generatedName->generateRandomString(6);
+        
+        $destFile   = $this->imagesFolder .DIRECTORY_SEPARATOR. "image_".$generatedName.".".$ext;
+        
+        // Prepare uploader object.
+        $uploader    = new ITPrismFileUploaderLocal($image);
+        $uploader->setDestination($destFile);
+        
+        // Upload temporary file
+        $file->setUploader($uploader);
+        
+        $file->upload();
+        
+        // Get file
+        $sourceFile = $file->getFile();
+        
+        if(!is_file($sourceFile)){
+            throw new Exception('COM_VIPPORTFOLIO_ERROR_FILE_CANT_BE_UPLOADED');
+        }
         
         // Resize image
         $resizeImage = JArrayHelper::getValue($options, "resize_image", false);
@@ -460,7 +472,7 @@ class VipPortfolioModelProject extends JModelAdmin {
             $app->setUserState($this->option.".project.image_width", $width);
             $app->setUserState($this->option.".project.image_height", $height);
             $app->setUserState($this->option.".project.image_scale", $scale);
-            $this->resizeImage($imageName, $width, $height, $scale);
+            $this->resizeImage($sourceFile, $width, $height, $scale);
         }
         
         // Create thumbnail
@@ -474,60 +486,99 @@ class VipPortfolioModelProject extends JModelAdmin {
             $app->setUserState($this->option.".project.thumb_width", $width);
             $app->setUserState($this->option.".project.thumb_height", $height);
             $app->setUserState($this->option.".project.thumb_scale", $scale);
-            $thumbName = $this->createThumb($imageName, $width, $height, "thumb_", $scale);
+            $thumbName = $this->createThumb($sourceFile, $width, $height, "thumb_", $scale);
         }
         
         return $names = array(
-            "image" => $imageName,
+            "image" => basename($sourceFile),
             "thumb" => $thumbName
         );
         
     }
     
-	/**
-     * This method upload the thumnail
-     * @param array $file
+    /**
+     * This method upload the thumnail.
+     * 
+     * @param array $image
      */
-    public function uploadThumb($file) {
+    public function uploadThumb($image) {
         
-        $upload          = new ITPrismFileUploadImage($file);
+        $app = JFactory::getApplication();
+        /** @var $app JSite **/
         
-        // Media manager parameters
-        $upload->setMimeTypes($this->uploadMime);
+        $uploadedFile    = JArrayHelper::getValue($image, 'tmp_name');
+        $uploadedName    = JArrayHelper::getValue($image, 'name');
         
-        $upload->setImageExtensions($this->imageExtensions);
+        // Joomla! media extension parameters
+        $mediaParams     = JComponentHelper::getParams("com_media");
         
-        $KB              = 1024 * 1024;
-        $upload->setMaxFileSize( round($this->uploadMaxSize * $KB, 0) );
+        jimport("itprism.file");
+        jimport("itprism.file.uploader.local");
+        jimport("itprism.file.validator.size");
+        jimport("itprism.file.validator.image");
         
-        // Validate
-        $upload->validate();
-    
-        $ext = JFile::getExt( JFile::makeSafe($file["name"]) );
+        $file           = new ITPrismFile();
         
-        // Generate name of the image
-        $code      = substr(JApplication::getHash(time()), 0, 6);
-        $thumbName = "thumb_".$code.".".$ext;
-        $dest      = $this->imagesFolder . DIRECTORY_SEPARATOR . $thumbName;
+        // Prepare size validator.
+        $KB             = 1024 * 1024;
+        $fileSize       = (int)$app->input->server->get('CONTENT_LENGTH');
+        $uploadMaxSize  = $mediaParams->get("upload_maxsize") * $KB;
         
-        $upload->upload($dest);
+        $sizeValidator  = new ITPrismFileValidatorSize($fileSize, $uploadMaxSize);
+        
+        
+        // Prepare image validator.
+        $imageValidator = new ITPrismFileValidatorImage($uploadedFile, $uploadedName);
+        
+        // Get allowed mime types from media manager options
+        $mimeTypes = explode(",", $mediaParams->get("upload_mime"));
+        $imageValidator->setMimeTypes($mimeTypes);
+        
+        // Get allowed image extensions from media manager options
+        $imageExtensions = explode(",", $mediaParams->get("image_extensions"));
+        $imageValidator->setImageExtensions($imageExtensions);
+        
+        $file
+            ->addValidator($sizeValidator)
+            ->addValidator($imageValidator);
+        
+        // Validate the file
+        $file->validate();
+        
+        // Generate temporary file name
+        $ext   = JString::strtolower(JFile::makeSafe(JFile::getExt($image['name'])));
+        
+        jimport("itprism.string");
+        $generatedName = new ITPrismString();
+        $generatedName->generateRandomString(6);
+        
+        $thumbName  = "thumb_".$generatedName.".".$ext;
+        $destFile   = $this->imagesFolder .DIRECTORY_SEPARATOR. $thumbName;
+        
+        // Prepare uploader object.
+        $uploader    = new ITPrismFileUploaderLocal($image);
+        $uploader->setDestination($destFile);
+        
+        // Upload temporary file
+        $file->setUploader($uploader);
+        
+        $file->upload();
         
         return $thumbName;
         
     }
     
-    protected function resizeImage($fileName, $width, $height, $scale = JImage::SCALE_INSIDE) {
+    protected function resizeImage($file, $width, $height, $scale = JImage::SCALE_INSIDE) {
         
         // Make thumbnail
-        $newFile = $this->imagesFolder.DIRECTORY_SEPARATOR.$fileName;
         
-        $ext     = (string)JFile::getExt(JFile::makeSafe($fileName));
+        $ext     = JString::strtolower(JFile::getExt(JFile::makeSafe($file)));
         
         $image   = new JImage();
         
-        $image->loadFile($newFile);
+        $image->loadFile($file);
         if (!$image->isLoaded()) {
-            throw new Exception(JText::sprintf('COM_VIPPORTFOLIO_ERROR_FILE_NOT_FOUND', $newFile));
+            throw new Exception(JText::sprintf('COM_VIPPORTFOLIO_ERROR_FILE_NOT_FOUND', $file));
         }
         
         // Resize the file
@@ -547,29 +598,31 @@ class VipPortfolioModelProject extends JModelAdmin {
 				$type = IMAGETYPE_JPEG;
 		}
 		
-        $image->toFile($newFile, $type);
+        $image->toFile($file, $type);
         
     }
     
-    protected function createThumb($fileName, $width, $heigh, $prefix = "thumb_", $scale = JImage::SCALE_INSIDE) {
+    protected function createThumb($file, $width, $heigh, $prefix = "thumb_", $scale = JImage::SCALE_INSIDE) {
         
-        // Make thumbnail
-        $newFile = $this->imagesFolder.DIRECTORY_SEPARATOR.$fileName;
+        $destFolder = JPath::clean(dirname($file));
         
-        $ext     = JFile::getExt(JFile::makeSafe($fileName));
+        $ext        = JString::strtolower(JFile::makeSafe(JFile::getExt($file)));
         
         $image   = new JImage();
-        $image->loadFile($newFile);
+        $image->loadFile($file);
         if (!$image->isLoaded()) {
-            throw new Exception(JText::sprintf('COM_VIPPORTFOLIO_ERROR_FILE_NOT_FOUND', $newFile));
+            throw new Exception(JText::sprintf('COM_VIPPORTFOLIO_ERROR_FILE_NOT_FOUND', $file));
         }
         
         // Resize the file as a new object
         $thumb     = $image->resize($width, $heigh, true, $scale);
         
-        $code      = uniqid(rand(0, 10000));
-        $thumbName = $prefix . substr(JApplication::getHash($code), 0, 6) . ".".$ext;
-        $thumbFile = $this->imagesFolder.DIRECTORY_SEPARATOR.$thumbName;
+        jimport("itprism.string");
+        $generatedName = new ITPrismString();
+        $generatedName->generateRandomString(6);
+        
+        $thumbName = $prefix.$generatedName. "." .$ext;
+        $thumbFile = $destFolder.DIRECTORY_SEPARATOR.$thumbName;
         
         switch ($ext) {
 			case "gif":
@@ -590,41 +643,92 @@ class VipPortfolioModelProject extends JModelAdmin {
         return $thumbName;
     }
     
+    
     public function uploadExtraImages($files, $thumbWidth = 50, $thumbHeight = 50, $scale = JImage::SCALE_INSIDE){
         
         $images = array();
         
+        $app = JFactory::getApplication();
+        /** @var $app JSite **/
+        
+        $KB             = 1024 * 1024;
+        
+        jimport("itprism.file");
+        jimport("itprism.file.uploader.local");
+        jimport("itprism.file.validator.size");
+        jimport("itprism.file.validator.image");
+        
+        // Joomla! media extension parameters
+        $mediaParams     = JComponentHelper::getParams("com_media");
+        
         // check for error
-        foreach($files as $file){
+        foreach($files as $image){
             
             // Upload image
-            if(!empty($file['name'])){
+            if(!empty($image['name'])){
                 
-                $upload          = new ITPrismFileUploadImage($file);
-            
-                // Media manager parameters
-                $upload->setMimeTypes($this->uploadMime);
+                $names           = array("image", "thumb");
                 
-                $upload->setImageExtensions($this->imageExtensions);
+                $uploadedFile    = JArrayHelper::getValue($image, 'tmp_name');
+                $uploadedName    = JArrayHelper::getValue($image, 'name');
                 
-                $KB              = 1024 * 1024;
-                $upload->setMaxFileSize( round($this->uploadMaxSize * $KB, 0) );
+                $file           = new ITPrismFile();
                 
-                // Validate
-                $upload->validate();
-            
-                $ext = JFile::getExt( JFile::makeSafe($file["name"]) );
+                // Prepare size validator.
+                $fileSize       = (int)JArrayHelper::getValue($image, 'size');
+                $uploadMaxSize  = $mediaParams->get("upload_maxsize") * $KB;
                 
-                // Generate name of the image
-                $code      = substr(JApplication::getHash(time() + mt_rand()), 0, 6);
-                $imageName = "extra_".$code.".".$ext;
-                $dest      = $this->imagesFolder . DIRECTORY_SEPARATOR . $imageName;
+                $sizeValidator  = new ITPrismFileValidatorSize($fileSize, $uploadMaxSize);
                 
-                $upload->upload($dest);
+                
+                // Prepare image validator.
+                $imageValidator = new ITPrismFileValidatorImage($uploadedFile, $uploadedName);
+                
+                // Get allowed mime types from media manager options
+                $mimeTypes = explode(",", $mediaParams->get("upload_mime"));
+                $imageValidator->setMimeTypes($mimeTypes);
+                
+                // Get allowed image extensions from media manager options
+                $imageExtensions = explode(",", $mediaParams->get("image_extensions"));
+                $imageValidator->setImageExtensions($imageExtensions);
+                
+                $file
+                    ->addValidator($sizeValidator)
+                    ->addValidator($imageValidator);
+                
+                // Validate the file
+                $file->validate();
+                
+                // Generate temporary file name
+                $ext   = JString::strtolower(JFile::makeSafe(JFile::getExt($image['name'])));
+                
+                jimport("itprism.string");
+                $generatedName = new ITPrismString();
+                $generatedName->generateRandomString(6);
+                
+                $imageName  = "extra_".$generatedName.".".$ext;
+                $destFile   = $this->imagesFolder .DIRECTORY_SEPARATOR. $imageName;
+                
+                // Prepare uploader object.
+                $uploader    = new ITPrismFileUploaderLocal($image);
+                $uploader->setDestination($destFile);
+                
+                // Upload temporary file
+                $file->setUploader($uploader);
+                
+                $file->upload();
+                
+                // Get file
+                $sourceFile = $file->getFile();
+                
+                if(!is_file($sourceFile)){
+                    throw new Exception('COM_VIPPORTFOLIO_ERROR_FILE_CANT_BE_UPLOADED');
+                }
                 
                 $names = array("thumb" =>"", "image" =>"");
+                
                 $names['image'] = $imageName;
-                $names["thumb"] = $this->createThumb($imageName, $thumbWidth, $thumbHeight, "extra_thumb_", $scale);
+                $names["thumb"] = $this->createThumb($sourceFile, $thumbWidth, $thumbHeight, "extra_thumb_", $scale);
                 
                 $images[] = $names;
                 
@@ -662,7 +766,6 @@ class VipPortfolioModelProject extends JModelAdmin {
                 ->set( $db->quoteName("thumb")      ."=". $db->quote($image["thumb"]))
                 ->set( $db->quoteName("project_id") ."=". (int)$projectId);
                 
-            JLog::add((string)$query, JLog::DEBUG);
             $db->setQuery($query);
             $db->query();
             
@@ -695,4 +798,11 @@ class VipPortfolioModelProject extends JModelAdmin {
 		return $condition;
 	}
 	
+	
+	public function setImagesFolder($folder) {
+	    $this->imagesFolder = JPath::clean($folder);
+	}
+	public function setImagesUri($uri) {
+	    $this->imagesURI = $uri;
+	}
 }

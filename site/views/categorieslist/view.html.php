@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -16,7 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewCategoriesList extends JView {
+class VipPortfolioViewCategoriesList extends JViewLegacy {
     
     protected $state;
     protected $items;
@@ -43,14 +39,46 @@ class VipPortfolioViewCategoriesList extends JView {
         
         $this->projectsView   = $app->input->get("projecs_view", "categorieslist", "string");
         
-        // Set tmpl parameter if the the page is loaded from Faceboo
-        $tmpl = $app->input->get("tmpl");
-        if(!empty($tmpl)) {
-            $this->tmpl           = "&tmpl=component";
+        // Parse parameters
+        if(!empty($this->items)) {
+            foreach($this->items as $item) {
+                $item->params = json_decode($item->params);
+                if(!empty($item->params->image)) {
+                    $item->image = $item->params->image;
+                }
+            }
         }
         
         $this->prepareDocument();
-                
+ 
+        // If tmpl is set that mean the user loads the page from Facebook
+        // So we should Auto Grow the tab.
+        $tmpl = $app->input->get("tmpl");
+        if(!empty($tmpl)) {
+            if($this->params->get("fbpp_auto_grow") ){
+                VipPortfolioHelper::facebookAutoGrow($this->document, $this->params);
+            }
+        }
+        
+        $this->version     = new VipPortfolioVersion();
+        
+        // Events
+        JPluginHelper::importPlugin('content');
+        $dispatcher	       = JEventDispatcher::getInstance();
+        $offset            = 0;
+        
+        $item              = new stdClass();
+        $item->title       = $this->document->getTitle();
+        $item->link        = VipPortfolioHelperRoute::getCategoryListViewRoute();
+        $item->image_intro = VipPortfolioHelper::getCategoryImage($this->items);
+        
+        $this->event       = new stdClass();
+        $results           = $dispatcher->trigger('onContentBeforeDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentBeforeDisplay = trim(implode("\n", $results));
+        
+        $results           = $dispatcher->trigger('onContentAfterDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentAfterDisplay = trim(implode("\n", $results));
+        
         parent::display($tpl);
     }
     
@@ -100,14 +128,6 @@ class VipPortfolioViewCategoriesList extends JView {
         // Add template style
         $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $view . '/style.css', 'text/css', null );
         
-        // If tmpl is set that mean the user loads the page from Facebook
-        // So we should Auto Grow the tab.
-        $tmpl = $app->input->get("tmpl");
-        if(!empty($tmpl)) {
-            if($this->params->get("fbpp_auto_grow") ){
-                VipPortfolioHelper::facebookAutoGrow($this->document, $this->params);
-            }            
-        }
     }
     
 }

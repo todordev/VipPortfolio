@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="2.5" method="upgrade">
+<extension type="component" version="3.2" method="upgrade">
 	<name>com_vipportfolio</name>
 	<author>Todor Iliev</author>
 	<authorEmail>todor@itprism.com</authorEmail>
 	<authorUrl>http://itprism.com</authorUrl>
-	<copyright>Copyright (C) 2010 Todor Iliev ( ITPrism.com )</copyright>
+	<copyright>Copyright (C) 2014 Todor Iliev ( ITPrism.com )</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html</license>
-	<version>3.7</version>
-	<creationDate>27 June, 2013</creationDate>
-	<description>COM_VIPPORTFOLIO_DESCRIPTION</description>
+	<version>3.8</version>
+	<creationDate>29 January, 2014</creationDate>
+	<description><![CDATA[
+    <p><a href="http://itprism.com/free-joomla-extensions/vip-portfolio-component" target="_blank">Vip Portfolio</a> helps you to create your portfolio easily. It is a good way to show your work, and excellent way to sell your skills.</p>
+    <p>Invest in the extension and help for its improvement. You can <a href="http://itprism.com/sponsorship" target="_blank">sponsor the extension via SMS, PayPal and Bitcoin</a>.</p>
+    <p><a href="http://itprism.com/" target="_blank">Subscribe for the newsletter</a> to receive information about updates and new ITPrism extensions.</p>
+    <p>Please, <a href="http://extensions.joomla.org/extensions/directory-a-documentation/portfolio/7863" target="_blank">vote for the extension</a> on Joomla! Extensions Directory</p>
+    ]]></description>
 
 	<install>
         <sql>
@@ -35,54 +40,41 @@
 		<folder>images</folder>
 		<folder>js</folder>
 		<folder>projects</folder>
-		
 	</media>
 	
 	<!-- Site Main File Copy Section -->
 	<files folder="site">
 	    <folder>controllers</folder>
-        <folder>helpers</folder>
+	    <folder>helpers</folder>
+	    <folder>language</folder>
         <folder>models</folder>
         <folder>views</folder>
+        
 		<filename>controller.php</filename>
 		<filename>index.html</filename>
 		<filename>router.php</filename>
 		<filename>vipportfolio.php</filename>
 	</files>
 
-	<languages folder="site">
-		<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
-	</languages>
-	
 	<administration>
-		<menu img="../media/com_vipportfolio/images/icon_vipportfolio_16.png" link="option=com_vipportfolio">COM_VIPPORTFOLIO</menu>
-		<submenu>
-			<menu img="../media/com_vipportfolio/images/icon_cpanel_16.png" link="option=com_vipportfolio">COM_VIPPORTFOLIO_DASHBOARD</menu>
-			<menu img="../media/com_vipportfolio/images/icon_new_project_16.png" link="option=com_vipportfolio&amp;view=project&amp;layout=edit">COM_VIPPORTFOLIO_NEW_PROJECT</menu>
-			<menu img="../media/com_vipportfolio/images/icon_projects_16.png" link="option=com_vipportfolio&amp;view=projects">COM_VIPPORTFOLIO_PROJECTS</menu>
-			<menu img="../media/com_vipportfolio/images/icon_new_folder_16.png" link="option=com_vipportfolio&amp;view=category&amp;layout=edit">COM_VIPPORTFOLIO_NEW_CATEGORY</menu>
-			<menu img="../media/com_vipportfolio/images/icon_folder_16.png" link="option=com_vipportfolio&amp;view=categories">COM_VIPPORTFOLIO_CATEGORIES</menu>
-		</submenu>
+		<menu link="option=com_vipportfolio">COM_VIPPORTFOLIO</menu>
 	
 		<files folder="admin">		    		
 			<folder>controllers</folder>
 			<folder>helpers</folder>
+            <folder>language</folder>
 			<folder>libraries</folder>
 			<folder>models</folder>
 			<folder>tables</folder>
 			<folder>sql</folder>
 			<folder>views</folder>		
+            
 			<filename>access.xml</filename> 
-            <filename>config.xml</filename>     
+			<filename>config.xml</filename> 
 			<filename>controller.php</filename>
 			<filename>index.html</filename>
 			<filename>vipportfolio.php</filename>
 		</files>
-		
-		<languages folder="admin">
-			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.ini</language>
-			<language tag="en-GB">language/en-GB/en-GB.com_vipportfolio.sys.ini</language>
-		</languages>
-			
 	</administration>
+    
 </extension>

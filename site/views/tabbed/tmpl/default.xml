@@ -12,10 +12,14 @@
             addfieldpath="/administrator/components/com_vipportfolio/models/fields"
         >
             
-            <field name="categories_ids" type="vpcategories" multiple="true" size="10"
-                label="COM_VIPPORTFOLIO_VIEW_OPTION_CATEGORIES_LABEL"
-                description="COM_VIPPORTFOLIO_VIEW_OPTION_CATEGORIES_DESC"
-            />
+            <field name="categories_ids" type="category"
+               label="COM_VIPPORTFOLIO_CATEGORY"
+               description="COM_VIPPORTFOLIO_VIEW_SELECT_CATEGORY_DESC"
+               extension="com_vipportfolio"
+               required="true"
+               multiple="true" 
+               size="10"
+           />
             
         </fieldset>
     </fields>
@@ -23,44 +27,39 @@
     <!-- Add fields to the parameters object for the layout. -->
     <fields name="params">
         <fieldset name="basic">
-            <field name="ctabModal" type="list" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
-                <option value="">COM_VIPPORTFOLIO_CONFIG_NONE</option>
-                <option value="native">COM_VIPPORTFOLIO_CONFIG_JOOMLA_NATIVE</option>
-                <option value="slimbox">Slimbox</option>
-            </field>
-            <field name="ctabsDisplayTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_SHOW_TITLE" description="COM_VIPPORTFOLIO_SHOW_TITLE_DESC" class="btn-group">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="ctabsTitleLinkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" class="btn-group">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="tabbed_open_link" type="list" default="_self"  label="COM_VIPPORTFOLIO_OPEN_LINK" description="COM_VIPPORTFOLIO_OPEN_LINK_DESC" >
-                <option value="_self">COM_VIPPORTFOLIO_SAME_TAB</option>
-                <option value="_blank">COM_VIPPORTFOLIO_NEW_TAB</option>
-            </field>
-            <field name="ctabsDisplayTips" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_TIPS" description="COM_VIPPORTFOLIO_DISPLAY_TIPS_DESC" class="btn-group">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="ctabsDisplayInnerTitle" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_INNER_TITLE" description="COM_VIPPORTFOLIO_DISPLAY_INNER_TITLE_DESC" class="btn-group">
-                <option value="0">JHIDE</option>
-                <option value="1">JSHOW</option>
-            </field>
-            <field name="ctabsDisplayInner" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_INNER" description="COM_VIPPORTFOLIO_DISPLAY_INNER_DESC" class="btn-group">
-                <option value="0">JHIDE</option>
-                <option value="1">JSHOW</option>
-            </field>
-            <field name="ctabsInnerURL" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_INNER_URL" description="COM_VIPPORTFOLIO_DISPLAY_INNER_URL_DESC" class="btn-group">
-                <option value="0">JNO</option>
-                <option value="1">JYES</option>
-            </field>
-            <field name="ctabsInnerTitleMaxChars" type="text" default="20" size="50" label="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS_DESC" />
-            <field name="ctabsInnerMaxChars" type="text" default="80" size="50" label="COM_VIPPORTFOLIO_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_MAX_CHARACTERS_DESC" />
-            <field name="ctabs_thumb_width" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_WIDTH" description="COM_VIPPORTFOLIO_THUMB_WIDTH_DESC" />
-            <field name="ctabs_thumb_height" type="text" default="200" size="50" label="COM_VIPPORTFOLIO_THUMB_HEIGHT" description="COM_VIPPORTFOLIO_THUMB_HEIGHT_DESC" />
+            <field name="tabbed_modal" type="list" default="0"  label="COM_VIPPORTFOLIO_MODAL_WINDOW" description="COM_VIPPORTFOLIO_MODAL_WINDOW_DESC" >
+	           <option value="">COM_VIPPORTFOLIO_NONE</option>
+               <option value="nivo">COM_VIPPORTFOLIO_LIGHTBOX_NIVO</option>
+               <option value="duncan">COM_VIPPORTFOLIO_DUNCAN_RESPONSIVE_LIGHTBOX</option>
+	        </field>
+	        <field name="tabbed_dislpay_title" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_TITLE" description="COM_VIPPORTFOLIO_DISPLAY_TITLE_DESC" class="btn-group">
+	            <option value="0">JNO</option>
+	            <option value="1">JYES</option>
+	        </field>
+	        <field name="tabbed_dislpay_description" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_DESCRIPTION" description="COM_VIPPORTFOLIO_DISPLAY_DESCRIPTION_DESC" class="btn-group">
+	            <option value="0">JNO</option>
+	            <option value="1">JYES</option>
+	        </field>
+	        <field name="tabbed_dislpay_url" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_URL" description="COM_VIPPORTFOLIO_DISPLAY_URL_DESC" class="btn-group">
+	            <option value="0">JNO</option>
+	            <option value="1">JYES</option>
+	        </field>
+            <field name="tabbed_title_max_charts" type="text" label="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_TITLE_MAX_CHARACTERS_DESC" />
+            <field name="tabbed_desc_max_charts" type="text" label="COM_VIPPORTFOLIO_DESCRIPTION_MAX_CHARACTERS" description="COM_VIPPORTFOLIO_DESCRIPTION_MAX_CHARACTERS_DESC" />
+	        <field name="tabbed_title_linkable" type="radio" default="0"  label="COM_VIPPORTFOLIO_TITLE_LINK" description="COM_VIPPORTFOLIO_TITLE_LINK_DESC" class="btn-group">
+	            <option value="0">JNO</option>
+	            <option value="1">JYES</option>
+	        </field>
+	        <field name="tabbed_open_link" type="list" default="_self"  label="COM_VIPPORTFOLIO_OPEN_LINK" description="COM_VIPPORTFOLIO_OPEN_LINK_DESC" >
+	            <option value="_self">COM_VIPPORTFOLIO_SAME_TAB</option>
+	            <option value="_blank">COM_VIPPORTFOLIO_NEW_TAB</option>
+	        </field>
+	        <field name="tabbed_display_tip" type="radio" default="0"  label="COM_VIPPORTFOLIO_DISPLAY_TIPS" description="COM_VIPPORTFOLIO_DISPLAY_TIPS_DESC" class="btn-group">
+	            <option value="0">JNO</option>
+	            <option value="1">JYES</option>
+	        </field>
             
+	        <field name="tabbed_active_tab" type="vpcatlayout" label="COM_VIPPORTFOLIO_ACTIVE_TAB" description="COM_VIPPORTFOLIO_ACTIVE_TAB_DESC" />
         </fieldset>
     </fields>
     

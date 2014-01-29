@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // No direct access
@@ -19,11 +15,11 @@ jimport('joomla.application.component.controllers');
 /**
  * Project controller class.
  *
- * @package		ITPrism Components
- * @subpackage	Vip Portfolio
+ * @package		VipPortfolio
+ * @subpackage	Components
  * @since		1.6
  */
-class VipPortfolioControllerProject extends JController {
+class VipPortfolioControllerProject extends JControllerLegacy {
     
 	/**
      * Proxy for getModel.
@@ -31,24 +27,14 @@ class VipPortfolioControllerProject extends JController {
      */
     public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
         
-        $option = JFactory::getApplication()->input->get("option");
-        
         $model  = parent::getModel($name, $prefix, $config);
         
         // Load the component parameters.
-        $params                 = JComponentHelper::getParams($option);
+        $params = JComponentHelper::getParams("com_vipportfolio");
         
-        // Extension parameters
-        $model->imagesURI       = $params->get("images_directory", "images/vipportfolio");
-        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
-        
-        // Joomla! media extension parameters
-        $mediaParams = JComponentHelper::getParams("com_media");
-        
-        // Media Manager parameters
-        $model->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
-        $model->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
-        $model->uploadMaxSize   = $mediaParams->get("upload_maxsize");
+        // Set images folder
+        $model->setImagesFolder(JPATH_ROOT .DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio"));
+        $model->setImagesUri("../".$params->get("images_directory", "images/vipportfolio")."/");
         
         return $model;
     }
@@ -59,11 +45,11 @@ class VipPortfolioControllerProject extends JController {
      */
     public function removeExtraImage() {
        
-        $app = JFactory::getApplication();
-        /** @var $app JAdministrator **/
-        
         // Initialize variables
-        $itemId  = $app->input->post->get("id");
+        $itemId  = $this->input->post->get("id");
+        
+        jimport("itprism.response.json");
+        $response    = new ITPrismResponseJson();
         
         try {
             
@@ -76,74 +62,65 @@ class VipPortfolioControllerProject extends JController {
             throw new Exception($e->getMessage());
         }
         
-        $response = array(
-        	"success" => true,
-            "title"=> JText::_( 'COM_VIPPORTFOLIO_SUCCESS' ),
-            "text" => JText::_( 'COM_VIPPORTFOLIO_IMAGE_DELETED' ),
-            "data" => array("item_id"=>$itemId)
-        );
+        $response
+            ->setTitle(JText::_('COM_VIPPORTFOLIO_SUCCESS'))
+            ->setText(JText::_('COM_VIPPORTFOLIO_IMAGE_DELETED'))
+            ->setData(array("item_id"=>$itemId))
+            ->success();
         
-        echo json_encode($response);
+        echo $response;
         JFactory::getApplication()->close();
     }
     
     public function addExtraImage() {
        
-        $app = JFactory::getApplication();
-        /** @var $app JAdministrator **/
+        jimport("itprism.response.json");
+        $response    = new ITPrismResponseJson();
         
         // Initialize variables
-        $itemId      = $app->input->post->get("id");
+        $itemId      = $this->input->post->get("id");
         
         // Prepare the size of additional thumbnails
-        $thumbWidth  = $app->input->post->get("thumb_width", 50);
-        $thumbHeight = $app->input->post->get("thumb_height", 50);
+        $thumbWidth  = $this->input->post->get("thumb_width", 50);
+        $thumbHeight = $this->input->post->get("thumb_height", 50);
         if($thumbWidth < 25 OR $thumbHeight < 25 ) {
             $thumbWidth = 50;
             $thumbHeight = 50;
         }
         
-        $scale     = $app->input->post->get("thumb_scale", JImage::SCALE_INSIDE);
+        $scale     = $this->input->post->get("thumb_scale", JImage::SCALE_INSIDE);
         
-        $files       = $app->input->files->get("files");
-        
+        $files     = $this->input->files->get("files");
         if(!$files) {
-            $response = array(
-            	"success" => false,
-                "title"=> JText::_( 'COM_VIPPORTFOLIO_FAIL' ),
-                "text" => JText::_( 'COM_VIPPORTFOLIO_ERROR_FILE_UPLOAD' ),
-            );
-                
-            echo json_encode($response);
+            
+            $response
+                ->setTitle(JText::_('COM_VIPPORTFOLIO_FAIL'))
+                ->setText(JText::_('COM_VIPPORTFOLIO_ERROR_FILE_UPLOAD'))
+                ->failure();
+            
+            echo $response;
             JFactory::getApplication()->close();
         }
         
         try {
            
-            jimport('joomla.filesystem.folder');
-            jimport('joomla.filesystem.file');
-            jimport('joomla.filesystem.path');
-            jimport('joomla.image.image');
-            jimport('itprism.file.upload.image');    
-            
             // Get the model
             $model  = $this->getModel();
             $images = $model->uploadExtraImages($files, $thumbWidth, $thumbHeight, $scale);
             $images = $model->storeExtraImage($images, $itemId);
             
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             JLog::add($e->getMessage());
             throw new Exception($e->getMessage());
         }
         
-        $response = array(
-        	"success" => true,
-            "title"=> JText::_( 'COM_VIPPORTFOLIO_SUCCESS' ),
-            "text" => JText::_( 'COM_VIPPORTFOLIO_IMAGE_SAVED' ),
-            "data" => $images
-        );
+        $response
+            ->setTitle(JText::_('COM_VIPPORTFOLIO_SUCCESS'))
+            ->setText(JText::_('COM_VIPPORTFOLIO_IMAGE_SAVED'))
+            ->setData($images)
+            ->success();
         
-        echo json_encode($response);
+        echo $response;
         JFactory::getApplication()->close();
     }
     

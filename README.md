@@ -1,10 +1,22 @@
-Vip Portfolio Lite for Joomla! 
+Vip Portfolio for Joomla! 
 ==========================
-( Version 3.7 )
-- - -
+( Version 3.8 )
+- - - 
+
+This is a Joomla! extension that provides functionality for creating and managing interactive slideshow galleries and portfolio views. 
 
 Changelog
 ---------
+
+###v3.8
+* Added new plugin events - onContentBeforeDisplay, onContentAfterDisplay.
+* Removed the views which were based on MooTools galleries - ImageMenu and Scroll Gallery.
+* The lightboxes were replaced with new ones (responsive) - Nivo, Duncan's Responsive Lightbox.
+* Reworked Tabbed view. Now it uses Bootstrap tabs.
+* Removed caption of Tabbed view. Now it uses Bootstrap Thumbnails.
+* Added new gallery [Galleria](http://galleria.io/).
+* Fixed some issues.
+    
 
 ###v3.7
 
@@ -21,15 +33,16 @@ Changelog
 * Added ability to upload a thumbnail.
 * Improved the functionality of additional images uploading.
 * Improved resizing functionality
+* Fixed some issues with Facebook Fan Page installing
 * Improved usability.
-
 
 ###v3.5
 
-* Added Slide Gallery View
-* Added more option to Scroll Gallery View - auto scroll, linkable, animation start and speed,...
+* Added CSS editor
+* Added Facebook Pages and Tabs manager
 * Added filters - category,...
 * Added multiple select in the a category view option. Now you are able to select categories that you want to display.
+* Added Scroll Gallery View
 * The layouts have been moved to views. ( Now the extension use views to display categories and projects ).
 * Improved the multilanguage
 * Improved
@@ -38,7 +51,6 @@ Changelog
 
 * [[#1]](https://github.com/ITPrism/VipPortfolio/issues/1 "Description html strip when submit") Fixed the bug with text formating.
 * [[#3]](https://github.com/ITPrism/VipPortfolio/issues/3 "bug 'open link' new tab/same tab") Fixed the bug where links do not open in new tab.
-* Removed Facebook Layout
 * Improved
 
 ###v3.3
@@ -47,6 +59,7 @@ Changelog
   - A directory of images
   - Options for images resizing
   - Open link in new tab or in the same one
+  - Use Joomla! content plugins. 
   
 * Options changed
   - Removed the options where you select the modal box type

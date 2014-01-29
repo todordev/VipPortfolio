@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -16,7 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewLineal extends JView {
+class VipPortfolioViewLineal extends JViewLegacy {
 
     protected $state;
     protected $items;
@@ -41,7 +37,7 @@ class VipPortfolioViewLineal extends JView {
         /** @var $app JSite **/
         
         // Check for valid category
-        $this->categoryId = $app->input->get->getInt("catid");
+        $this->categoryId = $app->input->getInt("id");
         $this->category   = null;
         
         if(!empty($this->categoryId)){
@@ -60,83 +56,87 @@ class VipPortfolioViewLineal extends JView {
         
         $this->item       = JArrayHelper::getValue($this->items, 0);
         
-        if(!empty($this->item)) {
-        
-            // Extra Images
-            $extraImages = array();
-            if($this->params->get("lineal_extra_image") AND isset($this->item)){
-                
-                $extraImages[$this->item->id] = VipPortfolioHelper::getExtraImages($this->item->id);
-                
-                $this->extraImages = $extraImages;
-                $this->extraMax = $this->params->get("lineal_extra_max");
-            
-            }
-        
-            // Prepare Joomla! plugin onContentPrepare
-            if($this->params->get("joomla_plugins")) {
-                $offset = $this->state->get("list.start", null);
-                 
-                $this->item->text = $this->item->description;
-                $this->item->link = "index.php?option=com_vipportfolio&view=projects&layout=lineal";
-                $this->item->image_intro = $this->params->get("images_directory", "images/vipportfolio")."/".$this->item->thumb;
-                
-                $dispatcher	= JDispatcher::getInstance();
-                JPluginHelper::importPlugin('content');
-    		    $results = $dispatcher->trigger('onContentPrepare', array ('com_vipportfolio.lineal', &$this->item, &$this->params, $offset));
-    		    
-    		    // Remove redundant parameters
-    	        $this->item->description = $this->item->text;
-    	        unset($this->item->text);
-    	        
-                $this->event = new stdClass();
-        		$results = $dispatcher->trigger('onContentAfterTitle', array('com_vipportfolio.project', &$this->item, &$this->params, $offset));
-        		$this->event->afterDisplayTitle = trim(implode("\n", $results));
-        
-        		$results = $dispatcher->trigger('onContentBeforeDisplay', array('com_vipportfolio.project', &$this->item, &$this->params, $offset));
-        		$this->event->beforeDisplayContent = trim(implode("\n", $results));
-        
-        		$results = $dispatcher->trigger('onContentAfterDisplay', array('com_vipportfolio.project', &$this->item, &$this->params, $offset));
-        		$this->event->afterDisplayContent = trim(implode("\n", $results));
-            }
-            
-            // Open link target
-            $this->openLink = 'target="'.$this->params->get("lineal_open_link", "_self").'"';
-            
-            $this->prepareLightBox();
+        if(!$this->item) {
+            throw new RuntimeException(JText::_("COM_VIPPORTFOLIO_ERROR_INVALID_PROJECT"));
         }
         
+        // Extra Images
+        $extraImages = array();
+        if($this->params->get("lineal_extra_image") AND isset($this->item)){
+        
+            $extraImages[$this->item->id] = VipPortfolioHelper::getExtraImages($this->item->id);
+        
+            $this->extraImages = $extraImages;
+            $this->extraMax    = $this->params->get("lineal_extra_max");
+        
+        }
+        
+        // Open link target
+        $this->openLink = 'target="'.$this->params->get("lineal_open_link", "_self").'"';
+        
+        $this->imagesUri = JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/";
+        
+        $this->prepareLightBox();
         $this->prepareDocument();
+        
+        $this->version     = new VipPortfolioVersion();
+        
+        // Events
+        $offset            = $this->state->get("list.start", null);
+        
+        $item        = new stdClass();
+        $item->title = $this->document->getTitle();
+        $item->link  = VipPortfolioHelperRoute::getLinealViewRoute($this->categoryId, $offset);
+        $item->image_intro = $this->imagesUri.$this->item->thumb;
+        
+        JPluginHelper::importPlugin('content');
+        $dispatcher	       = JEventDispatcher::getInstance();
+        $this->event       = new stdClass();
+         
+        $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentBeforeDisplay = trim(implode("\n", $results));
+        
+        $results = $dispatcher->trigger('onContentAfterDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentAfterDisplay = trim(implode("\n", $results));
         
         parent::display($tpl);
     }
     
     protected function prepareLightBox() {
         
-        $modal = $this->params->get("lModal");
+        $this->modal      = $this->params->get("lModal");
+        $this->modalClass = VipPortfolioHelper::getModalClass($this->modal);
         
-        switch($modal) {
+        switch($this->modal) {
             
-            case "slimbox":
+            case "duncan":
                 
-                JHTML::_('behavior.framework');
+                JHTML::_('jquery.framework');
+                JHtml::_('vipportfolio.lightbox_duncan');
                 
-                $this->document->addStyleSheet('media/'.$this->option.'/js/slimbox/css/slimbox.css');
-                $this->document->addScript('media/'.$this->option.'/js/slimbox/slimbox.js');
+                // Initialize lightbox
+                $js = 'jQuery(document).ready(function(){
+                      jQuery(".'.$this->modalClass.'").lightbox();
+                });';
+                $this->document->addScriptDeclaration($js);
                     
                 break;
             
-            case "native": // Joomla! native
+            case "nivo": // Joomla! native
                 
-                JHTML::_('behavior.framework');
+                JHTML::_('jquery.framework');
+                JHtml::_('vipportfolio.lightbox_nivo');
                 
-                // Adds a JavaScript needs for modal windows
-                JHTML::_('behavior.modal', 'a.vip-modal');
+                // Initialize lightbox
+                $js = '
+                jQuery(document).ready(function(){
+                    jQuery(".'.$this->modalClass.'").nivoLightbox();
+                });';
+                $this->document->addScriptDeclaration($js);
                 
                 break;
         }
         
-        $this->modal = $modal;
     }
     
     
@@ -182,7 +182,7 @@ class VipPortfolioViewLineal extends JView {
             
         } else{
             
-            $title = $this->category->meta_title;
+            $title = $this->category->title;
             
             if(!$title){
                 // Get title from the page title option
@@ -205,20 +205,14 @@ class VipPortfolioViewLineal extends JView {
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_description'));
         } else {
-            $this->document->setDescription($this->category->meta_desc);
+            $this->document->setDescription($this->category->metadesc);
         }
         
         // Meta keywords 
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_keywords'));
         } else {
-            $this->document->setMetadata('keywords', $this->category->meta_keywords);
-        }
-        
-        // Canonical URL 
-        if(!empty($this->category) AND !empty($this->category->meta_canonical)) {
-           $cLink = '<link href="' . $this->category->meta_canonical . '" rel="canonical"  />';
-           $this->document->addCustomTag($cLink);
+            $this->document->setMetadata('keywords', $this->category->metakey);
         }
         
         // Add the category name into breadcrumbs

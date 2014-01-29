@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -50,11 +46,11 @@ class VipPortfolioModelSlideGallery extends JModelList {
         $app = JFactory::getApplication();
         /** @var $app JSite **/
         
-        $params = $app->getParams();
-        $this->setState('params', $params);
-        
         $value = $app->input->getInt('id');
         $this->setState('filter.catid', $value);
+        
+        $params = $app->getParams();
+        $this->setState('params', $params);
 
         $orderCol = $app->input->getCmd('filter_order', 'a.ordering');
         if(!in_array($orderCol, $this->filter_fields)){
@@ -118,7 +114,6 @@ class VipPortfolioModelSlideGallery extends JModelList {
         
         // Filter by a single or group of categories
         $categoryId = $this->getState('filter.catid');
-        
         if(!empty($categoryId)){
             $query->where('a.catid = ' . (int)$categoryId);
         }

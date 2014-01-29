@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -16,10 +12,10 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewList extends JView {
+class VipPortfolioViewList extends JViewLegacy {
 
-    protected $state = null;
-    protected $items = null;
+    protected $state  = null;
+    protected $items  = null;
     protected $params = null;
     
     protected $pagination = null;
@@ -43,7 +39,7 @@ class VipPortfolioViewList extends JView {
         /** @var $app JSite **/
         
         // Check for valid category
-        $this->categoryId = $app->input->get->getInt("catid");
+        $this->categoryId = $app->input->getInt("id");
         $this->category   = null;
         
         if(!empty($this->categoryId)){
@@ -58,9 +54,9 @@ class VipPortfolioViewList extends JView {
         $this->state      = $this->get('State');
         $this->items      = $this->get('Items');
         $this->pagination = $this->get('Pagination');
-        
-        $this->params     = $this->state->params;
-        
+
+        $this->params     = $this->state->get("params");
+
         // Extra images
         $extraImages = array();
         if($this->params->get("extra_image")){
@@ -74,41 +70,70 @@ class VipPortfolioViewList extends JView {
         }
     
         // Open link target
-        $this->openLink = 'target="'.$this->params->get("list_open_link", "_self").'"';
+        $this->openLink  = 'target="'.$this->params->get("list_open_link", "_self").'"';
         
+        $this->imagesUri = JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/";
         
         $this->prepareLightBox();
         $this->prepareDocument();
+        
+        $this->version     = new VipPortfolioVersion();
+        
+        // Events
+        JPluginHelper::importPlugin('content');
+        $dispatcher	       = JEventDispatcher::getInstance();
+        $this->event       = new stdClass();
+        $offset            = 0;
+        
+        $item              = new stdClass();
+        $item->title       = $this->document->getTitle();
+        $item->link        = VipPortfolioHelperRoute::getListViewRoute($this->categoryId);
+        $item->image_intro = VipPortfolioHelper::getIntroImage($this->category, $this->items);
+        
+        $results           = $dispatcher->trigger('onContentBeforeDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentBeforeDisplay = trim(implode("\n", $results));
+        
+        $results           = $dispatcher->trigger('onContentAfterDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentAfterDisplay = trim(implode("\n", $results));
         
         parent::display($tpl);
     }
     
     protected function prepareLightBox() {
         
-        $modal = $this->params->get("modal");
+        $this->modal      = $this->params->get("modal");
+        $this->modalClass = VipPortfolioHelper::getModalClass($this->modal);
         
-        switch($modal) {
+        switch($this->modal) {
             
-            case "slimbox":
+            case "duncan":
                 
-                JHTML::_('behavior.framework');
+                JHTML::_('jquery.framework');
+                JHtml::_('vipportfolio.lightbox_duncan');
                 
-                $this->document->addStyleSheet('media/'.$this->option.'/js/slimbox/css/slimbox.css');
-                $this->document->addScript('media/'.$this->option.'/js/slimbox/slimbox.js');
-                    
+                // Initialize lightbox
+                $js = 'jQuery(document).ready(function(){
+                      jQuery(".'.$this->modalClass.'").lightbox();
+                });';
+                $this->document->addScriptDeclaration($js);
+                
                 break;
             
-            case "native": // Joomla! native
+            case "nivo": // Joomla! native
                 
-                JHTML::_('behavior.framework');
+                JHTML::_('jquery.framework');
+                JHtml::_('vipportfolio.lightbox_nivo');
                 
-                // Adds a JavaScript needs for modal windows
-                JHTML::_('behavior.modal', 'a.vip-modal');
-                
+                // Initialize lightbox
+                $js = '
+                jQuery(document).ready(function(){
+                    jQuery(".'.$this->modalClass.'").nivoLightbox();
+                });';
+                $this->document->addScriptDeclaration($js);
                 break;
+                
         }
         
-        $this->modal = $modal;
     }
     
     
@@ -154,7 +179,7 @@ class VipPortfolioViewList extends JView {
             
         } else{
             
-            $title = $this->category->meta_title;
+            $title = $this->category->title;
             
             if(!$title){
                 // Get title from the page title option
@@ -177,28 +202,22 @@ class VipPortfolioViewList extends JView {
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_description'));
         } else {
-            $this->document->setDescription($this->category->meta_desc);
+            $this->document->setDescription($this->category->metadesc);
         }
         
         // Meta keywords 
         if(!$this->category) { // Uncategorised
             $this->document->setDescription($this->params->get('menu-meta_keywords'));
         } else {
-            $this->document->setMetadata('keywords', $this->category->meta_keywords);
-        }
-        
-        // Canonical URL 
-        if(!empty($this->category) AND !empty($this->category->meta_canonical)) {
-           $cLink = '<link href="' . $this->category->meta_canonical . '" rel="canonical"  />';
-           $this->document->addCustomTag($cLink);
+            $this->document->setMetadata('keywords', $this->category->metakey);
         }
         
         // Add the category name into breadcrumbs
         if($this->params->get('cat_breadcrumbs')){
             
-            if(!empty($this->category->name)){
+            if(!empty($this->category->title)){
                 $pathway    = $app->getPathway();
-                $pathway->addItem($this->category->name);
+                $pathway->addItem($this->category->title);
             }
         }
         

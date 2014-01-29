@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -53,8 +49,8 @@ class VipPortfolioModelList extends JModelList {
         
         $params = $app->getParams();
         $this->setState('params', $params);
-
-        $value = $app->input->getInt('catid');
+        
+        $value = $app->input->getInt('id');
         $this->setState('filter.catid', $value);
         
         $value = $params->get("pp_page", 0);
@@ -66,8 +62,7 @@ class VipPortfolioModelList extends JModelList {
         $value = $app->input->getInt('limitstart', 0);
         $this->setState('list.start', $value);
         
-        $this->setState('list.ordering', 'a.ordering');
-        
+        $this->setState('list.ordering',  'a.ordering');
         $this->setState('list.direction', 'ASC');
         
     }
@@ -107,13 +102,13 @@ class VipPortfolioModelList extends JModelList {
         // Select the required fields from the table.
         $query->select(
             $this->getState(
-            'list.select', 
-            'a.id, a.title, a.description, a.url, ' . 
-            'a.catid, a.thumb, a.image, a.published, a.ordering'
+                'list.select', 
+                'a.id, a.title, a.description, a.url, ' . 
+                'a.catid, a.thumb, a.image, a.published, a.ordering '
             )
         );
         
-        $query->from($db->quoteName('#__vp_projects') .' AS a');
+        $query->from($db->quoteName('#__vp_projects', 'a'));
         
         // Filter by category
         $categoryId = $this->getState('filter.catid');
@@ -132,10 +127,10 @@ class VipPortfolioModelList extends JModelList {
     }
     
     protected function getOrderString() {
-    
+        
         $orderCol   = $this->getState('list.ordering',  'a.ordering');
         $orderDirn  = $this->getState('list.direction', 'ASC');
-    
+        
         return $orderCol.' '.$orderDirn;
     }
     

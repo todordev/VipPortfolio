@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -16,46 +12,37 @@ defined('_JEXEC') or die;
 ?>
 <?php foreach ($this->items as $i => $item) {
 	    $ordering  = ($this->listOrder == 'a.ordering');
+	    
+        $disableClassName = '';
+		$disabledLabel	  = '';
+		if (!$this->saveOrder) {
+			$disabledLabel    = JText::_('JORDERINGDISABLED');
+			$disableClassName = 'inactive tip-top';
+		}
+		
 	?>
-	<tr class="row<?php echo $i % 2; ?>">
-        <td class="center">
+	<tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->catid?>">
+		<td class="order nowrap center hidden-phone">
+    		<span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
+    			<i class="icon-menu"></i>
+    		</span>
+    		<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
+    	</td>
+		<td class="center hidden-phone">
             <?php echo JHtml::_('grid.id', $i, $item->id); ?>
         </td>
-		<td >
-			<a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&view=project&layout=edit&id=".$item->id);?>" ><?php echo $item->title; ?></a>
-		</td>
-		<td width="150" align="center">
-		   <?php 
-		   if(!empty($item->category_name)) {
-		   ?>
-           <a href="<?php  echo JRoute::_("index.php?option=com_vipportfolio&view=category&layout=edit&id=".$item->catid);?>" ><?php echo $item->category_name; ?></a>
-           <?php } else {
-               echo JText::_("COM_VIPPORTFOLIO_UNCATEGORISED");
-		   }?>
-        </td>
-        <td width="300">
-			<?php echo $item->url; ?>
-		</td>
-		<td class="order">
-		 <?php
-            if($this->saveOrder) {
-                if ($this->listDirn == 'asc') {?>
-                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->catid == @$this->items[$i-1]->catid), 'projects.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->catid == @$this->items[$i+1]->catid), 'projects.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                <?php } elseif ($this->listDirn == 'desc') {?>
-                    <span><?php echo $this->pagination->orderUpIcon($i, ($item->catid == @$this->items[$i-1]->catid), 'projects.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                    <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, ($item->catid == @$this->items[$i+1]->catid), 'projects.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                <?php } 
-            }
-            $disabled = $this->saveOrder ?  '' : 'disabled="disabled"';?>
-            <input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-        </td>
-        <td align="center">
+        <td class="center">
             <?php echo JHtml::_('jgrid.published', $item->published, $i, "projects."); ?>
         </td>
-        <td align="center">
-            <?php echo $item->id;?>
+        
+		<td>
+			<a href="<?php echo JRoute::_("index.php?option=com_vipportfolio&view=project&layout=edit&id=".(int)$item->id); ?>" ><?php echo $item->title; ?></a>
+		</td>
+		<td width="10%" class="center nowrap hidden-phone">
+		   <?php echo (!empty($item->category)) ? $item->category : JText::_("COM_VIPPORTFOLIO_UNCATEGORISED") ?>
         </td>
+        <td width="20%" class="center hidden-phone"><?php echo JHtmlString::truncate($item->url, 64); ?></td>
+        <td class="center hidden-phone"><?php echo (int)$item->id;?></td>
 	</tr>
 <?php }?>
 	  

@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -53,8 +49,8 @@ class VipPortfolioModelLineal extends JModelList {
         
         $params     = $app->getParams();
         $this->setState('params', $params);
-
-        $value      = $app->input->getInt('catid');
+        
+        $value      = $app->input->getInt('id');
         $this->setState('filter.catid', $value);
         
         $this->setState('list.limit', 1);
@@ -63,7 +59,6 @@ class VipPortfolioModelLineal extends JModelList {
         $this->setState('list.start', $value);
         
         $this->setState('list.ordering', 'a.ordering');
-        
         $this->setState('list.direction', 'ASC');
         
     }
@@ -129,10 +124,10 @@ class VipPortfolioModelLineal extends JModelList {
     }
     
     protected function getOrderString() {
-    
+        
         $orderCol   = $this->getState('list.ordering',  'a.ordering');
         $orderDirn  = $this->getState('list.direction', 'ASC');
-    
+        
         return $orderCol.' '.$orderDirn;
     }
     

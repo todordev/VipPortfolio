@@ -1,32 +1,29 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
 defined('_JEXEC') or die;?>
- <?php foreach ( $this->items as $item ) {?>
-    <div class="itp-vp-box">
+<?php foreach ( $this->items as $item ) {?>
+    <div class="row-fluid">
         <?php if( !empty( $item->thumb ) ) { ?>
-        <div class="itp-vp-image-box" style="width: <?php echo $this->params->get('thumb_width', 200); ?>; height: <?php echo $this->params->get('thumb_height', 200); ?>;">
-           <?php if ($this->params->get("image_linkable")) {?>
-            <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->image;?>" <?php echo $this->openLink;?>>   
-           <?php }?>
+        <div class="span3" style="width: <?php echo $this->params->get('thumb_width', 200); ?>; height: <?php echo $this->params->get('thumb_height', 200); ?>;">
+            <?php if ($this->params->get("image_linkable")) {?>
+            <a href="<?php echo $this->imagesUri.$item->image;?>" <?php echo $this->openLink;?> >   
+            <?php }?>
         
             <img
             width="<?php echo $this->params->get('thumb_width', 200); ?>" 
             height="<?php echo $this->params->get('thumb_height', 200); ?>" 
-            src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$item->thumb;?>" 
+            src="<?php echo $this->imagesUri.$item->thumb;?>" 
             alt="<?php echo $this->escape($item->title);?>" 
             title="<?php echo $this->escape($item->title);?>" 
+            class="thumbnail"
             />  
             <?php if ($this->params->get("image_linkable")) {?>
             </a>
@@ -38,11 +35,11 @@ defined('_JEXEC') or die;?>
              if (isset($this->extraImages[$item->id]) AND !empty($this->extraImages[$item->id])){
                  $i = 0;
                  foreach($this->extraImages[$item->id] as $eImage){?>
-                    <a href="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['image'];?>" <?php echo $this->openLink;?>>
+                    <a href="<?php echo $this->imagesUri.$eImage['image'];?>" <?php echo $this->openLink;?> >
                         <img
                         width="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
                         height="<?php echo $this->params->get('ei_thumb_width', 50); ?>" 
-                        src="<?php echo JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/".$eImage['thumb'];?>" 
+                        src="<?php echo $this->imagesUri.$eImage['thumb'];?>" 
                         alt="" 
                         title="" 
                         />  
@@ -54,22 +51,24 @@ defined('_JEXEC') or die;?>
                  }
              }?>
             </div>
+            <div class="clearfix"></div>
             <?php }?>
         </div>
         <?php } ?>
-        <div class="itp-vp-text-box">
+        <div class="span9">
         
-        <?php if ($this->params->get("list_display_title")) {?>
-         <h3 class="itp-vp-title" >
-         <?php if($this->params->get("title_linkable") AND $item->url) { ?>
-         	<a href="<?php echo $item->url;?>" <?php echo $this->openLink;?>><?php echo $item->title;?></a>
-         <?php }else{?>
-             <?php echo $item->title;?>
-         <?php }?>
-         </h3>
-        <?php }?>
-        
-        <p><?php echo $item->description;?></p>
+             <?php
+             if ($this->params->get("list_display_title")) {?>
+             <h3>
+             <?php if($this->params->get("title_linkable") AND $item->url) { ?>
+             	<a href="<?php echo $item->url;?>" <?php echo $this->openLink;?>><?php echo $this->escape($item->title);?></a>
+             <?php }else{?>
+                 <?php echo $this->escape($item->title);?>
+             <?php }?>
+             </h3>
+            <?php }?>
+            
+            <p><?php echo $item->description;?></p>
         </div>
     </div>
     <?php }?>

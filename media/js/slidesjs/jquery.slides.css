@@ -1,0 +1,39 @@
+.slidesjs-previous {
+    float: left;
+    margin-right: 5px;
+}
+.slidesjs-navigation {
+    margin-top: 3px;
+    text-decoration: none !important;
+}
+
+.slidesjs-next {
+    float: left;
+    margin-right: 5px;
+}
+
+.slidesjs-pagination {
+    float: right;
+    list-style: none outside none;
+    margin: 6px 0 0;
+}
+
+
+.slidesjs-pagination li {
+    float: left;
+    margin: 0 1px;
+}
+
+.slidesjs-pagination li a.active, .slidesjs-pagination li a.active:hover {
+    background-position: 0 -13px;
+}
+.slidesjs-pagination li a {
+    background-image: url("images/pagination.png");
+    background-position: 0 0;
+    display: block;
+    float: left;
+    height: 0;
+    overflow: hidden;
+    padding-top: 13px;
+    width: 13px;
+}

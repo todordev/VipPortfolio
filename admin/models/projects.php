@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -39,7 +35,7 @@ class VipPortfolioModelProjects extends JModelList {
                 'title', 'a.title',
                 'published', 'a.published',
                 'ordering', 'a.ordering',
-                'name', 'b.name',
+                'category', 'b.title',
             );
         }
 
@@ -113,12 +109,12 @@ class VipPortfolioModelProjects extends JModelList {
                 'list.select',
                 'a.id, a.title, a.url,' .
                 'a.published, a.ordering, a.catid, ' . 
-                'b.name as category_name' 
+                'b.title as category' 
             )
         );
         
         $query->from($db->quoteName('#__vp_projects') .' AS a');
-        $query->leftJoin($db->quoteName('#__vp_categories') .' AS b ON a.catid = b.id');
+        $query->leftJoin($db->quoteName('#__categories') .' AS b ON a.catid = b.id');
 
         // Filter by category
         $categoryId = $this->getState('filter.category_id');

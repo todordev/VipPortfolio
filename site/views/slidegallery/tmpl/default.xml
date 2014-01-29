@@ -8,14 +8,15 @@
 
     <!-- Add fields to the request variables for the layout. -->
     <fields name="request">
-        <fieldset name="request"
-            addfieldpath="/administrator/components/com_vipportfolio/models/fields"
-        >
-            <field name="catid" type="vpcategories"
-                description="COM_VIPPORTFOLIO_CHOOSE_CATEGORY_DESC"
-                label="COM_VIPPORTFOLIO_CHOOSE_CATEGORY_LABEL"
-            />
+        <fieldset name="request">
             
+            <field name="id" type="category"
+               label="COM_VIPPORTFOLIO_CATEGORY"
+               description="COM_VIPPORTFOLIO_VIEW_SELECT_CATEGORY_DESC"
+               extension="com_vipportfolio"
+               required="true"
+           />
+           
         </fieldset>
     </fields>
 
@@ -23,18 +24,18 @@
     <fields name="params">
         <fieldset name="basic">
             <field name="slidegallery_effect" type="list" default="fade" label="COM_VIPPORTFOLIO_EFFECT" description="COM_VIPPORTFOLIO_SLIDEGALLERY_EFFECT_DESC" >
-                <option value="slide">COM_VIPPORTFOLIO_SLIDE</option>
-                <option value="fade">COM_VIPPORTFOLIO_FADE</option>
-                <option value="fade-crossfade">COM_VIPPORTFOLIO_FADE_CROSSFADE</option>
-            </field>
-            <field name="slidegallery_speed" type="text" default="200" label="COM_VIPPORTFOLIO_SPEED" description="COM_VIPPORTFOLIO_SPEED_DESC" />
-            
-            <field name="slidegallery_width" type="text" default="600" label="COM_VIPPORTFOLIO_WIDTH" description="COM_VIPPORTFOLIO_SLIDEGALLERY_WIDTH_DESC" />
-            <field name="slidegallery_height" type="text" default="400" label="COM_VIPPORTFOLIO_HEIGHT" description="COM_VIPPORTFOLIO_SLIDEGALLERY_HEIGHT_DESC" />
-            
-            <field name="slidegallery_start" type="text" default="1" label="COM_VIPPORTFOLIO_START" description="COM_VIPPORTFOLIO_SLIDEGALLERY_START_DESC" />
-            
-            <field name="slidegallery_navigation" type="radio" default="0" label="COM_VIPPORTFOLIO_NAVIGATION" description="COM_VIPPORTFOLIO_SLIDEGALLERY_NAVIGATION_DESC" class="btn-group">
+	            <option value="slide">COM_VIPPORTFOLIO_SLIDE</option>
+	            <option value="fade">COM_VIPPORTFOLIO_FADE</option>
+	            <option value="fade-crossfade">COM_VIPPORTFOLIO_FADE_CROSSFADE</option>
+	        </field>
+	        <field name="slidegallery_speed" type="text" default="200" label="COM_VIPPORTFOLIO_SPEED" description="COM_VIPPORTFOLIO_SPEED_DESC" />
+	        
+	        <field name="slidegallery_width" type="text" default="600" label="COM_VIPPORTFOLIO_WIDTH" description="COM_VIPPORTFOLIO_SLIDEGALLERY_WIDTH_DESC" />
+	        <field name="slidegallery_height" type="text" default="400" label="COM_VIPPORTFOLIO_HEIGHT" description="COM_VIPPORTFOLIO_SLIDEGALLERY_HEIGHT_DESC" />
+	        
+	        <field name="slidegallery_start" type="text" default="1" label="COM_VIPPORTFOLIO_START" description="COM_VIPPORTFOLIO_SLIDEGALLERY_START_DESC" />
+	        
+	        <field name="slidegallery_navigation" type="radio" default="0" label="COM_VIPPORTFOLIO_NAVIGATION" description="COM_VIPPORTFOLIO_SLIDEGALLERY_NAVIGATION_DESC" class="btn-group">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>

@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -16,7 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewDashboard extends JView {
+class VipPortfolioViewDashboard extends JViewLegacy {
     
     protected $option;
     
@@ -43,6 +39,7 @@ class VipPortfolioViewDashboard extends JView {
         VipPortfolioHelper::addSubmenu($this->getName());
         
         $this->addToolbar();
+        $this->addSidebar();
         $this->setDocument();
         
         parent::display($tpl);
@@ -54,9 +51,24 @@ class VipPortfolioViewDashboard extends JView {
      * @since   1.6
      */
     protected function addToolbar(){
-        JToolBarHelper::title(JText::_("COM_VIPPORTFOLIO_DASHBOARD"), 'vip-properties');
+        JToolBarHelper::title(JText::_("COM_VIPPORTFOLIO_DASHBOARD"));
+        
+        JToolBarHelper::preferences('com_vipportfolio');
+        JToolBarHelper::divider();
+        
+        // Help button
+        $bar = JToolBar::getInstance('toolbar');
+		$bar->appendButton('Link', 'help', JText::_('JHELP'), JText::_('COM_VIPPORTFOLIO_HELP_URL'));
+		
     }
 
+	/**
+     * Add a menu on the sidebar of page
+     */
+    protected function addSidebar() {
+		$this->sidebar = JHtmlSidebar::render();
+    }
+    
 	/**
 	 * Method to set up the document properties
 	 *
@@ -64,12 +76,8 @@ class VipPortfolioViewDashboard extends JView {
 	 */
 	protected function setDocument() {
 	    
-	    JHtml::_('behavior.modal', 'a.modal');
-	    
 		$this->document->setTitle(JText::_('COM_VIPPORTFOLIO_DASHBOARD'));
 		
-		// Header styles
-		$this->document->addStyleSheet('../media/'.$this->option.'/css/bootstrap.min.css');
 	}
 	
 }

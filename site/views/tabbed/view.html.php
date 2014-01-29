@@ -1,22 +1,19 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
 defined('_JEXEC') or die;
 
+jimport('joomla.html.html.bootstrap');
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewTabbed extends JView {
+class VipPortfolioViewTabbed extends JViewLegacy {
     
     protected $state;
     protected $items;
@@ -40,12 +37,21 @@ class VipPortfolioViewTabbed extends JView {
         
         $this->projectsView   = $app->input->get("projecs_view", "tabbed", "string");
         
-        // Only loads projects from the published categories
+        // Parse parameters and collect categories ids in array
         $categories = array();
-        foreach ($this->items as $item){
-            $categories[] = $item->id;
+        if(!empty($this->items)) {
+            foreach($this->items as &$item) {
+                $item->params = json_decode($item->params);
+                if(!empty($item->params->image)) {
+                    $item->image = $item->params->image;
+                }
+                
+                $categories[] = $item->id;
+            }
         }
         
+        // Get projects for these categories. 
+        // We need only published projects.
         $published = 1;
         $projects_ = VipPortfolioHelper::getProjects($categories, $published);
         
@@ -56,39 +62,79 @@ class VipPortfolioViewTabbed extends JView {
         
         $this->projects = $projects;
         
+        $this->imagesUrl = JURI::root().$this->params->get("images_directory", "images/vipportfolio") . "/";
+        $this->activeTab = $this->params->get("tabbed_active_tab");
+        $this->displayCaption = false;
+        
+        // Open link target
+        $this->openLink = 'target="'.$this->params->get("tabbed_open_link", "_self").'"';
+        
         $this->prepareLightBox();
         $this->prepareDocument();
                 
+        $this->version     = new VipPortfolioVersion();
+        
+        // Events
+        $offset      = 0;
+        
+        $item              = new stdClass();
+        $item->title       = $this->document->getTitle();
+        $item->link        = VipPortfolioHelperRoute::getTabbedViewRoute();
+        $item->image_intro = VipPortfolioHelper::getCategoryImage($this->items);
+        
+        JPluginHelper::importPlugin('content');
+        $dispatcher	       = JEventDispatcher::getInstance();
+        $this->event       = new stdClass();
+         
+        $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentBeforeDisplay = trim(implode("\n", $results));
+        
+        $results = $dispatcher->trigger('onContentAfterDisplay', array('com_vipportfolio.details', &$item, &$this->params, $offset));
+        $this->event->onContentAfterDisplay = trim(implode("\n", $results));
+        
         parent::display($tpl);
     }
     
     protected function prepareLightBox() {
         
-        $modal = $this->params->get("ctabModal");
+        $this->modal      = $this->params->get("tabbed_modal");
+        $this->modalClass = VipPortfolioHelper::getModalClass($this->modal);
         
-        switch($modal) {
+        $this->setLayout($this->modal);
+        
+        switch($this->modal) {
             
-            case "slimbox":
+            case "duncan":
                 
-                JHTML::_('behavior.framework');
+                JHTML::_('jquery.framework');
+                JHtml::_('vipportfolio.lightbox_duncan');
                 
-                $this->document->addStyleSheet('media/'.$this->option.'/js/slimbox/css/slimbox.css');
-                $this->document->addScript('media/'.$this->option.'/js/slimbox/slimbox.js');
+                // Initialize lightbox
+                $js = "jQuery(document).ready(function(){\n";
+                $js .= "jQuery('.".$this->modalClass."').lightbox();\n";
+                $js .= "});";
+                
+                $this->document->addScriptDeclaration($js);
                 
                 break;
             
-            case "native": // Joomla! native
+            case "nivo": // Joomla! native
                 
-                JHTML::_('behavior.framework');
+                JHTML::_('jquery.framework');
+                JHtml::_('vipportfolio.lightbox_nivo');
                 
-                // Adds a JavaScript needs for modal windows
-                JHTML::_('behavior.modal', 'a.vip-modal');
+                // Initialize lightbox
+                $js = '
+                jQuery(document).ready(function(){
+                    jQuery(".'.$this->modalClass.'").nivoLightbox();
+                });';
+                $this->document->addScriptDeclaration($js);
+                
                 break;
+                
         }
         
-        $this->modal    = $modal;
     }
-    
     /**
      * Prepare the document
      */
@@ -128,15 +174,26 @@ class VipPortfolioViewTabbed extends JView {
             $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
         }
         
-        // JavaScript and Styles
         
-        $view = JString::strtolower($this->getName());
+        // Scripts
+        JHTML::_('jquery.framework');
         
-        // Add template style
-        $this->document->addStyleSheet('media/'.$this->option.'/categories/' . $view . '/style.css', 'text/css', null );
+        if($this->params->get("tabbed_display_tip", 0)) {
+            JHTML::_('bootstrap.tooltip');
+        }
+
         
-        // Open link target
-        $this->openLink = 'target="'.$this->params->get("tabbed_open_link", "_self").'"';
+        if($this->params->get("tabbed_caption_title", 0) OR $this->params->get("tabbed_caption_desc", 0) OR $this->params->get("tabbed_caption_url", 0)) {
+            $this->displayCaption = true;
+        }
+        // Load captionjs script.
+        if($this->displayCaption) {
+            JHTML::_('vipportfolio.jsquares');
+            
+            $js = '';
+            
+            $this->document->addScriptDeclaration($js);
+        }
         
         // If tmpl is set that mean the user loads the page from Facebook
         // So we should Auto Grow the tab.

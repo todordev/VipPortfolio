@@ -1,21 +1,17 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   VipPortfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * VipPortfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
 defined('_JEXEC') or die;
 
 /**
- * Script file of VipPortfolio component
+ * Script file of VipPortfolio component.
  */
 class pkg_vipPortfolioInstallerScript {
     
@@ -75,10 +71,6 @@ class pkg_vipPortfolioInstallerScript {
         $params             = JComponentHelper::getParams("com_vipportfolio");
         $this->imagesFolder = JFolder::makeSafe($params->get("images_directory", "images/vipportfolio"));
         $this->imagesPath   = JPath::clean( JPATH_SITE.DIRECTORY_SEPARATOR.$this->imagesFolder );
-        $this->bootstrap    = JPath::clean( JPATH_SITE.DIRECTORY_SEPARATOR."media".DIRECTORY_SEPARATOR."com_vipportfolio".DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."bootstrap.min.css" );
-        
-        $style = '<style>'.file_get_contents($this->bootstrap).'</style>';
-        echo $style;
         
         // Create images folder
         if(!is_dir($this->imagesPath)){
@@ -117,7 +109,7 @@ class pkg_vipPortfolioInstallerScript {
         if(!extension_loaded('gd') AND function_exists('gd_info')) {
             $result = array("type" => "important", "text" => JText::_("COM_VIPPORTFOLIO_WARNING"));
         } else {
-            $result = array("type" => "success"  , "text" => JText::_("JON"));
+            $result = array("type" => "success"  , "text" => JText::_("JYES"));
         }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
@@ -128,7 +120,7 @@ class pkg_vipPortfolioInstallerScript {
             $info   = JText::_("COM_VIPPORTFOLIO_CURL_INFO");
             $result = array("type" => "important", "text" => JText::_("COM_VIPPORTFOLIO_WARNING"));
         } else {
-            $result = array("type" => "success"  , "text" => JText::_("JON"));
+            $result = array("type" => "success"  , "text" => JText::_("JYES"));
         }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
@@ -137,9 +129,19 @@ class pkg_vipPortfolioInstallerScript {
         $info   = "";
         if( get_magic_quotes_gpc() ) {
             $info   = JText::_("COM_VIPPORTFOLIO_MAGIC_QUOTES_INFO");
-            $result = array("type" => "important", "text" => JText::_("JON"));
+            $result = array("type" => "important", "text" => JText::_("JNO"));
         } else {
             $result = array("type" => "success"  , "text" => JText::_("JOFF"));
+        }
+        VipPortfolioInstallHelper::addRow($title, $result, $info);
+        
+        // Display result about verification FileInfo
+        $title  = JText::_("COM_VIPPORTFOLIO_PHP_VERSION");
+        $info   = "";
+        if (version_compare(PHP_VERSION, '5.3.0') < 0) {
+            $result = array("type" => "important", "text" => JText::_("COM_VIPPORTFOLIO_WARNING"));
+        } else {
+            $result = array("type" => "success", "text" => JText::_("JYES"));
         }
         VipPortfolioInstallHelper::addRow($title, $result, $info);
         
@@ -160,121 +162,8 @@ class pkg_vipPortfolioInstallerScript {
         
         // End table with the information
         VipPortfolioInstallHelper::endTable();
-        
-        // Do upgrade 
-        $this->upgradeExtension();
-        
-        echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_REVIEW_SAVE_SETTINGS", JRoute::_("index.php?option=com_vipportfolio"));
-        
-    }
-    
-    /**
-     * 
-     * Do some things after upgrading
-     */
-    private function upgradeExtension() {
-        
-        // Load version class from the library
-        jimport('vipportfolio.version');
-        
-        // If class exists, the version is larger than 3.3
-        if(class_exists("VipPortfolioVersion")) {
-            return;
-        }
-        
-        JLoader::register("VipPortfolioVersion", VIPPORTFOLIO_PATH_COMPONENT_ADMINISTRATOR . DIRECTORY_SEPARATOR . "libraries" . DIRECTORY_SEPARATOR ."version.php");
-
-        $version         = new VipPortfolioVersion();
-        $currentVersion  = $version->getShortVersion();
-        
-        switch($currentVersion) {
-            case "3.3":
-                $this->upgrade3_3();
-                break;
-        }
             
+        echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_REVIEW_SAVE_SETTINGS", JRoute::_("index.php?option=com_vipportfolio"));
     }
     
-    /**
-     * Copy files from media/vipportfolio to images/vipportfolio
-     * Upgrade for version 3.3
-     */
-    private function upgrade3_3() {
-        
-        $sourceFolder      = "media".DIRECTORY_SEPARATOR."vipportfolio";
-        $sourcePath        = JPATH_SITE.DIRECTORY_SEPARATOR.$sourceFolder;
-        $newSourcePath     = JPATH_SITE.DIRECTORY_SEPARATOR."media".DIRECTORY_SEPARATOR."tmp_vipportfolio";
-        
-        if(is_dir($sourcePath)) {
-            if(!JFolder::copy($sourcePath, $this->imagesPath, "", true)) {
-                echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_FOLDER_NOT_COPIED",$sourceFolder, $this->imagesFolder);
-            } else {
-                JFolder::move($sourcePath, $newSourcePath);
-                echo JText::sprintf("COM_VIPPORTFOLIO_MESSAGE_FOLDER_COPIED", $sourceFolder, $this->imagesFolder);
-                
-                // Make thumbnail
-                $db = JFactory::getDbo();
-                $query = $db->getQuery(true);
-                
-                $query
-                    ->select("image")
-                    ->from("#__vp_images");
-
-                $db->setQuery($query);
-                $result = $db->loadColumn();
-                
-                if(!empty($result)) {
-                    
-                    jimport('joomla.image.image');
-                    $image = new JImage();
-                    
-                    foreach($result as $fileName) {
-                        
-                        $sourceFile  = JPath::clean($this->imagesPath.DIRECTORY_SEPARATOR.$fileName);
-                        
-                        $newFileName = "extra_thumb_".$fileName;
-                        $newFile     = JPath::clean($this->imagesPath.DIRECTORY_SEPARATOR.$newFileName);
-                        
-                        $ext         = (string)JFile::getExt($fileName);
-                        $ext         = strtolower(JFile::makeSafe($ext));
-                        
-                        $image->loadFile($sourceFile);
-                        if (!$image->isLoaded()) {
-                            continue;
-                        }
-                        
-                        // Resize the file
-                        $image->resize(50, 50, false);
-                        
-                        switch ($ext) {
-                			case "gif":
-                				$type = IMAGETYPE_GIF;
-                				break;
-                
-                			case "gif":
-                				$type = IMAGETYPE_PNG;
-                				break;
-                
-                			case IMAGETYPE_JPEG:
-                			default:
-                				$type = IMAGETYPE_JPEG;
-                		}
-                		
-                        $image->toFile($newFile, $type);
-                        
-                        // Store new file name
-                        $query = $db->getQuery(true);
-                        $query
-                            ->update("#__vp_images")
-                            ->set("thumb=".$db->quote($newFileName))
-                            ->where("image=".$db->quote($fileName));
-                            
-                        $db->setQuery($query);
-                        $db->query();     
-                    }
-                }
-            }
-        }
-        
-    }
 }

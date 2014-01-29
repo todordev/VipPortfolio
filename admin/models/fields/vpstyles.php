@@ -1,15 +1,12 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
+
 defined('JPATH_BASE') or die;
 
 jimport('joomla.html.html');
@@ -20,8 +17,8 @@ JFormHelper::loadFieldClass('list');
 /**
  * Form Field class for the Joomla Framework.
  *
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @since       1.6
  */
 class JFormFieldVpStyles extends JFormFieldList {
@@ -44,9 +41,9 @@ class JFormFieldVpStyles extends JFormFieldList {
         $options = array(
             array("value"=>'list', "text"=>'List View'),
             array("value"=>'lineal', "text"=>'Lineal View'),
-            array("value"=>'scrollgallery', "text"=>'ScrollGallery View'),
             array("value"=>'slidegallery', "text"=>'SlideGallery View'),
-            array("value"=>'camera', "text"=>'Camera View')
+            array("value"=>'camera', "text"=>'Camera View'),
+            array("value"=>'galleria', "text"=>'Galleria View')
         );
         
         // Merge any additional options in the XML definition.

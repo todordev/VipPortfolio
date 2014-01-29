@@ -1,4 +1,5 @@
-window.addEvent('domready', function(){ 
+jQuery(document).ready(function() {
+	
 	// Validation script
     Joomla.submitbutton = function(task){
         if (task == 'project.cancel' || document.formvalidator.isValid(document.id('project-form'))) {
@@ -6,7 +7,16 @@ window.addEvent('domready', function(){
         }
     };
     
-    var extraImagesElement = jQuery("#itp-extra-images");
+	// Style file input
+	jQuery("#jform_thumb").filestyle({
+		buttonText: Joomla.JText._('COM_VIPPORTFOLIO_CHOOSE_FILE')
+	});
+	
+	jQuery("#jform_image").filestyle({
+		buttonText: Joomla.JText._('COM_VIPPORTFOLIO_CHOOSE_FILE')
+	});
+	
+	var extraImagesElement = jQuery("#itp-extra-images");
 	
 	if(extraImagesElement) {
 		
@@ -32,6 +42,25 @@ window.addEvent('domready', function(){
 	        }
 	    });
 		
+		jQuery(extraImagesElement).on("mouseover", ".ai-imglink", function(event) {
+			
+			var url = jQuery(this).data("image-url");
+			
+			var img = '<img src="'+url+'" />';
+			
+			jQuery(this).popover({ 
+				content: img, 
+				html:true,
+				placement: "right"
+			});
+			
+			jQuery(this).popover("show");
+		});
+		
+		jQuery(extraImagesElement).on("mouseout", ".ai-imglink", function(event) {
+			jQuery(this).popover("hide");
+		});
+
 		jQuery(extraImagesElement).on("click", ".ai_ri", function(event) {
 			
 			event.preventDefault();
@@ -56,6 +85,6 @@ window.addEvent('domready', function(){
 			
 		});
 	}
-    
+	
 });
 

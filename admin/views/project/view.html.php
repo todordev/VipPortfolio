@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -16,7 +12,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewProject extends JView {
+class VipPortfolioViewProject extends JViewLegacy {
     
     protected $state;
     protected $item;
@@ -64,15 +60,11 @@ class VipPortfolioViewProject extends JView {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
         $isNew = ($this->item->id == 0);
-        $this->documentTitle= $isNew ? JText::_('COM_VIPPORTFOLIO_PROJECT_ADD')
+        $this->documentTitle = $isNew ? JText::_('COM_VIPPORTFOLIO_PROJECT_ADD')
                                       : JText::_('COM_VIPPORTFOLIO_PROJECT_EDIT');
 
-        if(!$isNew) {
-            JToolBarHelper::title($this->documentTitle, 'vip-projects-edit');
-        } else {
-            JToolBarHelper::title($this->documentTitle, 'vip-projects-new');
-        }
-		                             
+        JToolBarHelper::title($this->documentTitle);
+        
         JToolBarHelper::apply('project.apply');
         JToolBarHelper::save2new('project.save2new');
         JToolBarHelper::save('project.save');
@@ -92,30 +84,28 @@ class VipPortfolioViewProject extends JView {
 	 */
 	protected function setDocument() {
 	    
-	    JText::script('COM_VIPPORTFOLIO_REMOVE');
 	    $this->document->setTitle($this->documentTitle);
-	    
-	    // Add behaviors
-	    JHtml::_('behavior.keepalive');
+        
+	    // Load language string in JavaScript 
+        JText::script('COM_VIPPORTFOLIO_CHOOSE_FILE');
+        JText::script('COM_VIPPORTFOLIO_REMOVE');
+        
+        // Script
+        JHtml::_('behavior.framework');
+        JHtml::_('behavior.keepalive');
         JHtml::_('behavior.formvalidation');
         JHtml::_('behavior.tooltip');
         
-        // Add styles
-        $this->document->addStyleSheet('../media/'.$this->option.'/css/bootstrap.min.css');
-        $this->document->addStyleSheet('../media/'.$this->option.'/css/jquery.pnotify.default.css');
-        $this->document->addStyleSheet('../media/'.$this->option.'/css/jquery.fileupload-ui.css');
+        JHtml::_('bootstrap.framework');
+        JHtml::_('formbehavior.chosen', 'select');
         
-        // Add JS libraries
-        $this->document->addScript('../media/'.$this->option.'/js/jquery/jquery.min.js');
-        $this->document->addScript('../media/'.$this->option.'/js/jquery/noconflict.js');
-        $this->document->addScript('../media/'.$this->option.'/js/jquery/bootstrap-filestyle.min.js');
-        $this->document->addScript('../media/'.$this->option.'/js/jquery/vendor/jquery.ui.widget.js');
-        $this->document->addScript('../media/'.$this->option.'/js/jquery/jquery.fileupload.js');
-        $this->document->addScript('../media/'.$this->option.'/js/jquery/jquery.iframe-transport.js');
+        JHtml::_('itprism.ui.pnotify');
+        JHtml::_('itprism.ui.bootstrap_filestyle');
+        JHtml::_('itprism.ui.fileupload');
         
-		// Add scripts
 		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
 		$this->document->addScript('../media/'.$this->option.'/js/admin/helper.js');
+		
 	}
 
 }

@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -29,47 +25,37 @@ class VipPortfolioHelper {
 	 */
 	public static function addSubmenu($vName = 'dashboard') {
 	    
-	    JSubMenuHelper::addEntry(
+	    JHtmlSidebar::addEntry(
 			JText::_('COM_VIPPORTFOLIO_DASHBOARD'),
 			'index.php?option='.self::$extension.'&view=dashboard',
 			$vName == 'dashboard'
 		);
 		
-		JSubMenuHelper::addEntry(
+		JHtmlSidebar::addEntry(
 			JText::_('COM_VIPPORTFOLIO_CATEGORIES'),
-			'index.php?option='.self::$extension.'&view=categories',
+			'index.php?option=com_categories&extension='.self::$extension,
 			$vName == 'categories'
 		);
 		
-		JSubMenuHelper::addEntry(
+		JHtmlSidebar::addEntry(
 			JText::_('COM_VIPPORTFOLIO_PROJECTS'),
 			'index.php?option='.self::$extension.'&view=projects',
 			$vName == 'projects'
 		);
 		
+		JHtmlSidebar::addEntry(
+			JText::_('COM_VIPPORTFOLIO_FACEBOOK_PAGES'),
+			'index.php?option='.self::$extension.'&view=pages',
+			$vName == 'pages'
+		);
+		
+		JHtmlSidebar::addEntry(
+			JText::_('COM_VIPPORTFOLIO_CSS_EDITOR'),
+			'index.php?option='.self::$extension.'&view=csseditor',
+			$vName == 'csseditor'
+		);
 	}
 	
-	/**
-	 * Get all categories
-	 * 
-	 * @return array Associative array
-	 */
-    public static function getCategories($index = "id") {
-    	
-    	$db              = JFactory::getDBO();
-    	/** @var $db JDatabaseMySQLi **/
-    	
-    	$query = $db->getQuery(true);
-    	$query
-    	    ->select("*")
-    	    ->from($db->quoteName("#__vp_categories") . " AS a")
-    	    ->order("a.name");
-    	
-    	$db->setQuery($query);
-    	
-    	return $db->loadAssocList($index);
-    }
-    
 	/**
 	 * Get all categories for using in options
 	 * 
@@ -82,9 +68,10 @@ class VipPortfolioHelper {
     	
     	$query = $db->getQuery(true);
     	$query
-    	    ->select("a.id AS value, a.name AS text")
-    	    ->from($db->quoteName("#__vp_categories") . " AS a")
-    	    ->order("a.name");
+    	    ->select("a.id AS value, a.title AS text")
+    	    ->from($db->quoteName("#__categories") . " AS a")
+    	    ->where("a.extension = ". $db->quote("com_vipportfolio"))
+    	    ->order("a.title");
     	
     	$db->setQuery($query);
     	
@@ -106,7 +93,7 @@ class VipPortfolioHelper {
         
         $query  = $db->getQuery(true);
         $query->select("*")
-              ->from($db->quoteName("#__vp_categories") . " AS a")
+              ->from($db->quoteName("#__categories") . " AS a")
               ->where("a.id = ". (int)$categoryId);
     	
         $db->setQuery($query);
@@ -132,8 +119,8 @@ class VipPortfolioHelper {
     	
     	$query = $db->getQuery(true);
     	$query
-    	    ->select("a.id, a.name")
-    	    ->from($db->quoteName("#__vp_categories") . " AS a")
+    	    ->select("a.title")
+    	    ->from($db->quoteName("#__categories") ." AS a")
     	    ->where("a.id=".(int)$id);
     	    
         $db->setQuery($query, 0, 1);
@@ -155,7 +142,7 @@ class VipPortfolioHelper {
               ->from($db->quoteName("#__vp_categories") . " AS a")
               ->where("a.id = ". (int)$categoryId);
         
-        $db->setQuery($query,0,1);
+        $db->setQuery($query, 0, 1);
         
         return (bool)$db->loadResult();
     }
@@ -176,7 +163,7 @@ class VipPortfolioHelper {
         $query  = $db->getQuery(true);
         $query
             ->select("*")
-            ->from($db->quoteName("#__vp_projects") ." AS a");
+            ->from($db->quoteName("#__vp_projects") . " AS a");
         
         // Gets only published or not published
         if (!is_null($published)){
@@ -192,7 +179,7 @@ class VipPortfolioHelper {
             JArrayHelper::toInteger($categories);
             
             if (!empty($categories)){
-                $query->where("a.catid IN (" . implode(",",$categories) . ")");
+                $query->where("a.catid IN (" . implode(",", $categories) . ")");
             }
         }
                
@@ -219,6 +206,195 @@ class VipPortfolioHelper {
         $db->setQuery($query);
         
         return $db->loadAssocList();
+    }
+    
+    public static function getStyleFile($styleFile) {
+
+        $filename    = "";
+        $mediaFolder = JPATH_ROOT.DIRECTORY_SEPARATOR."media".DIRECTORY_SEPARATOR."com_vipportfolio".DIRECTORY_SEPARATOR;
+        
+        switch($styleFile) {
+            
+            case 1:
+                $filename .= $mediaFolder."categories".DIRECTORY_SEPARATOR."categorieslist".DIRECTORY_SEPARATOR."style.css";
+                break;
+                
+            case 2:
+                $filename .= $mediaFolder."projects".DIRECTORY_SEPARATOR."list".DIRECTORY_SEPARATOR."style.css";
+                break;
+                
+            case 3:
+                $filename .= $mediaFolder."projects".DIRECTORY_SEPARATOR."lineal".DIRECTORY_SEPARATOR."style.css";
+                break;
+                
+        }
+
+        return $filename;
+    }
+    
+    public static function getFacebookPageName($pageId) {
+        
+        $db     = JFactory::getDBO();
+        /** @var $db JDatabaseMySQLi **/
+    	
+    	$query  = $db->getQuery(true);
+        $query
+            ->select("a.title")
+            ->from($db->quoteName("#__vp_pages") . " AS a")
+            ->where("a.page_id =". $db->quote($pageId));
+              
+        $db->setQuery($query, 0, 1);
+        $name = $db->loadResult();
+        
+        return $name;
+    }
+    
+    /**
+     * 
+     * Make a request to facebook and get pages
+     * @param Facebook $facebook
+     */
+    public function getFacebookPages($facebook) {
+        
+        $accounts = $facebook->api("/me/accounts");
+        $accounts = JArrayHelper::getValue($accounts, "data");
+        
+        $pages = array();
+        
+        if(!empty($accounts)) {
+            
+            // Get only pages and exlude applications
+            foreach($accounts as $account) {
+                if(strcmp("Application", $account["category"])) {
+                    $pages[] = $account;
+                }
+            }
+        }
+        
+        return $pages;
+        
+    }
+    
+    public function getFacebookPageAccessToken($facebook, $pageId) {
+        
+        $accessToken = "";
+        $pages       = self::getFacebookPages($facebook);
+        
+        foreach($pages as $page) {
+            if($pageId == $page["id"]) {
+                $accessToken = $page["access_token"];
+                break;
+            } 
+        }
+        
+        return $accessToken;
+        
+    }
+    
+    public static function facebookAutoGrow($document, $params) {
+        
+        $js = 'window.fbAsyncInit = function() {
+    	  FB.init({ 
+  	        appId: "' . $params->get("fbpp_app_id", "").'", 
+  	        cookie : true, 
+  	        status : true, 
+  	        xfbml  : true,
+  	        oauth  : true
+  	     });
+
+    	  FB.Canvas.setAutoGrow();
+    	  
+      };
+
+      // Load the SDK Asynchronously
+      (function(d){
+         var js, id = "facebook-jssdk"; if (d.getElementById(id)) {return;}
+         js = d.createElement("script"); js.id = id; js.async = true;
+         js.src = "//connect.facebook.net/en_US/all.js";
+         d.getElementsByTagName("head")[0].appendChild(js);
+       }(document));';
+        
+       $document->addScriptDeclaration($js);
+            
+    }
+    
+    /**
+     * Prepare an image that will be used for meta data.
+     * 
+     * @param JCategory $category
+     * @param array $items
+     * 
+     * @return NULL|string
+     */
+    public static function getIntroImage($category, $items){
+         
+        $categoryParams = json_decode($category->params);
+        
+        $uri    = JUri::getInstance();
+        
+        $image  = null;
+        if(!empty($categoryParams->image)) {
+            if(0 !== strpos($categoryParams->image, "http")) {
+                $imagesUri  = $uri->toString(array("scheme", "host"))."/";
+                $image      = $imagesUri.$categoryParams->image;
+            } else {
+                $image      = $imagesUri.$categoryParams->image;
+            }
+            
+        } else {
+            foreach($items as $item) {
+                if(!empty($item->thumb)) {
+                    
+                    $params     = JComponentHelper::getParams("com_vipportfolio");
+                    $imagesUri  = $uri->toString(array("scheme", "host"))."/".$params->get("images_directory", "images/vipportfolio")."/";
+                    
+                    $image      =  $imagesUri.$item->thumb;
+                    break;
+                    
+                }
+            }
+        }
+        
+        return $image;
+    
+    }
+    
+    public static  function getCategoryImage($catgories) {
+    
+        foreach($catgories as $category) {
+            if(!empty($category)) {
+                if(!empty($category->image)) {
+                    return JUri::root().$category->image;
+                }
+            }
+        }
+    
+        return null;
+    }
+    
+    public static function getModalClass($modal, $item = null){
+         
+        if(!empty($item) AND is_array($item)) {
+            $item = JArrayHelper::toObject($item);
+        }
+        
+        switch($modal) {
+            
+            case "nivo":
+                $class = "js-com-nivo-modal";
+                break;
+                
+            case "duncan":
+                $class = "js-com-duncan-modal";
+                break;
+                
+            default:
+                $class = "";
+                break;
+        }
+    
+        return $class;
+    
     }
     
 }

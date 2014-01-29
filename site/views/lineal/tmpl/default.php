@@ -1,43 +1,42 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
 defined('_JEXEC') or die;
 ?>
 <?php if ($this->params->get('show_page_heading', 1)) { ?>
-    <h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
-    <?php } ?>
-    
-    <?php if($this->params->get("catDesc")) {?>
-    <?php   if(!empty($this->category)) { echo $this->category->desc; }; ?>
-    <?php }?>
-    
-<?php if ( isset($this->item) ) { ?>
+<h1><?php echo $this->escape($this->params->get('page_heading')); ?></h1>
+<?php } ?>
 
-<?php 
-if($this->modal) {
+<?php echo (!empty($this->event->onContentBeforeDisplay) ) ? $this->event->onContentBeforeDisplay : "";?>
+    
+<?php if($this->params->get("catDesc")) {?>
+<?php   if(!empty($this->category)) { echo $this->category->description; }; ?>
+<?php }?>
+    
+<?php if ( isset($this->item) ) { 
+
+    if($this->modal) {
     switch($this->modal) {
-        case "slimbox":
-            echo $this->loadTemplate("slimbox");
+        case "duncan":
+            echo $this->loadTemplate("duncan");
             break;
-            
-        case "native": // Native modal
-            echo $this->loadTemplate("nativemodal");
+        
+        case "nivo": // Nivo modal
+            echo $this->loadTemplate("nivo");
             break;
     }
 } else {
     echo $this->loadTemplate("nomodal");
 }
+
+echo (!empty($this->event->onContentAfterDisplay) ) ? $this->event->onContentAfterDisplay : "";
 ?>
 
 <div class="pagination">
@@ -51,6 +50,6 @@ if($this->modal) {
     <?php echo $this->pagination->getPagesLinks(); ?>
 </div>
 
-<?php echo (!empty($this->event->afterDisplayContent) ) ? $this->event->afterDisplayContent : ""; ?>
-    
 <?php } // if ( isset($this->item) ) {?>
+<div class="clearfix"></div>
+<?php echo $this->version->backlink; ?>

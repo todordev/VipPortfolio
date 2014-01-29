@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Component
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -31,8 +27,7 @@ class VipPortfolioModelTabbed extends JModelList {
                 'id', 'a.id', 
                 'title', 'a.title', 
                 'catid', 'a.catid', 
-                'published', 'a.published', 
-                'ordering', 'a.ordering'
+                'published', 'a.published'
             );
         }
         
@@ -62,7 +57,7 @@ class VipPortfolioModelTabbed extends JModelList {
         $value = $app->input->getInt('limitstart', 0);
         $this->setState('list.start', $value);
         
-        $this->setState('list.ordering', 'a.ordering');
+        $this->setState('list.ordering', 'a.rgt');
         $this->setState('list.direction', 'ASC');
         
         // Get categories IDs
@@ -107,11 +102,12 @@ class VipPortfolioModelTabbed extends JModelList {
         // Select the required fields from the table.
         $query->select(
             $this->getState(
-            'list.select', 
-            'a.id, a.name, a.alias, a.image')
+                'list.select', 
+                'a.id, a.title, a.alias, a.params'
+            )
         );
         
-        $query->from($db->quoteName('#__vp_categories') .' AS a');
+        $query->from($db->quoteName('#__categories') .' AS a');
         
         // Get categories
         $categoriesIds = $this->getState("categories_ids");

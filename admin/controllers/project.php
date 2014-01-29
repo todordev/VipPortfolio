@@ -1,26 +1,23 @@
 <?php
 /**
- * @package      ITPrism Components
- * @subpackage   Vip Portfolio
+ * @package      VipPortfolio
+ * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // No direct access
 defined('_JEXEC') or die;
 
 jimport('itprism.controller.form.backend');
+jimport("joomla.filesystem.path");
 
 /**
  * Project controller class.
  *
- * @package		ITPrism Components
- * @subpackage	Vip Portfolio
+ * @package		VipPortfolio
+ * @subpackage	Components
  * @since		1.6
  */
 class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
@@ -33,23 +30,11 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
         
         $model = parent::getModel($name, $prefix, $config);
         
-        $app = JFactory::getApplication();
-        /** @var $app JAdministrator **/
-        
         // Load the component parameters.
-        $params       = JComponentHelper::getParams($this->option);
+        $params = JComponentHelper::getParams($this->option);
         
-        // Extension parameters
-        $model->imagesURI       = $params->get("images_directory", "images/vipportfolio");
-        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
-        
-        // Joomla! media extension parameters
-        $mediaParams = JComponentHelper::getParams("com_media");
-        
-        // Media Manager parameters
-        $model->uploadMime      = explode(",", $mediaParams->get("upload_mime"));
-        $model->imageExtensions = explode(",", $mediaParams->get("image_extensions") );
-        $model->uploadMaxSize   = $mediaParams->get("upload_maxsize");
+        // Set images folder
+        $model->setImagesFolder(JPATH_ROOT .DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio"));
         
         return $model;
     }
@@ -72,19 +57,13 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
         $data    = $app->input->post->get('jform', array(), 'array');
         $itemId  = JArrayHelper::getValue($data, "id", 0, "int");
         
-        $thumb   = $app->input->files->get('jform', array(), 'array');
-        $thumb   = JArrayHelper::getValue($thumb, "thumb");
-        
-        $image   = $app->input->files->get('jform', array(), 'array');
-        $image   = JArrayHelper::getValue($image, "image");
-        
         // Redirect options
         $redirectOptions = array (
             "task"	 => $this->getTask(),
             "id"     => $itemId
         );
         
-        $model = $this->getModel();
+        $model   = $this->getModel();
         /** @var $model VipPortfolioModelProject */
         
         $form = $model->getForm($data, false);
@@ -103,66 +82,56 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
             return;
         }
         
-        try{
+        try {
             
-            if(!empty($image['name']) OR !empty($thumb['name'])) {
-                jimport('joomla.filesystem.folder');
-                jimport('joomla.filesystem.file');
-                jimport('joomla.filesystem.path');
-                jimport('joomla.image.image');
-                jimport('itprism.file.upload.image');                
-            }
+            // Get image
+            $thumb   = $app->input->files->get('jform', array(), 'array');
+            $thumb   = JArrayHelper::getValue($thumb, "thumb");
+            
+            $image   = $app->input->files->get('jform', array(), 'array');
+            $image   = JArrayHelper::getValue($image, "image");
             
             // Upload image
-            $imageNames = array();
-            if(!empty($image['name'])) {
-                
-                // Image options
-                $options = JArrayHelper::getValue($validData, "resize");
-                
-                $imageNames    = $model->uploadImage($image, $options);
-                if(!empty($imageNames["image"])) {
-                    $validData["image"] = $imageNames["image"];
-                }
-                
-                if(!empty($imageNames["thumb"])) {
-                    $validData["thumb"] = $imageNames["thumb"];
-                }
-                
-            }
+            if(!empty($image['name']) OR !empty($thumb['name'])) {
             
-            // Upload thumbnail
-            if(!empty($thumb['name']) AND empty($validData["thumb"])) {
+                // Upload image
+                $imageNames = array();
+                if(!empty($image['name'])) {
                 
-                $thumbName    = $model->uploadThumb($thumb);
-                if(!empty($thumbName)) {
-                    $validData["thumb"] = $thumbName;
+                    // Image options
+                    $options       = JArrayHelper::getValue($validData, "resize");
+                
+                    $imageNames    = $model->uploadImage($image, $options);
+                    if(!empty($imageNames["image"])) {
+                        $validData["image"] = $imageNames["image"];
+                    }
+                
+                    if(!empty($imageNames["thumb"])) {
+                        $validData["thumb"] = $imageNames["thumb"];
+                    }
+                
                 }
                 
+                // Upload thumbnail
+                if(!empty($thumb['name']) AND empty($validData["thumb"])) {
+                
+                    $thumbName    = $model->uploadThumb($thumb);
+                    if(!empty($thumbName)) {
+                        $validData["thumb"] = $thumbName;
+                    }
+                
+                }
+            
             }
             
             $redirectOptions["id"] = $model->save($validData);
-        
-        } catch ( Exception $e ) {
             
-            $code = $e->getCode();
-            switch($code) {
+        } catch (RuntimeException $e) {
+            $this->displayWarning($e->getMessage(), $redirectOptions);
+        } catch (Exception $e) {
             
-                case ITPrismErrors::CODE_WARNING:
-                    $this->displayWarning($e->getMessage(), $redirectOptions);
-                    return;
-                break;
-            
-                case ITPrismErrors::CODE_HIDDEN_WARNING:
-                    $this->displayWarning(JText::_("COM_VIPPORTFOLIO_ERROR_FILE_CANT_BE_UPLOADED"), $redirectOptions);
-                    return;
-                break;
-            
-                default:
-                    JLog::add($e->getMessage());
-                    throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
-                break;
-            }
+            JLog::add($e->getMessage());
+            throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
             
         }
         
@@ -190,7 +159,7 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
             "id"     => $itemId
         );
         
-        try{
+        try {
             
             // Get the model
             $model = $this->getModel();
@@ -198,7 +167,7 @@ class VipPortfolioControllerProject extends ITPrismControllerFormBackend {
             
             $model->removeImage($itemId, $type);
             
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             JLog::add($e->getMessage());
             throw new Exception(JText::_('COM_VIPPORTFOLIO_ERROR_SYSTEM'));
         }

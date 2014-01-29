@@ -3,12 +3,8 @@
  * @package      Vip Portfolio
  * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -22,6 +18,13 @@ defined('_JEXEC') or die;
  * @since		1.6
  */
 abstract class JHtmlVipPortfolio {
+    
+    protected static $extension = "com_vipportfolio"; 
+    
+    /**
+     * @var   array   array containing information for loaded files
+     */
+    protected static $loaded = array();
     
 	public static function boolean($value) {
 	    
@@ -42,4 +45,37 @@ abstract class JHtmlVipPortfolio {
 		return implode($html);
 	}
     
+	public static function lightbox_nivo() {
+	
+	    // Only load once
+	    if (!empty(self::$loaded[__METHOD__])) {
+	        return;
+	    }
+	
+	    $document = JFactory::getDocument();
+	
+	    $document->addStylesheet(JUri::root().'media/'.self::$extension.'/js/nivo/nivo-lightbox.css');
+	    $document->addStylesheet(JUri::root().'media/'.self::$extension.'/js/nivo/themes/default/default.css');
+	    $document->addScript(JUri::root().'media/'.self::$extension.'/js/nivo/nivo-lightbox.js');
+	
+	    self::$loaded[__METHOD__] = true;
+	
+	}
+	
+	public static function lightbox_duncan() {
+	
+	    // Only load once
+	    if (!empty(self::$loaded[__METHOD__])) {
+	        return;
+	    }
+	
+	    $document = JFactory::getDocument();
+	
+	    $document->addStylesheet(JUri::root().'media/'.self::$extension.'/js/duncan/jquery.lightbox.min.css');
+	    $document->addScript(JUri::root().'media/'.self::$extension.'/js/duncan/jquery.lightbox.min.js');
+	
+	    self::$loaded[__METHOD__] = true;
+	
+	}
+	
 }

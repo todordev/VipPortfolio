@@ -1,14 +1,10 @@
 <?php
 /**
- * @package      Vip Portfolio
+ * @package      VipPortfolio
  * @subpackage   Components
  * @author       Todor Iliev
- * @copyright    Copyright (C) 2010 Todor Iliev <todor@itprism.com>. All rights reserved.
+ * @copyright    Copyright (C) 2014 Todor Iliev <todor@itprism.com>. All rights reserved.
  * @license      http://www.gnu.org/copyleft/gpl.html GNU/GPL
- * Vip Portfolio is free software. This version may have been modified pursuant
- * to the GNU General Public License, and as distributed it includes or
- * is derivative of works licensed under the GNU General Public License or
- * other free or open source software licenses.
  */
 
 // no direct access
@@ -25,8 +21,8 @@ jimport('joomla.application.categories');
  * Use router ...BuildRoute to build a link
  *
  * @static
- * @package		VipPortfolio
- * @subpackage	Components
+ * @package		ITPrism Components
+ * @subpackage	VipPortfolio
  * @since 1.5
  */
 abstract class VipPortfolioHelperRoute {
@@ -34,183 +30,337 @@ abstract class VipPortfolioHelperRoute {
 	protected static $lookup;
 
 	/**
-	 * This method route quote in the view "category".
+	 * Routing a link for list view.
 	 * 
-	 * @param	int		$id		The id of the item.
-	 * @param	int		$catid	The id of the category.
+	 * @param integer $catid
 	 */
-	public static function getDetailsRoute($id, $catid, $screen = null) {
+	public static function getListViewRoute($catid) {
 	    
-	    /**
-	     * 
-	     * # category
-	     * We will check for view category first. If find a menu item with view "category" and "id" eqallity of the key, 
-	     * we will get that menu item ( Itemid ). 
-	     * 
-	     * # categories view
-	     * If miss a menu item with view "category" we continue with searchin but now for view "categories".
-	     * It is assumed view "categories" will be in the first level of the menu.
-	     * The view "categories" won't contain category ID so it has to contain 0 for ID key. 
-	     */
-		$needles = array(
-	        'details' => array((int)$id),
-		);
-		
-		//Create the link
-		$link = 'index.php?option=com_crowdfunding&view=details&id='. $id;
-		if ($catid > 1) {
-		    $categories = JCategories::getInstance('crowdfunding');
-		    $category   = $categories->get($catid);
-		
-		    if($category) {
-		        $needles['discover']   = array_reverse($category->getPath());
-		        $needles['discover'][] = 0;
-		        $link .= '&catid='.$catid;
-		    }
-		}
-		
-		// Set a screen page
-		if(!empty($screen)) {
-		    $link .= '&screen='.$screen;
-		}
-		
-		// Looking for menu item (Itemid)
-		if ($item = self::_findItem($needles)) {
-			$link .= '&Itemid='.$item;
-		} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
-			$link .= '&Itemid='.$item;
-		}
-		
-		return $link;
-	}
-	
-	/**
-	 * @param	int		$id		The id of the item.
-	 * @param	int		$catid	The id of the category.
-	 * @param	string	$return	The return page variable.
-	 */
-	public static function getBackingRoute($id, $catid, $layout = "default", $rewardId = null) {
-	    
-		/**
-	     * 
-	     * # category
-	     * We will check for view category first. If find a menu item with view "category" and "id" eqallity of the key, 
-	     * we will get that menu item ( Itemid ). 
-	     * 
-	     * # categories view
-	     * If miss a menu item with view "category" we continue with searchin but now for view "categories".
-	     * It is assumed view "categories" will be in the first level of the menu.
-	     * The view "categories" won't contain category ID so it has to contain 0 for ID key. 
-	     */
-		$needles = array(
-			'backing'   => array((int)$id)
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_crowdfunding&view=backing&id='. $id;
-		if ($catid > 1) {
-		    $categories = JCategories::getInstance('crowdfunding');
-		    $category   = $categories->get($catid);
-		
-		    if($category) {
-		        $needles['discover']   = array_reverse($category->getPath());
-		        $needles['discover'][] = 0;
-		        $link .= '&catid='.$catid;
-		    }
-		}
-		
-		if (!is_null($layout)) {
-		    $link .= '&layout='.$layout;
+		if ($catid instanceof JCategoryNode) {
+			$id       = $catid->id;
+			$category = $catid;
+		} else {
+			$id       =  (int)$catid;
+			$category = JCategories::getInstance('VipPortfolio')->get($id);
 		}
 
-		if (!is_null($rewardId) AND $rewardId > 1) {
-		    $link .= '&rid='.(int)$rewardId;
-		}
-		
-		// Looking for menu item (Itemid)
-		if ($item = self::_findItem($needles)) {
-			$link .= '&Itemid='.$item;
-		} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
-			$link .= '&Itemid='.$item;
+		if ($id < 1) {
+			$link = '';
+		} else {
+			$needles = array(
+				'list'   => array($id)
+			);
+
+			// Get menu item ( Itemid )
+			if ($item = self::_findItem($needles)) {
+			    
+				$link = 'index.php?Itemid='.$item;
+			
+			} else { // Continue to search and deep inside
+			    
+				//Create the link
+				$link = 'index.php?option=com_vipportfolio&view=list&id='.$id;
+
+				if ($category) {
+					$catids  = array_reverse($category->getPath());
+					
+					$needles = array(
+						'list' => $catids
+					);
+					
+					// Looking for menu item (Itemid)
+					if ($item = self::_findItem($needles)) {
+						$link .= '&Itemid='.$item;
+					} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
+						$link .= '&Itemid='.$item;
+					}
+				}
+			}
 		}
 
 		return $link;
 	}
 	
 	/**
-	 * @param	int		$id		The id of the item.
-	 * @param	int		$catid	The id of the category.
-	 * @param	int		$catid	The id of the category.
+	 * Routing a link for lineal view.
 	 * 
-	 * $return	Return URL string
+	 * @param integer $catid
 	 */
-	public static function getEmbedRoute($id, $catid, $layout = null) {
+	public static function getLinealViewRoute($catid, $offset) {
+	    
+		if ($catid instanceof JCategoryNode) {
+			$id       = $catid->id;
+			$category = $catid;
+		} else {
+			$id       =  (int)$catid;
+			$category = JCategories::getInstance('VipPortfolio')->get($id);
+		}
+
+		if ($id < 1) {
+			$link = '';
+		} else {
+			$needles = array(
+				'lineal'   => array($id)
+			);
+
+			// Get menu item ( Itemid )
+			if ($item = self::_findItem($needles)) {
+			    
+				$link = 'index.php?Itemid='.$item;
+			
+			} else { // Continue to search and deep inside
+			    
+				//Create the link
+				$link = 'index.php?option=com_vipportfolio&view=lineal&id='.$id;
+
+				if ($category) {
+					$catids  = array_reverse($category->getPath());
+					
+					$needles = array(
+						'lineal' => $catids
+					);
+					
+					// Looking for menu item (Itemid)
+					if ($item = self::_findItem($needles)) {
+						$link .= '&Itemid='.$item;
+					} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
+						$link .= '&Itemid='.$item;
+					}
+				}
+			}
+		}
+
+		if(!empty($offset)){
+		  $link .= "&start=".(int)$offset;
+		}
+		return $link;
+	}
+	
+	/**
+	 * Routing a link for camera view.
+	 * 
+	 * @param integer $catid
+	 */
+	public static function getCameraViewRoute($catid) {
+	    
+		if ($catid instanceof JCategoryNode) {
+			$id       = $catid->id;
+			$category = $catid;
+		} else {
+			$id       =  (int)$catid;
+			$category = JCategories::getInstance('VipPortfolio')->get($id);
+		}
+
+		if ($id < 1) {
+			$link = '';
+		} else {
+			$needles = array(
+				'camera'   => array($id)
+			);
+
+			// Get menu item ( Itemid )
+			if ($item = self::_findItem($needles)) {
+			    
+				$link = 'index.php?Itemid='.$item;
+			
+			} else { // Continue to search and deep inside
+			    
+				//Create the link
+				$link = 'index.php?option=com_vipportfolio&view=camera&id='.$id;
+
+				if ($category) {
+					$catids  = array_reverse($category->getPath());
+					
+					$needles = array(
+						'camera' => $catids
+					);
+					
+					// Looking for menu item (Itemid)
+					if ($item = self::_findItem($needles)) {
+						$link .= '&Itemid='.$item;
+					} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
+						$link .= '&Itemid='.$item;
+					}
+				}
+			}
+		}
+
+		return $link;
+	}
+	
+	/**
+	 * Routing a link for slide gallery view.
+	 * 
+	 * @param integer $catid
+	 */
+	public static function getSlideGalleryViewRoute($catid) {
+	    
+		if ($catid instanceof JCategoryNode) {
+			$id       = $catid->id;
+			$category = $catid;
+		} else {
+			$id       =  (int)$catid;
+			$category = JCategories::getInstance('VipPortfolio')->get($id);
+		}
+
+		if ($id < 1) {
+			$link = '';
+		} else {
+			$needles = array(
+				'slidegallery'   => array($id)
+			);
+
+			// Get menu item ( Itemid )
+			if ($item = self::_findItem($needles)) {
+			    
+				$link = 'index.php?Itemid='.$item;
+			
+			} else { // Continue to search and deep inside
+			    
+				//Create the link
+				$link = 'index.php?option=com_vipportfolio&view=slidegallery&id='.$id;
+
+				if ($category) {
+					$catids  = array_reverse($category->getPath());
+					
+					$needles = array(
+						'slidegallery' => $catids
+					);
+					
+					// Looking for menu item (Itemid)
+					if ($item = self::_findItem($needles)) {
+						$link .= '&Itemid='.$item;
+					} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
+						$link .= '&Itemid='.$item;
+					}
+				}
+			}
+		}
+
+		return $link;
+	}
+	
+	/**
+	 * Routing a link for galleria view.
+	 *
+	 * @param integer $catid
+	 */
+	public static function getGalleriaViewRoute($catid) {
+	     
+	    if ($catid instanceof JCategoryNode) {
+	        $id       = $catid->id;
+	        $category = $catid;
+	    } else {
+	        $id       =  (int)$catid;
+	        $category = JCategories::getInstance('VipPortfolio')->get($id);
+	    }
+	
+	    if ($id < 1) {
+	        $link = '';
+	    } else {
+	        $needles = array(
+                'galleria'   => array($id)
+	        );
+	
+	        // Get menu item ( Itemid )
+	        if ($item = self::_findItem($needles)) {
+	             
+	            $link = 'index.php?Itemid='.$item;
+	            	
+	        } else { // Continue to search and deep inside
+	             
+	            //Create the link
+	            $link = 'index.php?option=com_vipportfolio&view=galleria&id='.$id;
+	
+	            if ($category) {
+	                $catids  = array_reverse($category->getPath());
+	                	
+	                $needles = array(
+                        'galleria' => $catids
+	                );
+	                	
+	                // Looking for menu item (Itemid)
+	                if ($item = self::_findItem($needles)) {
+	                    $link .= '&Itemid='.$item;
+	                } elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
+	                    $link .= '&Itemid='.$item;
+	                }
+	            }
+	        }
+	    }
+	
+	    return $link;
+	}
+	
+	
+	/**
+	 * Routing a link for tabbed view.
+	 * 
+	 */
+	public static function getTabbedViewRoute() {
 	    
 		/**
-	     * 
+	     *
 	     * # category
-	     * We will check for view category first. If find a menu item with view "category" and "id" eqallity of the key, 
-	     * we will get that menu item ( Itemid ). 
-	     * 
+	     * We will check for view category first. If find a menu item with view "category" and "id" eqallity of the key,
+	     * we will get that menu item ( Itemid ).
+	     *
 	     * # categories view
 	     * If miss a menu item with view "category" we continue with searchin but now for view "categories".
 	     * It is assumed view "categories" will be in the first level of the menu.
-	     * The view "categories" won't contain category ID so it has to contain 0 for ID key. 
+	     * The view "categories" won't contain category ID so it has to contain 0 for ID key.
 	     */
-		$needles = array(
-		    'embed' => array((int)$id)
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_crowdfunding&view=embed&id='. $id;
-		if ($catid > 1) {
-		    $categories = JCategories::getInstance('crowdfunding');
-		    $category   = $categories->get($catid);
-		
-		    if($category) {
-		        $needles['discover']   = array_reverse($category->getPath());
-		        $needles['discover'][] = 0;
-		        $link .= '&catid='.$catid;
-		    }
-		}
-		
-		if(!empty($layout)) {
-		    $link .= "&layout=".$layout;
-		}
-		
-		// Looking for menu item (Itemid)
-		if ($item = self::_findItem($needles)) {
-			$link .= '&Itemid='.$item;
-		} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
-			$link .= '&Itemid='.$item;
-		}
-
-		return $link;
+	    $needles = array(
+            'tabbed' => array(0)
+	    );
+	
+	    //Create the link
+	    $link = 'index.php?option=com_vipportfolio&view=tabbed';
+	
+	    // Looking for menu item (Itemid)
+	    if ($item = self::_findItem($needles)) {
+	        $link .= '&Itemid='.$item;
+	    } elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
+	        $link .= '&Itemid='.$item;
+	    }
+	
+	    return $link;
 	}
-
+	
 	/**
-	 * @param	int		$id		The id of the item.
-	 * @param	string	$return	The return page variable.
+	 * Routing a link for cateogry list view.
+	 * 
 	 */
-	public static function getFormRoute($id) {
+	public static function getCategoryListViewRoute() {
 	    
-		$needles = array(
-			'project'   => array(0)
-		);
-
-		//Create the link
-		$link = 'index.php?option=com_crowdfunding&view=project&id='. $id;
-
-		// Looking for menu item (Itemid)
-		if ($item = self::_findItem($needles)) {
-			$link .= '&Itemid='.$item;
-		} elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
-			$link .= '&Itemid='.$item;
-		}
-
-		return $link;
+		/**
+	     *
+	     * # category
+	     * We will check for view category first. If find a menu item with view "category" and "id" eqallity of the key,
+	     * we will get that menu item ( Itemid ).
+	     *
+	     * # categories view
+	     * If miss a menu item with view "category" we continue with searchin but now for view "categories".
+	     * It is assumed view "categories" will be in the first level of the menu.
+	     * The view "categories" won't contain category ID so it has to contain 0 for ID key.
+	     */
+	    $needles = array(
+            'categorylist' => array(0)
+	    );
+	
+	    //Create the link
+	    $link = 'index.php?option=com_vipportfolio&view=categorylist';
+	
+	    // Looking for menu item (Itemid)
+	    if ($item = self::_findItem($needles)) {
+	        $link .= '&Itemid='.$item;
+	    } elseif ($item = self::_findItem()) { // Get the menu item (Itemid) from the active (current) item.
+	        $link .= '&Itemid='.$item;
+	    }
+	
+	    return $link;
 	}
-
+	
 	protected static function _findItem($needles = null) {
 		$app		= JFactory::getApplication();
 		$menus		= $app->getMenu('site');
@@ -221,13 +371,13 @@ abstract class VipPortfolioHelperRoute {
 		// and the menu item id (Itemid) as a value
 		// Example:
 		// array( "category" => 
-		//     1(id) => 100 (Itemid),
-		//     2(id) => 101 (Itemid)
+		//     1(catid) => 100 (Itemid),
+		//     2(catid) => 101 (Itemid)
 		// );
 		if (self::$lookup === null) {
 			self::$lookup = array();
 
-			$component	= JComponentHelper::getComponent('com_crowdfunding');
+			$component	= JComponentHelper::getComponent('com_vipportfolio');
 			$items		= $menus->getItems('component_id', $component->id);
 
 			if ($items) {
@@ -276,7 +426,7 @@ abstract class VipPortfolioHelperRoute {
 	/**
 	 * 
 	 * Prepeare categories path to the segments.
-	 * We use this method in the router "CrowdFundingParseRoute".
+	 * We use this method in the router "VipPortfolioParseRoute".
 	 * 
 	 * @param integer   $catId		Category Id
 	 * @param array 	$segments	
@@ -285,7 +435,7 @@ abstract class VipPortfolioHelperRoute {
 	public static function prepareCategoriesSegments($catId, &$segments, $mId = null) {
 	    
 	    $menuCatid    = $mId;
-		$categories   = JCategories::getInstance('CrowdFunding');
+		$categories   = JCategories::getInstance('VipPortfolio');
 		$category     = $categories->get($catId);
 
 		if ($category) {
@@ -305,31 +455,4 @@ abstract class VipPortfolioHelperRoute {
 		}
 	}
 	
-    /**
-     * 
-     * Load an object that contains a data about project.
-     * We use this method in the router "CrowdFundingParseRoute".
-     * 
-     * @param integer $id
-     */
-    public static function getProject($id) {
-        
-        $db     = JFactory::getDbo();
-        $query  = $db->getQuery(true);
-        
-        $query
-            ->select("a.alias, a.catid")
-            ->from($query->quoteName("#__crowdf_projects") . " AS a")
-            ->where("a.id = " . (int)$id);
-
-        $db->setQuery($query);
-        $result = $db->loadObject();
-        
-        if(!$result) {
-            $result = null;
-        }
-        
-        return $result;
-			
-    }
 }

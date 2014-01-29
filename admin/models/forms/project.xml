@@ -1,47 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
 	<fieldset>
-		<field 
-			name="id" 
-			type="text" 
-			default="0" 
+		<field name="id" type="text" class="readonly"
 			label="JGLOBAL_FIELD_ID_LABEL" 
-			readonly="true" 
-			class="readonly"
 			description="JGLOBAL_FIELD_ID_DESC"
+			default="0" 
 			filter="int"
-			/>
+			readonly="true" 
+		/>
 
         <field name="alias" type="text" class="inputbox" 
-            size="60" 
             label="JFIELD_ALIAS_LABEL"
             description="JFIELD_ALIAS_DESC" 
+            size="60" 
             filter="trim"
         />
         
-		<field 
-		    name="title" 
-		    type="text" 
-		    class="inputbox"
-			size="40" 
+		<field name="title"  type="text" class="inputbox span10"
 			label="JGLOBAL_TITLE"
 			description="COM_VIPPORTFOLIO_FIELD_TITLE_DESC" 
 			required="true" 
-			filter="trim" />
+			filter="trim" 
+	    />
 
-		<field
-	        name="catid"
-	        type="vpcategories"
-	        label="JCATEGORY"
-	        filter="int"
-	        />
+        <field name="catid" type="category" class="inputbox" 
+            label="JCATEGORY" 
+            description="JFIELD_CATEGORY_DESC"
+            extension="com_vipportfolio"
+            filter="int"
+        />
 
-		<field
-			name="published"
-			type="list"
+		<field name="published" type="list" class="inputbox"
 			label="JSTATUS"
 			description="JFIELD_PUBLISHED_DESC"
-			class="inputbox"
 			size="1"
 			default="1" >
 			<option
@@ -53,49 +44,39 @@
 		<field name="thumb" type="file" class="inputbox"
             label="COM_VIPPORTFOLIO_FIELD_THUMB"
             description="COM_VIPPORTFOLIO_FIELD_THUMB_DESC"
-            size="60"
         />
         
-		<field
-            name="image"
-            type="file"
+		<field name="image" type="file" class="inputbox"
             label="COM_VIPPORTFOLIO_FIELD_IMAGE"
             description="COM_VIPPORTFOLIO_FIELD_IMAGE_DESC"
-            class="inputbox"
-            size="60"
-            />
+        />
             
-        <field
-            name="url"
-            type="url"
+        <field name="url" type="url" class="inputbox span10"
             label="COM_VIPPORTFOLIO_URL"
             description="COM_VIPPORTFOLIO_FIELD_URL_DESC"
-            class="inputbox"
-            size="60"
             filter="trim"
             validate="url"
-            />
+         />
 		
-		<field name="description" type="editor" buttons="false" show="toggle"
-            class="inputbox"
-            filter="safehtml"
-            width="500"
+		<field name="description" type="editor" class="inputbox span10" 
+		    buttons="false" show="toggle"
             label="JGLOBAL_DESCRIPTION" 
             description="COM_VIPPORTFOLIO_FIELD_DESCRIPTION_DESC" 
-            />
+            filter="safehtml"
+        />
 
 	</fieldset>
 	
 	<fields name="resize">
-    
-       <field name="create_thumb"  type="checkbox" 
+	
+	   <field name="create_thumb"  type="checkbox" 
             label="COM_VIPPORTFOLIO_THUMB_CREATE_THUMB"
             description="COM_VIPPORTFOLIO_THUMB_CREATE_THUMB_DESC" 
             filter="int" 
             value="1"
         />
         
-       <field name="thumb_width"  type="text" class="inputbox"
+	   <field name="thumb_width"  type="text" class="inputbox"
             label="COM_VIPPORTFOLIO_THUMB_WIDTH"
             description="COM_VIPPORTFOLIO_THUMB_RESIZE_WIDTH_DESC" 
             filter="int" 
@@ -148,6 +129,5 @@
             <option value="3">COM_VIPPORTFOLIO_OUTSIDE</option>
         </field>
         
-    </fields>
-    
+	</fields>
 </form>

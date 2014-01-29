@@ -35,10 +35,6 @@
     width: 100%;
 }
 
-.clr{
-  clear: both;
-}
-
 .itp-vp-extra-image img{
     -webkit-transform:scale(0.8); /*Webkit: Scale down image to 0.8x original size*/
     -moz-transform:scale(0.8); /*Mozilla scale version*/
