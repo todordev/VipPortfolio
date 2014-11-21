@@ -51,5 +51,3 @@ echo (!empty($this->event->onContentAfterDisplay) ) ? $this->event->onContentAft
 </div>
 
 <?php } // if ( isset($this->item) ) {?>
-<div class="clearfix"></div>
-<?php echo $this->version->backlink; ?>

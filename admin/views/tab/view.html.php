@@ -12,91 +12,102 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-class VipPortfolioViewTab extends JViewLegacy {
-    
+class VipPortfolioViewTab extends JViewLegacy
+{
+    /**
+     * @var JDocumentHtml
+     */
+    public $document;
+
+    /**
+     * @var Joomla\Registry\Registry
+     */
+    protected $params;
+
     protected $state;
     protected $item;
     protected $form;
-    
+
     protected $documentTitle;
     protected $option;
-    
-    public function __construct($config) {
+
+    protected $pageName;
+
+    public function __construct($config)
+    {
         parent::__construct($config);
         $this->option = JFactory::getApplication()->input->get("option");
     }
-    
+
     /**
      * Display the view
      */
-    public function display($tpl = null){
-        
-        $this->state     = $this->get('State');
-        $this->item      = $this->get('Item');
-        $this->form      = $this->get('Form');
+    public function display($tpl = null)
+    {
+        $this->state = $this->get('State');
+        $this->item  = $this->get('Item');
+        $this->form  = $this->get('Form');
 
-        $this->params    = $this->state->get("params");
-        
-        $pageId          = $this->state->get("page_id");
-        $this->pageName  = VipPortfolioHelper::getFacebookPageName($pageId);
-        
+        $this->params = $this->state->get("params");
+
+        $pageId         = $this->state->get("page_id");
+        $this->pageName = VipPortfolioHelper::getFacebookPageName($pageId);
+
         // Prepare actions, behaviors, scritps and document
         $this->addToolbar();
         $this->setDocument();
-        
+
         parent::display($tpl);
     }
-    
+
     /**
      * Add the page title and toolbar.
      *
      * @since   1.6
      */
-    protected function addToolbar(){
-        
+    protected function addToolbar()
+    {
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $isNew = ($this->item->id == 0);
+        $isNew               = ($this->item->id == 0);
         $this->documentTitle = $isNew ? JText::_('COM_VIPPORTFOLIO_TAB_ADD')
-                                      : JText::_('COM_VIPPORTFOLIO_TAB_EDIT');
+            : JText::_('COM_VIPPORTFOLIO_TAB_EDIT');
 
         JToolBarHelper::title($this->documentTitle);
-		                             
+
         JToolBarHelper::apply('tab.apply');
         JToolBarHelper::save2new('tab.save2new');
         JToolBarHelper::save('tab.save');
-    
-        if(!$isNew){
+
+        if (!$isNew) {
             JToolBarHelper::cancel('tab.cancel', 'JTOOLBAR_CANCEL');
-        }else{
+        } else {
             JToolBarHelper::cancel('tab.cancel', 'JTOOLBAR_CLOSE');
         }
-        
     }
-    
-	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function setDocument() {
-	    
-	    // Add behaviors
-	    JHtml::_('behavior.tooltip');
+
+    /**
+     * Method to set up the document properties
+     *
+     * @return void
+     */
+    protected function setDocument()
+    {
+        // Add behaviors
+        JHtml::_('behavior.tooltip');
         JHtml::_('behavior.formvalidation');
-        
+
         JHtml::_('formbehavior.chosen', 'select');
-        
+
         $isNew = ($this->item->id == 0);
-        
-	    if(!$isNew) {
+
+        if (!$isNew) {
             $this->document->setTitle(JText::sprintf("COM_VIPPORTFOLIO_TAB_EDIT", $this->pageName));
         } else {
             $this->document->setTitle(JText::sprintf("COM_VIPPORTFOLIO_TAB_ADD", $this->pageName));
         }
-        
-		// Add scripts
-		$this->document->addScript('../media/'.$this->option.'/js/admin/'.strtolower($this->getName()).'.js');
-	}
 
+        // Add scripts
+        $this->document->addScript('../media/' . $this->option . '/js/admin/' . strtolower($this->getName()) . '.js');
+    }
 }

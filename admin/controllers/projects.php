@@ -17,25 +17,25 @@ jimport('itprism.controller.admin');
  *
  * @package     VipPortfolio
  * @subpackage  Components
-  */
-class VipPortfolioControllerProjects extends ITPrismControllerAdmin {
-    
+ */
+class VipPortfolioControllerProjects extends ITPrismControllerAdmin
+{
     /**
      * Proxy for getModel.
      * @since   1.6
      */
-    public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
-        
+    public function getModel($name = 'Project', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true))
+    {
         $model = parent::getModel($name, $prefix, $config);
-        
+
         // Load the component parameters.
-        $params       = JComponentHelper::getParams($this->option);
-        
+        $params = JComponentHelper::getParams($this->option);
+        /** @var  $params Joomla\Registry\Registry */
+
         // Extension parameters
-        $model->imagesURI       = $params->get("images_directory", "images/vipportfolio");
-        $model->imagesFolder    = JPATH_SITE . DIRECTORY_SEPARATOR. $params->get("images_directory", "images/vipportfolio");
-        
+        $model->setImagesUri($params->get("images_directory", "images/vipportfolio"));
+        $model->setImagesFolder(JPATH_ROOT . DIRECTORY_SEPARATOR . $params->get("images_directory", "images/vipportfolio"));
+
         return $model;
     }
-    
 }

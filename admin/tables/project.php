@@ -10,10 +10,15 @@
 // No direct access
 defined('_JEXEC') or die;
 
-class VipPortfolioTableProject extends JTable {
-    
-    public function __construct( $db ) {
-        parent::__construct( '#__vp_projects', 'id', $db );
+class VipPortfolioTableProject extends JTable
+{
+    /**
+     * Initialize the object.
+     *
+     * @param JDatabaseDriver $db
+     */
+    public function __construct($db)
+    {
+        parent::__construct('#__vp_projects', 'id', $db);
     }
-    
 }

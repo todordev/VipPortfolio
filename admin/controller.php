@@ -10,36 +10,35 @@
 // no direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controller');
-
 /**
  * Main controller
  *
- * @package		VipPortfolio
- * @subpackage	Components
+ * @package        VipPortfolio
+ * @subpackage     Components
  */
-class VipPortfolioController extends JControllerLegacy {
-    
+class VipPortfolioController extends JControllerLegacy
+{
     protected $option;
-    
-	public function __construct($config = array())	{
-		parent::__construct($config);
+
+    public function __construct($config = array())
+    {
+        parent::__construct($config);
         $this->option = JFactory::getApplication()->input->getCmd("option");
-	}
+    }
 
-	public function display($cachable = false, $urlparams = false) {
+    public function display($cachable = false, $urlparams = false)
+    {
+        $document = JFactory::getDocument();
+        /** @var $document JDocumentHtml */
 
-		$document = JFactory::getDocument();
-		/** @var $document JDocumentHtml **/
-		
-		// Add component style
-        $document->addStyleSheet('../media/'.$this->option.'/css/style.css');
-        
-        $viewName      = JFactory::getApplication()->input->getCmd('view', 'dashboard');
+        // Add component style
+        $document->addStyleSheet('../media/' . $this->option . '/css/style.css');
+
+        $viewName = JFactory::getApplication()->input->getCmd('view', 'dashboard');
         JFactory::getApplication()->input->set("view", $viewName);
 
         parent::display();
-        return $this;
-	}
 
+        return $this;
+    }
 }

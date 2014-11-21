@@ -13,9 +13,6 @@ defined('_JEXEC') or die;
 jimport("itprism.init");
 jimport("vipportfolio.init");
 
-// Include dependencies
-jimport('joomla.application.component.controller');
-
 // Get an instance of the controller
 $controller = JControllerLegacy::getInstance("VipPortfolio");
 

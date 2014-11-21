@@ -10,25 +10,23 @@
 // No direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.controller');
-
 /**
  * Facebook Page controller
  *
- * @package		VipPortfolio
- * @subpackage	Components
- * @since		1.6
+ * @package        VipPortfolio
+ * @subpackage     Components
+ * @since          1.6
  */
-class VipPortfolioControllerPage extends JControllerLegacy {
-    
+class VipPortfolioControllerPage extends JControllerAdmin
+{
     // Check the table in so it can be edited.... we are done with it anyway
-    private    $defaultLink = 'index.php?option=com_vipportfolio';
-    
+    private $defaultLink = 'index.php?option=com_vipportfolio';
+
     /**
      * Cancel operations
      */
-    public function cancel() {
-        $this->setRedirect(JRoute::_($this->defaultLink . "&view=".$this->view_list, false));
+    public function cancel()
+    {
+        $this->setRedirect(JRoute::_($this->defaultLink . "&view=" . $this->view_list, false));
     }
-    
 }

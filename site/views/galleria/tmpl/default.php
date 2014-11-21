@@ -33,5 +33,3 @@ switch($this->params->get("galleria_renderer", "thumbs_images")){
 }
 ?>
 <?php echo (!empty($this->event->onContentAfterDisplay) ) ? $this->event->onContentAfterDisplay : ""; ?>
-<div class="clearfix"></div>
-<?php echo $this->version->backlink; ?>

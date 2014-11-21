@@ -19,9 +19,10 @@ JFormHelper::loadFieldClass('list');
  *
  * @package      VipPortfolio
  * @subpackage   Components
- * @since       1.6
+ * @since        1.6
  */
-class JFormFieldVpStyles extends JFormFieldList {
+class JFormFieldVpStyles extends JFormFieldList
+{
     /**
      * The form field type.
      *
@@ -29,28 +30,26 @@ class JFormFieldVpStyles extends JFormFieldList {
      * @since   1.6
      */
     protected $type = 'VpStyles';
-    
+
     /**
      * Method to get the field options.
      *
      * @return  array   The field option objects.
      * @since   1.6
      */
-    protected function getOptions(){
-
+    protected function getOptions()
+    {
         $options = array(
-            array("value"=>'list', "text"=>'List View'),
-            array("value"=>'lineal', "text"=>'Lineal View'),
-            array("value"=>'slidegallery', "text"=>'SlideGallery View'),
-            array("value"=>'camera', "text"=>'Camera View'),
-            array("value"=>'galleria', "text"=>'Galleria View')
+            array("value" => 'list', "text" => 'List View'),
+            array("value" => 'lineal', "text" => 'Lineal View'),
+            array("value" => 'slidegallery', "text" => 'SlideGallery View'),
+            array("value" => 'camera', "text" => 'Camera View'),
+            array("value" => 'galleria', "text" => 'Galleria View')
         );
-        
+
         // Merge any additional options in the XML definition.
         $options = array_merge(parent::getOptions(), $options);
-        
+
         return $options;
-    
     }
-    
 }

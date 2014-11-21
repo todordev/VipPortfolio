@@ -45,5 +45,3 @@ defined('_JEXEC') or die;
     <?php echo $this->pagination->getPagesLinks(); ?>
 </div>
 <?php }?>
-<div class="clearfix"></div>
-<?php echo $this->version->backlink; ?>

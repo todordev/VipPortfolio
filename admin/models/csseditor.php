@@ -10,16 +10,11 @@
 // no direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.filesystem.file');
-jimport('joomla.application.component.model');
-
 /**
- * It is a project model
- * 
- * @author Todor Iliev
- * @todo gets the destination dir from parameters
+ * It is a css editor model.
+ *
  */
-class VipPortfolioModelCssEditor extends JModelLegacy {
-    
-    
+class VipPortfolioModelCssEditor extends JModelLegacy
+{
+
 }

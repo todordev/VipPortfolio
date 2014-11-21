@@ -18,125 +18,126 @@ jimport('itprism.controller.admin');
  * @package     VipPortfolio
  * @subpackage  Components
  */
-class VipPortfolioControllerTabs extends ITPrismControllerAdmin {
-    
+class VipPortfolioControllerTabs extends ITPrismControllerAdmin
+{
     /**
      * Proxy for getModel.
      * @since   1.6
      */
-    public function getModel($name = 'Tab', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true)) {
+    public function getModel($name = 'Tab', $prefix = 'VipPortfolioModel', $config = array('ignore_request' => true))
+    {
         $model = parent::getModel($name, $prefix, $config);
+
         return $model;
     }
-    
-    public function delete() {
-        
+
+    public function delete()
+    {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-        
+
         $app = JFactory::getApplication();
-        /** @var $app JAdministrator **/
-        
+        /** @var $app JApplicationAdministrator */
+
         $redirectOptions = array(
             "view" => $this->view_list
         );
-        
-        $cid     = $app->input->get('cid', array(), 'array');
+
+        $cid = $app->input->get('cid', array(), 'array');
         JArrayHelper::toInteger($cid);
-        
-        if(empty($cid)){
-            $this->displayNotice(JText::_($this->text_prefix."_ERROR_FACEBOOK_INVALID_TAB"), $redirectOptions);
+
+        if (empty($cid)) {
+            $this->displayNotice(JText::_($this->text_prefix . "_ERROR_FACEBOOK_INVALID_TAB"), $redirectOptions);
+
             return;
         }
-        
-        $pageId  = $app->input->get('pid', 0);
-        
-        $model   = $this->getModel();
-        /** @var $model VipPortfolioModelTab **/
-        
+
+        $model = $this->getModel();
+        /** @var $model VipPortfolioModelTab */
+
         // Get component parameters
         $params = JComponentHelper::getParams($this->option);
-        
+
         try {
-            
-            foreach($cid as $itemId) {
+
+            foreach ($cid as $itemId) {
                 $item = $model->getItem($itemId);
                 $model->uninstallFacebookTab($item, $params);
                 $model->delete($item->id);
             }
-        
-        } catch ( Exception $e ) {
+
+        } catch (Exception $e) {
             JLog::add($e->getMessage());
-            $this->displayError(JText::_($this->text_prefix."_ERROR_FACEBOOK"), array("view" => "pages"));
+            $this->displayError(JText::_($this->text_prefix . "_ERROR_FACEBOOK"), array("view" => "pages"));
+
             return;
         }
-        
+
         $msg = JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid));
         $this->displayMessage($msg, $redirectOptions);
-        
+
     }
-    
-    public function publish() {
-        
+
+    public function publish()
+    {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-        
+
         $app = JFactory::getApplication();
-        /** @var $app JAdministrator **/
-        
+        /** @var $app JApplicationAdministrator */
+
         $redirectOptions = array(
             "view" => $this->view_list
         );
-        
-        $cid     = $app->input->get('cid', array(), 'array');
+
+        $cid = $app->input->get('cid', array(), 'array');
         JArrayHelper::toInteger($cid);
-        
-        if(empty($cid)){
-            $this->displayNotice(JText::_($this->text_prefix."_ERROR_FACEBOOK_INVALID_TAB"), $redirectOptions);
+
+        if (empty($cid)) {
+            $this->displayNotice(JText::_($this->text_prefix . "_ERROR_FACEBOOK_INVALID_TAB"), $redirectOptions);
+
             return;
         }
-        
-        $pageId  = $app->input->get('pid', 0);
-        $data    = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
-		$task    = $this->getTask();
-		$value   = JArrayHelper::getValue($data, $task, 0, 'int');
-		
-        $model   = $this->getModel();
-        /** @var $model VipPortfolioModelTab **/
-        
+
+        $data   = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+        $task   = $this->getTask();
+        $value  = JArrayHelper::getValue($data, $task, 0, 'int');
+
+        $model = $this->getModel();
+        /** @var $model VipPortfolioModelTab * */
+
         // Get component parameters
         $params = JComponentHelper::getParams($this->option);
-        
+
         try {
-            
-            foreach($cid as $itemId) {
-                
+
+            foreach ($cid as $itemId) {
+
                 $item = $model->getItem($itemId);
-                
-                if(!$value) {
+
+                if (!$value) {
                     $model->uninstallFacebookTab($item, $params);
                 } else {
                     $model->installFacebookTab($item, $params);
                 }
 
             }
-            
+
             // Publish or not
             $model->publish($cid, $value);
-        
-        } catch ( Exception $e ) {
+
+        } catch (Exception $e) {
             JLog::add($e->getMessage());
-            $this->displayError(JText::_($this->text_prefix."_ERROR_FACEBOOK"), array("view" => "pages"));
+            $this->displayError(JText::_($this->text_prefix . "_ERROR_FACEBOOK"), array("view" => "pages"));
+
             return;
         }
-        
+
         // Set message
-        if(!$value) {
+        if (!$value) {
             $msg = JText::plural($this->text_prefix . '_N_ITEMS_UNPUBLISHED', count($cid));
-        } else{
+        } else {
             $msg = JText::plural($this->text_prefix . '_N_ITEMS_PUBLISHED', count($cid));
         }
-        
+
         $this->displayMessage($msg, $redirectOptions);
-        
     }
-    
 }
